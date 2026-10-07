@@ -1,0 +1,131 @@
+/* ==========================================================================
+   ODDLY MADE - PREMIUM SITE OVERRIDES & INTERACTION STYLES
+   ========================================================================== */
+
+/* Split Text Words */
+.gsap_split_word {
+    display: inline-block;
+}
+
+/* 7. Testimonials & Spacing */
+.testimonial-container {
+    padding-top: clamp(2rem, 4vw, 4rem) !important;
+    padding-bottom: clamp(2rem, 4vw, 4rem) !important;
+}
+
+/* 8. Custom Mouse Cursor Follower */
+.project-cursor-wrp {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none !important;
+    z-index: 9999 !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+    display: block !important;
+}
+
+.project-cursor-wrp.is-visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.view-project-follow-cursor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    will-change: transform;
+}
+
+.view-project-cursor {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid #111111;
+    color: #111111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.15;
+    font-weight: 500;
+    text-transform: capitalize;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* 10. Video Lightbox Modal */
+.custom-lightbox-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.custom-lightbox-modal.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.custom-lightbox-inner {
+    position: relative;
+    width: 90%;
+    max-width: 960px;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    background: #000;
+}
+
+.custom-lightbox-inner iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.custom-lightbox-close {
+    position: absolute;
+    top: -42px;
+    right: 0;
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 1;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    opacity: 0.8;
+}
+
+.custom-lightbox-close:hover {
+    transform: scale(1.15);
+    opacity: 1;
+}
+
+/* 11. Wavy Hover Underline Animations */
+.nav-links:hover .underline svg path,
+.footer-nav-links:hover .underline svg path {
+    animation: waveBounce 0.4s ease;
+}
+
+@keyframes waveBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+}

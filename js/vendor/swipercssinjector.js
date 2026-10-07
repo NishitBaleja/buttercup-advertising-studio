@@ -1,0 +1,1 @@
+!function(){var e=document.querySelector("link[data-swiper-css]");e&&e.remove();var t=document.createElement("link");t.rel="stylesheet",t.href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css",t.setAttribute("data-swiper-css","true"),t.crossOrigin="anonymous",document.head.appendChild(t)}();
