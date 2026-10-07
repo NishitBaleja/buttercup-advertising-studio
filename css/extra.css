@@ -1,10 +1,15 @@
 /* ==========================================================================
-   ODDLY MADE - PREMIUM SITE OVERRIDES & INTERACTION STYLES
+   BUTTERCUP ADVERTISING STUDIO - PREMIUM SITE OVERRIDES & INTERACTION STYLES
    ========================================================================== */
 
 /* Split Text Words */
 .gsap_split_word {
     display: inline-block;
+}
+
+/* Hero BAS Background Wordmark */
+.hero-video-wrp .icon-embed-custom {
+    width: min(94%, 1400px) !important;
 }
 
 /* 7. Testimonials & Spacing */

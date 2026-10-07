@@ -1,5 +1,5 @@
 /**
- * Oddly Made - Interactive Scripts
+ * Buttercup Advertising Studio - Interactive Scripts
  * Handles Lenis smooth scrolling and the scroll / load GSAP animations,
  * mirroring the timelines of the original site 1-to-1 (hero, about, services,
  * selected work, archive, news, marquee) + cursor follower, tabs, video lightbox.
