@@ -165,3 +165,27 @@
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-2px); }
 }
+
+/* 12. Client Logos Marquee Styling */
+.marquee-track {
+    grid-column-gap: 0px !important;
+    column-gap: 0px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.marquee-logo-image {
+    height: 130px;
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+    display: block;
+}
+
+@media screen and (max-width: 767px) {
+    .marquee-logo-image {
+        height: 85px;
+    }
+}
+
+
