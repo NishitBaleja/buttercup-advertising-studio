@@ -618,30 +618,50 @@
     display: none;
 }
 
-/* Show Product Base list when hovering Product Base */
+/* Show Product Base list when hovering Product Base or when active */
 .industry-dropdown-popup:has([data-category="product"]:hover) #subpopup-product,
-.industry-dropdown-popup:has(#subpopup-product:hover) #subpopup-product,
 .industry-dropdown-popup.show-product-subpopup #subpopup-product,
 .industry-subpopup.show-product #subpopup-product {
     display: block !important;
 }
 
-/* Show Service Base list when hovering Service Base */
+/* Show Service Base list when hovering Service Base or when active */
 .industry-dropdown-popup:has([data-category="service"]:hover) #subpopup-service,
-.industry-dropdown-popup:has(#subpopup-service:hover) #subpopup-service,
 .industry-dropdown-popup.show-service-subpopup #subpopup-service,
 .industry-subpopup.show-service #subpopup-service {
     display: block !important;
 }
 
-/* Hide product when service is explicitly hovered */
+/* Hide product when service is hovered or active */
 .industry-dropdown-popup:has([data-category="service"]:hover) #subpopup-product,
-.industry-dropdown-popup:has(#subpopup-service:hover) #subpopup-product {
+.industry-dropdown-popup.show-service-subpopup #subpopup-product,
+.industry-subpopup.show-service #subpopup-product {
     display: none !important;
 }
 
-/* If subpopup is visible via fallback JS and no panel specified, default to product */
-.industry-subpopup.is-visible:not(.show-service) #subpopup-product {
+/* Hide service when product is hovered or active */
+.industry-dropdown-popup:has([data-category="product"]:hover) #subpopup-service,
+.industry-dropdown-popup.show-product-subpopup #subpopup-service,
+.industry-subpopup.show-product #subpopup-service {
+    display: none !important;
+}
+
+/* Direct hover persistence for subpopup panels via pure CSS */
+.industry-dropdown-popup:has(#subpopup-service:hover) #subpopup-service {
+    display: block !important;
+}
+.industry-dropdown-popup:has(#subpopup-service:hover) #subpopup-product {
+    display: none !important;
+}
+.industry-dropdown-popup:has(#subpopup-product:hover) #subpopup-product {
+    display: block !important;
+}
+.industry-dropdown-popup:has(#subpopup-product:hover) #subpopup-service {
+    display: none !important;
+}
+
+/* Fallback default when subpopup is hovered and neither class is set: default to product */
+.industry-dropdown-popup:has(.industry-subpopup:hover):not(.show-service-subpopup) #subpopup-product {
     display: block;
 }
 
@@ -788,5 +808,213 @@
     transform: translate(3px, -3px) !important;
 }
 
+/* ==========================================================================
+   17. SERVICES MEGA DROPDOWN MENU
+   ========================================================================== */
+.nav-services-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
 
+.services-dropdown-popup {
+    position: absolute;
+    top: calc(100% + 14px);
+    right: -120px;
+    width: 780px;
+    max-width: calc(100vw - 32px);
+    background: rgba(14, 15, 18, 0.97);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    padding: 1.5rem 1.6rem 1.25rem;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), 0 4px 16px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(8px) scale(0.98);
+    transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.22s ease;
+}
 
+/* Hover bridge for services dropdown */
+.nav-services-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: -20px;
+    right: -20px;
+    height: 18px;
+    background: transparent;
+    pointer-events: auto;
+}
+
+.nav-services-wrapper:hover .services-dropdown-popup,
+.services-dropdown-popup:hover,
+.nav-services-wrapper.is-open .services-dropdown-popup {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translateY(0) scale(1) !important;
+}
+
+.services-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.services-popup-tag {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #ffaa40;
+    text-transform: uppercase;
+}
+
+.services-popup-subtitle {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 400;
+}
+
+.services-pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.1rem;
+}
+
+.service-pillar-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 12px;
+    padding: 1rem 1.05rem;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.service-pillar-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    transform: translateY(-2px);
+}
+
+.pillar-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.45rem;
+}
+
+.pillar-num {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #ffaa40;
+}
+
+.pillar-arrow {
+    opacity: 0.4;
+    color: #ffffff;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.service-pillar-card:hover .pillar-arrow {
+    opacity: 1;
+    transform: translate(2px, -2px);
+}
+
+.pillar-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.25;
+    margin-bottom: 0.65rem;
+}
+
+.pillar-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.32rem;
+}
+
+.pillar-item {
+    font-size: 0.78rem;
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.75);
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    transition: color 0.18s ease;
+}
+
+.pillar-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    flex-shrink: 0;
+    transition: background 0.18s ease;
+}
+
+.service-pillar-card:hover .pillar-item {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.service-pillar-card:hover .pillar-dot {
+    background: #ffaa40;
+}
+
+.services-popup-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.1rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.services-footer-text {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.services-footer-cta {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.services-footer-cta:hover {
+    color: #ffaa40;
+    transform: translateX(3px);
+}
+
+@media screen and (max-width: 1200px) {
+    .services-dropdown-popup {
+        width: 680px;
+        right: -80px;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .services-dropdown-popup {
+        display: none !important;
+    }
+}

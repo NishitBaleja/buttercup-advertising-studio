@@ -501,14 +501,18 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (subpopup) {
-      subpopup.addEventListener("mouseenter", () => {
+      const keepVisible = () => {
         clearTimeout(subTimer);
         subpopup.classList.add("is-visible");
-      });
-      subpopup.addEventListener("mouseover", () => {
-        clearTimeout(subTimer);
-        subpopup.classList.add("is-visible");
-      });
+        const isServ = subpopup.classList.contains("show-service");
+        catCards.forEach(c => {
+          const isThisService = c.getAttribute("data-category") === "service" || c.innerText.includes("Service Base");
+          c.classList.toggle("is-active", isServ ? isThisService : !isThisService);
+        });
+      };
+
+      subpopup.addEventListener("mouseenter", keepVisible);
+      subpopup.addEventListener("mouseover", keepVisible);
       subpopup.addEventListener("mouseleave", (e) => {
         const toElem = e.relatedTarget;
         let isMovingToCard = false;
