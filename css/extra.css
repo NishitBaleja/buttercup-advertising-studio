@@ -601,8 +601,7 @@
 }
 
 /* PURE CSS HOVER TRIGGER via :has() (Works 100% even without JS) */
-.industry-dropdown-popup:has([data-category="product"]:hover) .industry-subpopup,
-.industry-dropdown-popup:has([data-category="service"]:hover) .industry-subpopup,
+.industry-dropdown-popup:has([data-category]:hover) .industry-subpopup,
 .industry-dropdown-popup:has(.industry-subpopup:hover) .industry-subpopup,
 .industry-dropdown-popup.show-product-subpopup .industry-subpopup,
 .industry-dropdown-popup.show-service-subpopup .industry-subpopup,
@@ -809,7 +808,7 @@
 }
 
 /* ==========================================================================
-   17. SERVICES MEGA DROPDOWN MENU
+   17. SERVICES DROPDOWN POPUP (EXACT SAME AS INDUSTRY DROPDOWN POPUP)
    ========================================================================== */
 .nav-services-wrapper {
     position: relative;
@@ -817,204 +816,97 @@
     align-items: center;
 }
 
-.services-dropdown-popup {
-    position: absolute;
-    top: calc(100% + 14px);
-    right: -120px;
-    width: 780px;
-    max-width: calc(100vw - 32px);
-    background: rgba(14, 15, 18, 0.97);
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 18px;
-    padding: 1.5rem 1.6rem 1.25rem;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), 0 4px 16px rgba(0, 0, 0, 0.3);
-    z-index: 10000;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: translateY(8px) scale(0.98);
-    transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-                visibility 0.22s ease;
+.services-popup {
+    /* Inherits all .industry-dropdown-popup layout, glassmorphism, border, size and shadow */
+    right: 0;
 }
 
-/* Hover bridge for services dropdown */
-.nav-services-wrapper::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: -20px;
-    right: -20px;
-    height: 18px;
-    background: transparent;
-    pointer-events: auto;
+/* Show subpanels on hover in services popup */
+.services-popup:has([data-category="brand-strategy"]:hover) #subpopup-brand-strategy,
+.services-popup:has(#subpopup-brand-strategy:hover) #subpopup-brand-strategy,
+.services-subpopup.show-strategy #subpopup-brand-strategy {
+    display: block !important;
 }
 
-.nav-services-wrapper:hover .services-dropdown-popup,
-.services-dropdown-popup:hover,
-.nav-services-wrapper.is-open .services-dropdown-popup {
+.services-popup:has([data-category="visual-identity"]:hover) #subpopup-visual-identity,
+.services-popup:has(#subpopup-visual-identity:hover) #subpopup-visual-identity,
+.services-subpopup.show-visual #subpopup-visual-identity {
+    display: block !important;
+}
+
+.services-popup:has([data-category="marketing-comm"]:hover) #subpopup-marketing-comm,
+.services-popup:has(#subpopup-marketing-comm:hover) #subpopup-marketing-comm,
+.services-subpopup.show-marketing #subpopup-marketing-comm {
+    display: block !important;
+}
+
+/* Hide other panels when one is hovered */
+.services-popup:has([data-category="brand-strategy"]:hover) #subpopup-visual-identity,
+.services-popup:has([data-category="brand-strategy"]:hover) #subpopup-marketing-comm,
+.services-popup:has(#subpopup-brand-strategy:hover) #subpopup-visual-identity,
+.services-popup:has(#subpopup-brand-strategy:hover) #subpopup-marketing-comm,
+.services-popup:has([data-category="visual-identity"]:hover) #subpopup-brand-strategy,
+.services-popup:has([data-category="visual-identity"]:hover) #subpopup-marketing-comm,
+.services-popup:has(#subpopup-visual-identity:hover) #subpopup-brand-strategy,
+.services-popup:has(#subpopup-visual-identity:hover) #subpopup-marketing-comm,
+.services-popup:has([data-category="marketing-comm"]:hover) #subpopup-brand-strategy,
+.services-popup:has([data-category="marketing-comm"]:hover) #subpopup-visual-identity,
+.services-popup:has(#subpopup-marketing-comm:hover) #subpopup-brand-strategy,
+.services-popup:has(#subpopup-marketing-comm:hover) #subpopup-visual-identity {
+    display: none !important;
+}
+
+/* Fallback default when services subpopup is hovered: default to brand strategy */
+.services-popup:has(.services-subpopup:hover):not(:has([data-category="visual-identity"]:hover)):not(:has([data-category="marketing-comm"]:hover)):not(:has(#subpopup-visual-identity:hover)):not(:has(#subpopup-marketing-comm:hover)) #subpopup-brand-strategy {
+    display: block;
+}
+
+/* Card active hover states */
+.services-popup:has([data-category="brand-strategy"]:hover) [data-category="brand-strategy"],
+.services-popup:has(#subpopup-brand-strategy:hover) [data-category="brand-strategy"],
+.services-popup:has([data-category="visual-identity"]:hover) [data-category="visual-identity"],
+.services-popup:has(#subpopup-visual-identity:hover) [data-category="visual-identity"],
+.services-popup:has([data-category="marketing-comm"]:hover) [data-category="marketing-comm"],
+.services-popup:has(#subpopup-marketing-comm:hover) [data-category="marketing-comm"] {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+.services-popup:has([data-category="brand-strategy"]:hover) [data-category="brand-strategy"] .industry-cat-icon,
+.services-popup:has(#subpopup-brand-strategy:hover) [data-category="brand-strategy"] .industry-cat-icon,
+.services-popup:has([data-category="visual-identity"]:hover) [data-category="visual-identity"] .industry-cat-icon,
+.services-popup:has(#subpopup-visual-identity:hover) [data-category="visual-identity"] .industry-cat-icon,
+.services-popup:has([data-category="marketing-comm"]:hover) [data-category="marketing-comm"] .industry-cat-icon,
+.services-popup:has(#subpopup-marketing-comm:hover) [data-category="marketing-comm"] .industry-cat-icon {
+    background: #ffffff !important;
+    color: #111111 !important;
+}
+
+.services-popup:has([data-category="brand-strategy"]:hover) [data-category="brand-strategy"] .cat-arrow,
+.services-popup:has(#subpopup-brand-strategy:hover) [data-category="brand-strategy"] .cat-arrow,
+.services-popup:has([data-category="visual-identity"]:hover) [data-category="visual-identity"] .cat-arrow,
+.services-popup:has(#subpopup-visual-identity:hover) [data-category="visual-identity"] .cat-arrow,
+.services-popup:has([data-category="marketing-comm"]:hover) [data-category="marketing-comm"] .cat-arrow,
+.services-popup:has(#subpopup-marketing-comm:hover) [data-category="marketing-comm"] .cat-arrow {
     opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    transform: translateY(0) scale(1) !important;
+    transform: translate(3px, -3px) !important;
 }
 
-.services-popup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 1.1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+/* Compact spacing for 3 cards in services popup to match video height */
+.services-popup .industry-cat-card {
+    padding: 0.62rem 0.8rem;
+    gap: 0.75rem;
 }
-
-.services-popup-tag {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    color: #ffaa40;
-    text-transform: uppercase;
+.services-popup .industry-cat-title {
+    font-size: 1.02rem;
+    margin-bottom: 0.22rem;
 }
-
-.services-popup-subtitle {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.5);
-    font-weight: 400;
-}
-
-.services-pillars-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.1rem;
-}
-
-.service-pillar-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 12px;
-    padding: 1rem 1.05rem;
-    display: flex;
-    flex-direction: column;
-    text-decoration: none;
-    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-}
-
-.service-pillar-card:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.18);
-    transform: translateY(-2px);
-}
-
-.pillar-card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.45rem;
-}
-
-.pillar-num {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: #ffaa40;
-}
-
-.pillar-arrow {
-    opacity: 0.4;
-    color: #ffffff;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.service-pillar-card:hover .pillar-arrow {
-    opacity: 1;
-    transform: translate(2px, -2px);
-}
-
-.pillar-title {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #ffffff;
-    line-height: 1.25;
-    margin-bottom: 0.65rem;
-}
-
-.pillar-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.32rem;
-}
-
-.pillar-item {
-    font-size: 0.78rem;
+.services-popup .industry-cat-desc {
+    font-size: 0.76rem;
     line-height: 1.35;
-    color: rgba(255, 255, 255, 0.75);
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    transition: color 0.18s ease;
+}
+.services-popup .industry-cat-icon {
+    width: 32px;
+    height: 32px;
 }
 
-.pillar-dot {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    flex-shrink: 0;
-    transition: background 0.18s ease;
-}
-
-.service-pillar-card:hover .pillar-item {
-    color: rgba(255, 255, 255, 0.95);
-}
-
-.service-pillar-card:hover .pillar-dot {
-    background: #ffaa40;
-}
-
-.services-popup-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 1.1rem;
-    padding-top: 0.8rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.services-footer-text {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.5);
-}
-
-.services-footer-cta {
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: #ffffff;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    transition: color 0.18s ease, transform 0.18s ease;
-}
-
-.services-footer-cta:hover {
-    color: #ffaa40;
-    transform: translateX(3px);
-}
-
-@media screen and (max-width: 1200px) {
-    .services-dropdown-popup {
-        width: 680px;
-        right: -80px;
-    }
-}
-
-@media screen and (max-width: 991px) {
-    .services-dropdown-popup {
-        display: none !important;
-    }
-}

@@ -429,7 +429,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================================
-  // 7. INDUSTRY DROPDOWN POPUP & NESTED SUB-POPUPS
+  // 7. INDUSTRY & SERVICES DROPDOWN MEGA POPUPS
   // =========================================================================
   const dropdownWrappers = document.querySelectorAll(".nav-dropdown-wrapper");
   dropdownWrappers.forEach(wrapper => {
@@ -439,55 +439,49 @@ document.addEventListener("DOMContentLoaded", () => {
     const mainPopup = wrapper.querySelector(".industry-dropdown-popup");
     const subpopup = wrapper.querySelector(".industry-subpopup");
     const catCards = wrapper.querySelectorAll(".industry-cat-card");
-    const prodPanel = wrapper.querySelector("#subpopup-product");
-    const servPanel = wrapper.querySelector("#subpopup-service");
+    const panels = wrapper.querySelectorAll(".subpopup-panel");
 
-    function showSubpanel(type) {
+    function showSubpanel(catType) {
       if (!subpopup) return;
       clearTimeout(subTimer);
 
-      if (type === "product") {
-        if (mainPopup) {
-          mainPopup.classList.add("show-product-subpopup");
-          mainPopup.classList.remove("show-service-subpopup");
-        }
-        subpopup.classList.add("show-product");
-        subpopup.classList.remove("show-service");
-        if (prodPanel) prodPanel.style.display = "block";
-        if (servPanel) servPanel.style.display = "none";
-      } else if (type === "service") {
-        if (mainPopup) {
-          mainPopup.classList.add("show-service-subpopup");
-          mainPopup.classList.remove("show-product-subpopup");
-        }
-        subpopup.classList.add("show-service");
-        subpopup.classList.remove("show-product");
-        if (prodPanel) prodPanel.style.display = "none";
-        if (servPanel) servPanel.style.display = "block";
+      panels.forEach(p => {
+        const matches = p.id === `subpopup-${catType}` || p.getAttribute("data-panel") === catType;
+        p.style.display = matches ? "block" : "none";
+      });
+
+      if (mainPopup) {
+        mainPopup.classList.remove("show-product-subpopup", "show-service-subpopup");
+        if (catType === "product") mainPopup.classList.add("show-product-subpopup");
+        if (catType === "service") mainPopup.classList.add("show-service-subpopup");
       }
 
       subpopup.classList.add("is-visible");
+      subpopup.setAttribute("data-active-cat", catType);
     }
 
     function hideSubpopup() {
       if (!subpopup) return;
       subTimer = setTimeout(() => {
-        subpopup.classList.remove("is-visible", "show-product", "show-service");
+        subpopup.classList.remove("is-visible");
+        subpopup.removeAttribute("data-active-cat");
         if (mainPopup) mainPopup.classList.remove("show-product-subpopup", "show-service-subpopup");
         catCards.forEach(c => c.classList.remove("is-active"));
       }, 240);
     }
 
     catCards.forEach(card => {
-      const isProduct = card.getAttribute("data-category") === "product" || card.innerText.includes("Product Base");
-      const isService = card.getAttribute("data-category") === "service" || card.innerText.includes("Service Base");
+      const catType = card.getAttribute("data-category") ||
+        (card.innerText.includes("Product") ? "product" :
+         card.innerText.includes("Strategy") ? "brand-strategy" :
+         card.innerText.includes("Visual") ? "visual-identity" :
+         card.innerText.includes("Marketing") ? "marketing-comm" : "service");
 
       const handleEnter = () => {
         clearTimeout(subTimer);
         catCards.forEach(c => c.classList.remove("is-active"));
         card.classList.add("is-active");
-        if (isProduct) showSubpanel("product");
-        else if (isService) showSubpanel("service");
+        showSubpanel(catType);
       };
 
       card.addEventListener("mouseenter", handleEnter);
@@ -504,11 +498,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const keepVisible = () => {
         clearTimeout(subTimer);
         subpopup.classList.add("is-visible");
-        const isServ = subpopup.classList.contains("show-service");
-        catCards.forEach(c => {
-          const isThisService = c.getAttribute("data-category") === "service" || c.innerText.includes("Service Base");
-          c.classList.toggle("is-active", isServ ? isThisService : !isThisService);
-        });
+        const activeCat = subpopup.getAttribute("data-active-cat");
+        if (activeCat) {
+          catCards.forEach(c => {
+            const cat = c.getAttribute("data-category");
+            c.classList.toggle("is-active", cat === activeCat);
+          });
+        }
       };
 
       subpopup.addEventListener("mouseenter", keepVisible);
@@ -536,7 +532,10 @@ document.addEventListener("DOMContentLoaded", () => {
     wrapper.addEventListener("mouseleave", () => {
       timer = setTimeout(() => {
         wrapper.classList.remove("is-open");
-        if (subpopup) subpopup.classList.remove("is-visible", "show-product", "show-service");
+        if (subpopup) {
+          subpopup.classList.remove("is-visible");
+          subpopup.removeAttribute("data-active-cat");
+        }
         if (mainPopup) mainPopup.classList.remove("show-product-subpopup", "show-service-subpopup");
         catCards.forEach(c => c.classList.remove("is-active"));
       }, 200);
