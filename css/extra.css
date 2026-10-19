@@ -188,4 +188,605 @@
     }
 }
 
+/* 13. Client Problems Q&A (01-02-03) */
+.qa-item {
+    padding-top: 2.75rem;
+    padding-bottom: 2.75rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    transition: background-color 0.25s ease;
+}
+
+.qa-item:last-child {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.qa-question-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-right: 1.5rem;
+}
+
+.qa-number {
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.25);
+    line-height: 1;
+    margin-bottom: 1rem;
+    transition: color 0.3s ease;
+}
+
+.qa-item:hover .qa-number {
+    color: #111111;
+}
+
+.qa-question {
+    font-size: clamp(1.2rem, 1.7vw, 1.45rem);
+    font-weight: 600;
+    line-height: 1.35;
+    color: #111111;
+    margin-bottom: 2rem;
+}
+
+.qa-divider {
+    width: 100%;
+    height: 1.5px;
+    background-color: #111111;
+    margin-top: auto;
+}
+
+.qa-answer {
+    display: flex;
+    align-items: center;
+}
+
+.qa-answer .text-3x_base {
+    line-height: 1.7;
+    color: #2b2b2b;
+}
+
+@media screen and (max-width: 991px) {
+    .qa-item {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+    .qa-question-col {
+        padding-right: 0;
+    }
+    .qa-divider {
+        margin-bottom: 1.5rem;
+        margin-top: 1rem;
+    }
+}
+
+/* 14. Founder Message Heading Typography */
+.founder-heading {
+    font-size: clamp(2.85rem, 4.8vw, 4.5rem) !important;
+    line-height: 1.12 !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 1.75rem !important;
+}
+
+@media screen and (max-width: 991px) {
+    .founder-heading {
+        font-size: clamp(2.2rem, 5vw, 3.25rem) !important;
+        line-height: 1.15 !important;
+    }
+}
+
+@media screen and (max-width: 479px) {
+    .founder-heading {
+        font-size: 1.9rem !important;
+    }
+}
+
+/* ==========================================================================
+   15. Industry Mega Dropdown Popup (Dark Frosted Glassmorphism)
+   ========================================================================== */
+
+.nav-dropdown-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.nav-dropdown-wrapper.is-open .industry-dropdown-popup,
+.nav-dropdown-wrapper:hover .industry-dropdown-popup {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+.industry-dropdown-popup {
+    position: absolute;
+    top: calc(100% + 14px);
+    right: -80px;
+    width: 660px;
+    max-width: 92vw;
+    background: rgba(14, 15, 18, 0.96);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(10px) scale(0.98);
+    transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.28s ease;
+    text-align: left;
+}
+
+/* Invisible bridge so mouse doesn't drop hover when moving from link to popup */
+.industry-dropdown-popup::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: transparent;
+}
+
+.industry-popup-inner {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+/* Left Column */
+.industry-popup-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.industry-popup-header {
+    margin-bottom: 0.85rem;
+}
+
+.industry-popup-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.45);
+    text-transform: uppercase;
+}
+
+.industry-cat-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 0.85rem 0.9rem;
+    border-radius: 12px;
+    text-decoration: none;
+    background: transparent;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.industry-cat-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(4px);
+}
+
+.industry-cat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.industry-cat-card:hover .industry-cat-icon {
+    background: #ffffff;
+    color: #111111;
+    border-color: #ffffff;
+}
+
+.industry-cat-content {
+    flex: 1;
+}
+
+.industry-cat-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.25;
+    margin-bottom: 0.35rem;
+}
+
+.industry-cat-title .cat-arrow {
+    opacity: 0.4;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.industry-cat-card:hover .industry-cat-title .cat-arrow {
+    opacity: 1;
+    transform: translate(3px, -3px);
+}
+
+.industry-cat-desc {
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.industry-popup-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 0.35rem 0;
+}
+
+.industry-popup-stats {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.industry-stat-pill {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.65);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.35rem 0.65rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.industry-stat-pill strong {
+    color: #ffffff;
+}
+
+/* Right Column (Video) */
+.industry-popup-right {
+    display: flex;
+}
+
+.industry-video-card {
+    position: relative;
+    width: 100%;
+    min-height: 220px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: #000000;
+}
+
+.industry-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.industry-video-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.75) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.85rem;
+    pointer-events: none;
+}
+
+.video-live-badge {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 0.25rem 0.55rem;
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ff3b30;
+    animation: pulseDot 1.8s infinite;
+}
+
+@keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.video-caption-text {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #ffffff;
+    line-height: 1.35;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Dropdown chevron on navbar link */
+.dropdown-chevron {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 4px;
+    transition: transform 0.25s ease;
+}
+
+.nav-dropdown-wrapper:hover .dropdown-chevron {
+    transform: rotate(180deg);
+}
+
+@media screen and (max-width: 991px) {
+    .industry-dropdown-popup {
+        position: static;
+        width: 100%;
+        max-width: 100%;
+        margin-top: 1rem;
+        transform: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        display: none;
+    }
+    .nav-dropdown-wrapper.is-mobile-open .industry-dropdown-popup {
+        display: block;
+    }
+    .industry-popup-inner {
+        grid-template-columns: 1fr;
+    }
+    .industry-video-card {
+        min-height: 180px;
+    }
+}
+
+/* ==========================================================================
+   16. Nested Sub-Popup for Product Base & Service Base Lists
+   ========================================================================== */
+
+.industry-subpopup {
+    position: absolute;
+    top: 0;
+    right: calc(100% + 14px);
+    left: auto;
+    width: 320px;
+    background: rgba(14, 15, 18, 0.98);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 20px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    padding: 1.25rem 1.4rem;
+    z-index: 10005;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(10px) scale(0.97);
+    transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.22s ease;
+}
+
+/* Invisible bridge between main popup and subpopup so mouse movement never drops hover */
+.industry-subpopup::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -28px;
+    width: 28px;
+    height: 100%;
+    background: transparent;
+    pointer-events: auto;
+}
+
+/* PURE CSS HOVER TRIGGER via :has() (Works 100% even without JS) */
+.industry-dropdown-popup:has([data-category="product"]:hover) .industry-subpopup,
+.industry-dropdown-popup:has([data-category="service"]:hover) .industry-subpopup,
+.industry-dropdown-popup:has(.industry-subpopup:hover) .industry-subpopup,
+.industry-dropdown-popup.show-product-subpopup .industry-subpopup,
+.industry-dropdown-popup.show-service-subpopup .industry-subpopup,
+.industry-subpopup.is-visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translateX(0) scale(1) !important;
+}
+
+/* Default panel visibility rules */
+.subpopup-panel {
+    display: none;
+}
+
+/* Show Product Base list when hovering Product Base */
+.industry-dropdown-popup:has([data-category="product"]:hover) #subpopup-product,
+.industry-dropdown-popup:has(#subpopup-product:hover) #subpopup-product,
+.industry-dropdown-popup.show-product-subpopup #subpopup-product,
+.industry-subpopup.show-product #subpopup-product {
+    display: block !important;
+}
+
+/* Show Service Base list when hovering Service Base */
+.industry-dropdown-popup:has([data-category="service"]:hover) #subpopup-service,
+.industry-dropdown-popup:has(#subpopup-service:hover) #subpopup-service,
+.industry-dropdown-popup.show-service-subpopup #subpopup-service,
+.industry-subpopup.show-service #subpopup-service {
+    display: block !important;
+}
+
+/* Hide product when service is explicitly hovered */
+.industry-dropdown-popup:has([data-category="service"]:hover) #subpopup-product,
+.industry-dropdown-popup:has(#subpopup-service:hover) #subpopup-product {
+    display: none !important;
+}
+
+/* If subpopup is visible via fallback JS and no panel specified, default to product */
+.industry-subpopup.is-visible:not(.show-service) #subpopup-product {
+    display: block;
+}
+
+.subpopup-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 0.65rem;
+}
+
+.subpopup-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #ffaa40;
+    text-transform: uppercase;
+}
+
+.subpopup-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
+.subpopup-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 0.6rem 0;
+}
+
+.subpopup-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    max-height: 380px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.subpopup-list::-webkit-scrollbar {
+    width: 4px;
+}
+.subpopup-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.subpopup-item {
+    margin: 0;
+    padding: 0;
+}
+
+.subpopup-link {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.85rem;
+    line-height: 1.35;
+    transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.subpopup-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    flex-shrink: 0;
+    transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.subpopup-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    transform: translateX(4px);
+}
+
+.subpopup-link:hover .subpopup-dot {
+    background: #ffaa40;
+    transform: scale(1.4);
+}
+
+.subpopup-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+    padding-top: 0.65rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.subpopup-cta {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+/* Card active state when subpopup is open or hovered */
+.industry-dropdown-popup:has([data-category="product"]:hover) [data-category="product"],
+.industry-dropdown-popup:has(#subpopup-product:hover) [data-category="product"],
+.industry-cat-card.is-active {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+.industry-dropdown-popup:has([data-category="product"]:hover) [data-category="product"] .industry-cat-icon,
+.industry-dropdown-popup:has(#subpopup-product:hover) [data-category="product"] .industry-cat-icon,
+.industry-cat-card.is-active .industry-cat-icon {
+    background: #ffffff !important;
+    color: #111111 !important;
+}
+
+.industry-dropdown-popup:has([data-category="product"]:hover) [data-category="product"] .cat-arrow,
+.industry-dropdown-popup:has(#subpopup-product:hover) [data-category="product"] .cat-arrow,
+.industry-cat-card.is-active .cat-arrow {
+    opacity: 1 !important;
+    transform: translate(3px, -3px) !important;
+}
+
+.industry-dropdown-popup:has([data-category="service"]:hover) [data-category="service"],
+.industry-dropdown-popup:has(#subpopup-service:hover) [data-category="service"] {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+.industry-dropdown-popup:has([data-category="service"]:hover) [data-category="service"] .industry-cat-icon,
+.industry-dropdown-popup:has(#subpopup-service:hover) [data-category="service"] .industry-cat-icon {
+    background: #ffffff !important;
+    color: #111111 !important;
+}
+
+.industry-dropdown-popup:has([data-category="service"]:hover) [data-category="service"] .cat-arrow,
+.industry-dropdown-popup:has(#subpopup-service:hover) [data-category="service"] .cat-arrow {
+    opacity: 1 !important;
+    transform: translate(3px, -3px) !important;
+}
+
+
 

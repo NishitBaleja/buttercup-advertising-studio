@@ -428,4 +428,128 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // =========================================================================
+  // 7. INDUSTRY DROPDOWN POPUP & NESTED SUB-POPUPS
+  // =========================================================================
+  const dropdownWrappers = document.querySelectorAll(".nav-dropdown-wrapper");
+  dropdownWrappers.forEach(wrapper => {
+    let timer = null;
+    let subTimer = null;
+    const video = wrapper.querySelector(".industry-video");
+    const mainPopup = wrapper.querySelector(".industry-dropdown-popup");
+    const subpopup = wrapper.querySelector(".industry-subpopup");
+    const catCards = wrapper.querySelectorAll(".industry-cat-card");
+    const prodPanel = wrapper.querySelector("#subpopup-product");
+    const servPanel = wrapper.querySelector("#subpopup-service");
+
+    function showSubpanel(type) {
+      if (!subpopup) return;
+      clearTimeout(subTimer);
+
+      if (type === "product") {
+        if (mainPopup) {
+          mainPopup.classList.add("show-product-subpopup");
+          mainPopup.classList.remove("show-service-subpopup");
+        }
+        subpopup.classList.add("show-product");
+        subpopup.classList.remove("show-service");
+        if (prodPanel) prodPanel.style.display = "block";
+        if (servPanel) servPanel.style.display = "none";
+      } else if (type === "service") {
+        if (mainPopup) {
+          mainPopup.classList.add("show-service-subpopup");
+          mainPopup.classList.remove("show-product-subpopup");
+        }
+        subpopup.classList.add("show-service");
+        subpopup.classList.remove("show-product");
+        if (prodPanel) prodPanel.style.display = "none";
+        if (servPanel) servPanel.style.display = "block";
+      }
+
+      subpopup.classList.add("is-visible");
+    }
+
+    function hideSubpopup() {
+      if (!subpopup) return;
+      subTimer = setTimeout(() => {
+        subpopup.classList.remove("is-visible", "show-product", "show-service");
+        if (mainPopup) mainPopup.classList.remove("show-product-subpopup", "show-service-subpopup");
+        catCards.forEach(c => c.classList.remove("is-active"));
+      }, 240);
+    }
+
+    catCards.forEach(card => {
+      const isProduct = card.getAttribute("data-category") === "product" || card.innerText.includes("Product Base");
+      const isService = card.getAttribute("data-category") === "service" || card.innerText.includes("Service Base");
+
+      const handleEnter = () => {
+        clearTimeout(subTimer);
+        catCards.forEach(c => c.classList.remove("is-active"));
+        card.classList.add("is-active");
+        if (isProduct) showSubpanel("product");
+        else if (isService) showSubpanel("service");
+      };
+
+      card.addEventListener("mouseenter", handleEnter);
+      card.addEventListener("mouseover", handleEnter);
+
+      card.addEventListener("mouseleave", (e) => {
+        const toElem = e.relatedTarget;
+        if (subpopup && subpopup.contains(toElem)) return;
+        hideSubpopup();
+      });
+    });
+
+    if (subpopup) {
+      subpopup.addEventListener("mouseenter", () => {
+        clearTimeout(subTimer);
+        subpopup.classList.add("is-visible");
+      });
+      subpopup.addEventListener("mouseover", () => {
+        clearTimeout(subTimer);
+        subpopup.classList.add("is-visible");
+      });
+      subpopup.addEventListener("mouseleave", (e) => {
+        const toElem = e.relatedTarget;
+        let isMovingToCard = false;
+        catCards.forEach(c => {
+          if (c.contains(toElem)) isMovingToCard = true;
+        });
+        if (!isMovingToCard) {
+          hideSubpopup();
+        }
+      });
+    }
+
+    wrapper.addEventListener("mouseenter", () => {
+      clearTimeout(timer);
+      wrapper.classList.add("is-open");
+      if (video && video.paused) {
+        video.play().catch(() => {});
+      }
+    });
+
+    wrapper.addEventListener("mouseleave", () => {
+      timer = setTimeout(() => {
+        wrapper.classList.remove("is-open");
+        if (subpopup) subpopup.classList.remove("is-visible", "show-product", "show-service");
+        if (mainPopup) mainPopup.classList.remove("show-product-subpopup", "show-service-subpopup");
+        catCards.forEach(c => c.classList.remove("is-active"));
+      }, 200);
+    });
+
+    const trigger = wrapper.querySelector(".nav-dropdown-trigger");
+    if (trigger) {
+      trigger.addEventListener("click", (e) => {
+        if (window.innerWidth <= 991) {
+          e.preventDefault();
+          wrapper.classList.toggle("is-mobile-open");
+          if (video && video.paused) {
+            video.play().catch(() => {});
+          }
+        }
+      });
+    }
+  });
+
 });
