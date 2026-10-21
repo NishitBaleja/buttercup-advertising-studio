@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         normalizeWheel: false,
         smoothTouch: false,
       });
+      window.lenis = lenis;
 
       // If GSAP is present, it will drive Lenis via gsap.ticker below; otherwise fallback to RAF
       if (typeof gsap === "undefined") {
@@ -329,31 +330,45 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================================================
   // 4. SELECTED WORK TABS (LIST vs GRID VIEW)
   // =========================================================================
-  const tabLinks = document.querySelectorAll(".grid-list-view[data-w-tab]");
-  const tabPanes = document.querySelectorAll(".w-tab-content .w-tab-pane");
+  const allTabMenus = document.querySelectorAll(".tabs, .w-tabs, .grid-list-tabs");
+  if (allTabMenus.length > 0) {
+    allTabMenus.forEach((tabContainer) => {
+      const containerLinks = tabContainer.querySelectorAll("[data-w-tab].w-tab-link, [data-w-tab].grid-list-view, [data-w-tab].project-tabs");
+      const containerPanes = tabContainer.querySelectorAll(".w-tab-content .w-tab-pane");
 
-  if (tabLinks.length > 0 && tabPanes.length > 0) {
-    tabLinks.forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        const tabName = btn.getAttribute("data-w-tab");
+      containerLinks.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const tabName = btn.getAttribute("data-w-tab");
 
-        tabLinks.forEach(b => b.classList.remove("w--current"));
-        btn.classList.add("w--current");
+          containerLinks.forEach(b => {
+            b.classList.remove("w--current");
+            const act = b.querySelector(".active-tab");
+            if (act) act.remove();
+          });
+          btn.classList.add("w--current");
 
-        tabPanes.forEach(pane => {
-          if (pane.getAttribute("data-w-tab") === tabName) {
-            pane.classList.add("w--tab-active");
-            pane.style.display = "block";
-          } else {
-            pane.classList.remove("w--tab-active");
-            pane.style.display = "none";
+          // For work.html project-tabs active indicator
+          if (btn.classList.contains("project-tabs")) {
+            const actDiv = document.createElement("div");
+            actDiv.className = "active-tab";
+            btn.appendChild(actDiv);
+          }
+
+          containerPanes.forEach(pane => {
+            if (pane.getAttribute("data-w-tab") === tabName) {
+              pane.classList.add("w--tab-active");
+              pane.style.display = "block";
+            } else {
+              pane.classList.remove("w--tab-active");
+              pane.style.display = "none";
+            }
+          });
+
+          if (typeof ScrollTrigger !== "undefined") {
+            ScrollTrigger.refresh();
           }
         });
-
-        if (typeof ScrollTrigger !== "undefined") {
-          ScrollTrigger.refresh();
-        }
       });
     });
   }
@@ -554,5 +569,138 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   });
+
+  // =========================================================================
+  // NAVBAR SQUIGGLY UNDERLINE: Hidden by default, animated on hover
+  // =========================================================================
+  const allNavbarLinks = document.querySelectorAll(".navbar .nav-links, .nav-dropdown-wrapper");
+  allNavbarLinks.forEach((linkItem) => {
+    const underline = linkItem.querySelector(".underline-overflow");
+    if (!underline) return;
+
+    // Explicitly hide initially
+    underline.style.setProperty("width", "0%", "important");
+    underline.style.setProperty("max-width", "0%", "important");
+    underline.style.setProperty("opacity", "0", "important");
+    underline.style.setProperty("visibility", "hidden", "important");
+    underline.style.setProperty("pointer-events", "none", "important");
+    underline.style.setProperty(
+      "transition",
+      "width 0.35s cubic-bezier(0.25, 1, 0.5, 1), max-width 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s ease, visibility 0.25s ease",
+      "important"
+    );
+
+    const showUnderline = () => {
+      underline.style.setProperty("visibility", "visible", "important");
+      underline.style.setProperty("width", "100%", "important");
+      underline.style.setProperty("max-width", "100%", "important");
+      underline.style.setProperty("opacity", "1", "important");
+    };
+
+    const hideUnderline = () => {
+      underline.style.setProperty("width", "0%", "important");
+      underline.style.setProperty("max-width", "0%", "important");
+      underline.style.setProperty("opacity", "0", "important");
+      setTimeout(() => {
+        if (!linkItem.matches(":hover")) {
+          underline.style.setProperty("visibility", "hidden", "important");
+        }
+      }, 350);
+    };
+
+    linkItem.addEventListener("mouseenter", showUnderline);
+    linkItem.addEventListener("mouseleave", hideUnderline);
+  });
+
+  // =========================================================================
+  // GLOBAL CUSTOM ROUND CURSOR ("GOL GOL CURSOR")
+  // =========================================================================
+  function initGlobalCustomCursor() {
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
+    document.documentElement.classList.add("custom-cursor-active");
+
+    let cursorDot = document.querySelector(".custom-cursor-dot");
+    let cursorRing = document.querySelector(".custom-cursor-ring");
+
+    if (!cursorDot) {
+      cursorDot = document.createElement("div");
+      cursorDot.className = "custom-cursor-dot";
+      document.body.appendChild(cursorDot);
+    }
+    if (!cursorRing) {
+      cursorRing = document.createElement("div");
+      cursorRing.className = "custom-cursor-ring";
+      document.body.appendChild(cursorRing);
+    }
+
+    let mouseX = -100;
+    let mouseY = -100;
+    let ringX = -100;
+    let ringY = -100;
+    let isVisible = false;
+
+    window.addEventListener("mousemove", (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      if (!isVisible) {
+        isVisible = true;
+        cursorDot.classList.add("is-active");
+        cursorRing.classList.add("is-active");
+        ringX = mouseX;
+        ringY = mouseY;
+      }
+
+      cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+    });
+
+    window.addEventListener("mousedown", () => {
+      cursorRing.classList.add("is-clicking");
+    });
+
+    window.addEventListener("mouseup", () => {
+      cursorRing.classList.remove("is-clicking");
+    });
+
+    document.addEventListener("mouseleave", () => {
+      isVisible = false;
+      cursorDot.classList.remove("is-active");
+      cursorRing.classList.remove("is-active");
+    });
+
+    document.addEventListener("mouseenter", () => {
+      isVisible = true;
+      cursorDot.classList.add("is-active");
+      cursorRing.classList.add("is-active");
+    });
+
+    function renderRing() {
+      if (isVisible) {
+        ringX += (mouseX - ringX) * 0.16;
+        ringY += (mouseY - ringY) * 0.16;
+        cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+      }
+      requestAnimationFrame(renderRing);
+    }
+    requestAnimationFrame(renderRing);
+
+    const interactiveSel = "a, button, input, textarea, select, [role='button'], .nav-links, .cards, .submit-btn, .menu-button, .custom-lightbox-close";
+    document.addEventListener("mouseover", (e) => {
+      if (e.target.closest(interactiveSel)) {
+        cursorRing.classList.add("is-hovering");
+        cursorDot.classList.add("is-hovering");
+      }
+    });
+
+    document.addEventListener("mouseout", (e) => {
+      if (e.target.closest(interactiveSel)) {
+        cursorRing.classList.remove("is-hovering");
+        cursorDot.classList.remove("is-hovering");
+      }
+    });
+  }
+
+  initGlobalCustomCursor();
 
 });
