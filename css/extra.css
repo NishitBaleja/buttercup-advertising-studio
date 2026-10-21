@@ -1389,6 +1389,17 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     color: #555555 !important;
 }
 
+.legal-wrp .branding-links {
+    color: #111111 !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    transition: opacity 0.2s ease !important;
+}
+
+.legal-wrp .branding-links:hover {
+    opacity: 0.65 !important;
+}
+
 .legal-wrp > .footer-links-group.horizontal {
     grid-column: 2 !important;
     justify-self: center !important;
