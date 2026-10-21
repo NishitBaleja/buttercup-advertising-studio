@@ -713,6 +713,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const successCard = document.getElementById("contact-form-success");
     const errorCard = document.getElementById("contact-form-error");
     const submitBtn = form.querySelector('input[type="submit"], button[type="submit"]');
+    const nextInput = document.getElementById("_next_url");
+
+    // Dynamic _next redirect URL for native submit fallback (works on any domain/link)
+    if (nextInput) {
+      try {
+        const cleanUrl = window.location.origin + window.location.pathname;
+        nextInput.value = cleanUrl + "?submitted=true";
+      } catch (e) {}
+    }
+
+    // Check if user returned from native redirect (?submitted=true)
+    if (window.location.search.includes("submitted=true")) {
+      form.style.display = "none";
+      if (successCard) {
+        successCard.style.display = "block";
+      }
+      try {
+        const cleanUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
+      } catch (e) {}
+    }
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -763,17 +784,22 @@ document.addEventListener("DOMContentLoaded", () => {
           throw new Error(result.message || "Failed to submit form");
         }
       } catch (err) {
-        console.error("Form submission error:", err);
-        if (errorCard) {
-          errorCard.style.display = "block";
-          errorCard.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          if (submitBtn.tagName === "INPUT") {
-            submitBtn.value = originalBtnValue;
-          } else {
-            submitBtn.textContent = originalBtnValue;
+        console.warn("Fetch failed, falling back to native submission:", err);
+        // Fallback: If client ad-blocker or browser blocks AJAX fetch, submit natively so email is ALWAYS delivered!
+        try {
+          form.submit();
+        } catch (submitErr) {
+          if (errorCard) {
+            errorCard.style.display = "block";
+            errorCard.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            if (submitBtn.tagName === "INPUT") {
+              submitBtn.value = originalBtnValue;
+            } else {
+              submitBtn.textContent = originalBtnValue;
+            }
           }
         }
       }
