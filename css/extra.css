@@ -1478,3 +1478,88 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     }
 }
 
+/* 14. Contact Form Feedback & Enhancements */
+.contact-form_block .w-form-done,
+.contact-form_block .success-message {
+    background: transparent !important;
+    padding: 0 !important;
+    text-align: center !important;
+}
+
+.contact-form_block .w-form-fail,
+.contact-form_block .error-message {
+    background: transparent !important;
+    padding: 0 !important;
+    margin-top: 1.5rem !important;
+}
+
+.form-feedback-card {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 1.5rem;
+    padding: 3.5rem 2rem;
+    background: #ffffff;
+    max-width: 580px;
+    margin: 2rem auto 0;
+    text-align: center;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.05);
+}
+
+.form-feedback-card.success {
+    border-color: rgba(34, 197, 94, 0.35);
+}
+
+.form-feedback-card.error {
+    border-color: rgba(239, 68, 68, 0.35);
+}
+
+.feedback-icon-check {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #f0fdf4;
+    color: #16a34a;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+}
+
+.feedback-icon-error {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #fef2f2;
+    color: #dc2626;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+}
+
+.form-feedback-card h3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #111111;
+    margin: 0 0 0.75rem 0;
+    letter-spacing: -0.02em;
+}
+
+.form-feedback-card p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #555555;
+    margin: 0;
+}
+
+.form-feedback-card p a {
+    color: #111111;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.submit-btn:disabled {
+    opacity: 0.65 !important;
+    cursor: not-allowed !important;
+}
+
+

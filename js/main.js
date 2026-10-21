@@ -703,4 +703,83 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initGlobalCustomCursor();
 
+  // =========================================================================
+  // 13. CONTACT FORM SUBMISSION (FormSubmit -> nishitbaleja@gmail.com)
+  // =========================================================================
+  function setupContactForm() {
+    const form = document.getElementById("email-form");
+    if (!form) return;
+
+    const successCard = document.getElementById("contact-form-success");
+    const errorCard = document.getElementById("contact-form-error");
+    const submitBtn = form.querySelector('input[type="submit"], button[type="submit"]');
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const originalBtnValue = submitBtn ? (submitBtn.value || submitBtn.textContent) : "Send Message";
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        if (submitBtn.tagName === "INPUT") {
+          submitBtn.value = "Sending...";
+        } else {
+          submitBtn.textContent = "Sending...";
+        }
+      }
+
+      if (errorCard) errorCard.style.display = "none";
+
+      const formData = new FormData(form);
+      const dataObj = {};
+      formData.forEach((value, key) => {
+        if (key === "_honey") return;
+        dataObj[key] = value;
+      });
+
+      try {
+        const response = await fetch("https://formsubmit.co/ajax/nishitbaleja@gmail.com", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(dataObj)
+        });
+
+        const result = await response.json().catch(() => ({}));
+
+        if (response.ok && (result.success === "true" || result.success === true || (result.message && result.message.includes("Activation")))) {
+          form.style.display = "none";
+          if (successCard) {
+            successCard.style.display = "block";
+            successCard.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        } else {
+          throw new Error(result.message || "Failed to submit form");
+        }
+      } catch (err) {
+        console.error("Form submission error:", err);
+        if (errorCard) {
+          errorCard.style.display = "block";
+          errorCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          if (submitBtn.tagName === "INPUT") {
+            submitBtn.value = originalBtnValue;
+          } else {
+            submitBtn.textContent = originalBtnValue;
+          }
+        }
+      }
+    });
+  }
+
+  setupContactForm();
+
 });
