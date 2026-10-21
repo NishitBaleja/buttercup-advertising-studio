@@ -704,34 +704,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initGlobalCustomCursor();
 
   // =========================================================================
-  // 13. WHATSAPP & CONTACT FORM SUITE (Email + WhatsApp to +91 6352867550)
+  // 13. CONTACT FORM SUBMISSION (FormSubmit -> nishitbaleja@gmail.com)
   // =========================================================================
-  const WHATSAPP_PHONE = "916352867550"; // Nishit Baleja WhatsApp Number
-
-  // Helper to construct formatted WhatsApp text message
-  function buildWhatsAppMessage(data) {
-    const firstName = data["First Name"] || "";
-    const lastName = data["Last Name"] || "";
-    const email = data["Email"] || "";
-    const company = data["Company Name"] || "";
-    const jobTitle = data["Job Title"] || "";
-    const details = data["Project Details"] || data["Message"] || "";
-
-    const lines = [
-      "✨ *New Project Inquiry - Buttercup Advertising Studio*",
-      "━━━━━━━━━━━━━━━━━━━━━━",
-      `👤 *Name:* ${firstName} ${lastName}`.trim(),
-      `📧 *Email:* ${email}`,
-      `🏢 *Company:* ${company}`,
-      jobTitle ? `💼 *Job Title:* ${jobTitle}` : "",
-      `📝 *Project Details:*`,
-      details,
-      "━━━━━━━━━━━━━━━━━━━━━━"
-    ].filter(Boolean);
-
-    return encodeURIComponent(lines.join("\n"));
-  }
-
   function setupContactForm() {
     const form = document.getElementById("email-form");
     if (!form) return;
@@ -739,8 +713,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const successCard = document.getElementById("contact-form-success");
     const errorCard = document.getElementById("contact-form-error");
     const submitBtn = form.querySelector('input[type="submit"], button[type="submit"]');
-    const waSubmitBtn = document.getElementById("whatsapp-submit-btn");
-    const waDirectLink = document.getElementById("whatsapp-direct-link");
     const nextInput = document.getElementById("_next_url");
 
     // Dynamic _next redirect URL for native submit fallback (works on any domain/link)
@@ -763,52 +735,6 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (e) {}
     }
 
-    function getFormDataObj() {
-      const formData = new FormData(form);
-      const dataObj = {};
-      formData.forEach((value, key) => {
-        if (key === "_honey") return;
-        dataObj[key] = value;
-      });
-      return dataObj;
-    }
-
-    // 1. WhatsApp Button Click on Form
-    if (waSubmitBtn) {
-      waSubmitBtn.addEventListener("click", () => {
-        if (!form.checkValidity()) {
-          form.reportValidity();
-          return;
-        }
-
-        const dataObj = getFormDataObj();
-        const waText = buildWhatsAppMessage(dataObj);
-        const waUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${waText}`;
-
-        // Open WhatsApp in new tab
-        window.open(waUrl, "_blank");
-
-        // Send silent email in background so Nishit also gets the email copy
-        fetch("https://formsubmit.co/ajax/nishitbaleja@gmail.com", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify(dataObj)
-        }).catch(() => {});
-
-        // Show success feedback
-        form.style.display = "none";
-        if (successCard) {
-          successCard.style.display = "block";
-          if (waDirectLink) waDirectLink.href = waUrl;
-          successCard.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      });
-    }
-
-    // 2. Standard Form Submit (Email First, with instant WhatsApp follow-up)
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -829,10 +755,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (errorCard) errorCard.style.display = "none";
 
-      const dataObj = getFormDataObj();
-      const waText = buildWhatsAppMessage(dataObj);
-      const waUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${waText}`;
-      if (waDirectLink) waDirectLink.href = waUrl;
+      const formData = new FormData(form);
+      const dataObj = {};
+      formData.forEach((value, key) => {
+        if (key === "_honey") return;
+        dataObj[key] = value;
+      });
 
       try {
         const response = await fetch("https://formsubmit.co/ajax/nishitbaleja@gmail.com", {
@@ -877,33 +805,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // =========================================================================
-  // 14. GLOBAL FLOATING WHATSAPP BUTTON (On Every Page)
-  // =========================================================================
-  function initGlobalWhatsAppFloat() {
-    if (document.querySelector(".global-whatsapp-float")) return;
-
-    const floatBtn = document.createElement("a");
-    floatBtn.className = "global-whatsapp-float";
-    floatBtn.href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent("Hi Nishit, I visited Buttercup Advertising Studio and would like to discuss a project.")}`;
-    floatBtn.target = "_blank";
-    floatBtn.rel = "noopener noreferrer";
-    floatBtn.setAttribute("aria-label", "Chat with Nishit on WhatsApp");
-
-    floatBtn.innerHTML = `
-      <div class="whatsapp-float-tooltip">Chat with Nishit</div>
-      <div class="whatsapp-float-icon">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="#ffffff">
-          <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.777.82 2.791.82h.005c3.18 0 5.767-2.587 5.768-5.766 0-1.542-.602-2.991-1.693-4.083a5.73 5.73 0 0 0-4.08-1.707zm8.28 11.458c-.371 1.047-1.83 1.916-2.52 1.956-.63.036-1.428.169-4.382-1.057-3.766-1.565-6.208-5.385-6.398-5.637-.184-.252-1.517-2.022-1.517-3.856 0-1.834.954-2.736 1.295-3.109.341-.373.743-.467.991-.467.248 0 .495.002.711.013.23.011.538-.087.842.645.313.753 1.07 2.614 1.164 2.805.093.19.155.413.031.662-.124.248-.186.402-.371.62-.186.217-.39.485-.558.652-.186.186-.38.388-.163.76.217.373.966 1.593 2.072 2.578 1.424 1.267 2.624 1.66 2.996 1.846.372.186.589.155.806-.093.217-.248.929-1.085 1.177-1.457.248-.372.496-.31.837-.186.341.124 2.169 1.023 2.541 1.209.372.186.62.279.713.434.093.155.093.9-.278 1.947zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.434 5.178L2 22l4.982-1.309A9.957 9.957 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
-        </svg>
-      </div>
-    `;
-
-    document.body.appendChild(floatBtn);
-  }
-
   setupContactForm();
-  initGlobalWhatsAppFloat();
-
 
 });
