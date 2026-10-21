@@ -325,16 +325,22 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
 }
 
 .marquee-logo-image {
-    height: 130px;
+    height: 185px;
     width: auto;
     object-fit: contain;
     flex-shrink: 0;
     display: block;
 }
 
+@media screen and (max-width: 991px) {
+    .marquee-logo-image {
+        height: 145px;
+    }
+}
+
 @media screen and (max-width: 767px) {
     .marquee-logo-image {
-        height: 85px;
+        height: 110px;
     }
 }
 
