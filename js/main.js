@@ -264,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // -----------------------------------------------------------------
       const marqueeTracks = $$(".marquee-track");
       if (marqueeTracks.length) {
-        gsap.to(marqueeTracks, { x: "-100%", duration: 28, repeat: -1, ease: "none" });
+        gsap.to(marqueeTracks, { x: "-100%", duration: 36, repeat: -1, ease: "none" });
       }
     };
 
