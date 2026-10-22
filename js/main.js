@@ -374,6 +374,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================================
+  // 4B. PROJECT CATEGORY ROUTING FALLBACK
+  // =========================================================================
+  const currentPath = window.location.pathname.toLowerCase();
+  if (currentPath.includes("work.html") || currentPath.endsWith("/work")) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const cat = (urlParams.get("category") || "").toLowerCase();
+    if (cat === "product") {
+      window.location.replace("product-base.html");
+    } else if (cat === "service") {
+      window.location.replace("service-base.html");
+    }
+  }
+
+  // =========================================================================
   // 5. VIDEO LIGHTBOX MODAL
   // =========================================================================
   const playButtons = document.querySelectorAll(".play-button, [data-lightbox-url]");
