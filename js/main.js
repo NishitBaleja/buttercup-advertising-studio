@@ -521,9 +521,31 @@ document.addEventListener("DOMContentLoaded", () => {
         if (subpopup && subpopup.contains(toElem)) return;
         hideSubpopup();
       });
+
+      // Explicit click handler ensures navigation always occurs immediately
+      card.addEventListener("click", (e) => {
+        const href = card.getAttribute("href");
+        if (href && href !== "#") {
+          e.preventDefault();
+          e.stopPropagation();
+          window.location.href = href;
+        }
+      });
     });
 
     if (subpopup) {
+      // Also ensure subpopup links and CTA reliably navigate
+      subpopup.querySelectorAll(".subpopup-link, .subpopup-cta").forEach(link => {
+        link.addEventListener("click", (e) => {
+          const href = link.getAttribute("href");
+          if (href && href !== "#") {
+            e.preventDefault();
+            e.stopPropagation();
+            window.location.href = href;
+          }
+        });
+      });
+
       const keepVisible = () => {
         clearTimeout(subTimer);
         subpopup.classList.add("is-visible");
@@ -820,5 +842,179 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   setupContactForm();
+
+  // =========================================================================
+  // 10. LIVE NUMBER COUNTERS (Viewport & Scroll-Triggered Animation)
+  // =========================================================================
+  function initLiveCounters() {
+    const counterElements = document.querySelectorAll(
+      ".pillar-metric-val, .stats-number, [data-counter]"
+    );
+    if (!counterElements.length) return;
+
+    function easeOutQuart(t) {
+      return 1 - Math.pow(1 - t, 4);
+    }
+
+    function parseMetric(el) {
+      const explicitTarget = el.getAttribute("data-target") || el.getAttribute("data-count");
+      const explicitSuffix = el.getAttribute("data-suffix");
+      const explicitPrefix = el.getAttribute("data-prefix");
+      const explicitDecimals = el.getAttribute("data-decimals");
+      const explicitPad = el.getAttribute("data-pad");
+
+      const text = el.textContent.trim();
+      // Match optional prefix, number (integer or decimal), optional suffix
+      const match = text.match(/^([^\d.]*)(\d+(?:\.\d+)?)(.*)$/);
+
+      let prefix = explicitPrefix !== null ? explicitPrefix : (match ? match[1] : "");
+      let rawNum = explicitTarget !== null ? explicitTarget : (match ? match[2] : "");
+      let suffix = explicitSuffix !== null ? explicitSuffix : (match ? match[3] : "");
+
+      if (!rawNum) return null;
+
+      const isFloat = rawNum.includes(".");
+      const decimals = explicitDecimals !== null
+        ? parseInt(explicitDecimals, 10)
+        : (isFloat ? rawNum.split(".")[1].length : 0);
+      const target = parseFloat(rawNum);
+      const isZeroPadded = explicitPad !== null
+        ? parseInt(explicitPad, 10)
+        : (!isFloat && rawNum.length > 1 && rawNum.startsWith("0") ? rawNum.length : 0);
+
+      return {
+        prefix,
+        target,
+        suffix,
+        decimals,
+        pad: isZeroPadded,
+        originalText: text
+      };
+    }
+
+    function formatNumber(val, config) {
+      let numStr;
+      if (config.decimals > 0) {
+        numStr = val.toFixed(config.decimals);
+      } else {
+        numStr = Math.floor(val).toString();
+        if (config.pad > 0) {
+          while (numStr.length < config.pad) {
+            numStr = "0" + numStr;
+          }
+        }
+      }
+      return config.prefix + numStr + config.suffix;
+    }
+
+    function animateCounter(el, delay = 0) {
+      if (el.dataset.counterStarted === "true") return;
+      el.dataset.counterStarted = "true";
+
+      const config = parseMetric(el);
+      if (!config || isNaN(config.target)) return;
+
+      // Start display at 0
+      el.textContent = formatNumber(0, config);
+      el.classList.add("is-counting");
+
+      setTimeout(() => {
+        const duration = 1800; // 1.8 seconds smooth count
+        let startTime = null;
+
+        function step(timestamp) {
+          if (!startTime) startTime = timestamp;
+          const elapsed = timestamp - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const currentVal = easeOutQuart(progress) * config.target;
+
+          el.textContent = formatNumber(currentVal, config);
+
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          } else {
+            el.textContent = formatNumber(config.target, config);
+            el.classList.remove("is-counting");
+            el.classList.add("counter-done");
+          }
+        }
+
+        requestAnimationFrame(step);
+      }, delay);
+    }
+
+    // Use IntersectionObserver to start counting as soon as scrolled into view
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const container = entry.target;
+          const targets = container.querySelectorAll(".pillar-metric-val, .stats-number, [data-counter]");
+          if (targets.length) {
+            targets.forEach((el, index) => {
+              animateCounter(el, index * 100);
+            });
+          } else {
+            animateCounter(container, 0);
+          }
+          obs.unobserve(container);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+
+    // Observe parent containers if they exist (for synchronized strip animations), else individual items
+    const strips = document.querySelectorAll(".pillar-metrics-strip, #stats-grid");
+    if (strips.length) {
+      strips.forEach(strip => observer.observe(strip));
+    }
+
+    counterElements.forEach(el => {
+      if (!el.closest(".pillar-metrics-strip") && !el.closest("#stats-grid")) {
+        observer.observe(el);
+      }
+    });
+
+    // Also trigger immediately if already visible in viewport on initial load
+    setTimeout(() => {
+      counterElements.forEach((el, idx) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          animateCounter(el, idx * 80);
+        }
+      });
+    }, 250);
+  }
+
+  initLiveCounters();
+
+  // =========================================================================
+  // 11. FAQ ACCORDION INTERACTION (Click + to open/close answers)
+  // =========================================================================
+  function initFaqAccordion() {
+    const faqItems = document.querySelectorAll(".faq-accordion-item");
+    if (!faqItems.length) return;
+
+    faqItems.forEach(item => {
+      const btn = item.querySelector(".faq-question-btn");
+      if (!btn) return;
+
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const isOpen = item.classList.contains("is-open");
+
+        // Close other open FAQ items in the same container for clean UX
+        const parent = item.closest(".faq-wrapper") || item.parentElement;
+        if (parent) {
+          parent.querySelectorAll(".faq-accordion-item.is-open").forEach(other => {
+            if (other !== item) other.classList.remove("is-open");
+          });
+        }
+
+        // Toggle current item
+        item.classList.toggle("is-open", !isOpen);
+      });
+    });
+  }
+
+  initFaqAccordion();
 
 });

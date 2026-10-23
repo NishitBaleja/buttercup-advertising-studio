@@ -246,6 +246,19 @@ html.custom-cursor-active body * {
     opacity: 1;
 }
 
+/* Navigation Comma Removal & Spacing */
+.nav-link_comma {
+    display: none !important;
+}
+
+@media screen and (min-width: 992px) {
+    .nav-link-group {
+        display: flex !important;
+        align-items: center !important;
+        gap: clamp(1.2rem, 1.8vw, 1.85rem) !important;
+    }
+}
+
 /* 11. Navbar Nav-Links Wavy Underline: Hidden by default, animated on hover */
 html body .navbar .nav-links .underline-overflow,
 html body .navbar .nav-links.w--current .underline-overflow,
@@ -598,7 +611,14 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     border-radius: 12px;
     text-decoration: none;
     background: transparent;
+    cursor: pointer !important;
+    position: relative;
+    z-index: 2;
     transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.industry-cat-card > * {
+    pointer-events: none;
 }
 
 .industry-cat-card:hover {
@@ -958,6 +978,7 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     color: rgba(255, 255, 255, 0.85);
     font-size: 0.85rem;
     line-height: 1.35;
+    cursor: pointer !important;
     transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
 }
 
@@ -995,6 +1016,15 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
 .subpopup-cta {
     color: #ffffff;
     font-weight: 500;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+.subpopup-cta:hover {
+    color: #ffaa40 !important;
+    transform: translateX(3px);
 }
 
 /* Card active state when subpopup is open or hovered */
@@ -1560,6 +1590,758 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
 .submit-btn:disabled {
     opacity: 0.65 !important;
     cursor: not-allowed !important;
+}
+
+/* ==========================================================================
+   18. DEDICATED SERVICE PILLAR PAGES (BRAND STRATEGY, VISUAL IDENTITY, MARKETING COMM)
+   ========================================================================== */
+
+/* Pillar Switcher Navigation Bar */
+.pillar-switcher-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 999px;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto 3rem auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.pillar-switch-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.35rem;
+    border-radius: 999px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: #444444;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.pillar-switch-link:hover {
+    color: #000000;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.pillar-switch-link.is-active {
+    background: #000000;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.pillar-switch-link .pillar-num-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    opacity: 0.6;
+    letter-spacing: 0.05em;
+}
+
+.pillar-switch-link.is-active .pillar-num-badge {
+    opacity: 0.85;
+    color: #ffffff;
+}
+
+/* Pillar Hero Section */
+.pillar-hero-wrap {
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+    padding-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.pillar-badge-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.pillar-tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.95rem;
+    border-radius: 999px;
+    background: #000000;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.pillar-tag-pill .tag-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+}
+
+.pillar-hero-subtitle {
+    font-size: clamp(1.15rem, 2vw, 1.45rem);
+    line-height: 1.5;
+    color: #444444;
+    max-width: 860px;
+    margin-top: 1.5rem;
+    margin-bottom: 2.25rem;
+}
+
+.pillar-metrics-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.25rem;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    padding: 1.75rem 2rem;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.pillar-metric-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    transition: transform 0.3s ease;
+}
+
+.pillar-metric-item:hover {
+    transform: translateY(-2px);
+}
+
+.pillar-metric-val {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #000000;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    transition: color 0.3s ease;
+    display: inline-block;
+    min-width: 2ch;
+}
+
+.pillar-metric-val.is-counting {
+    color: #111111;
+    will-change: contents;
+}
+
+.pillar-metric-val.counter-done {
+    color: #000000;
+}
+
+.pillar-metric-label {
+    font-size: 0.88rem;
+    color: #666666;
+    line-height: 1.35;
+    font-weight: 450;
+}
+
+/* Pillar Visual Banner */
+.pillar-banner-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 4.5rem;
+    background: #0b0c10;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+
+.pillar-banner-video,
+.pillar-banner-img {
+    width: 100%;
+    height: clamp(340px, 45vh, 520px);
+    object-fit: cover;
+    display: block;
+}
+
+.pillar-banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.75) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    color: #ffffff;
+}
+
+.pillar-banner-quote {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: clamp(1.6rem, 3.2vw, 2.75rem);
+    line-height: 1.25;
+    font-style: italic;
+    color: #ffffff;
+    max-width: 900px;
+    margin: 0;
+}
+
+.pillar-banner-sub {
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-top: 0.75rem;
+}
+
+/* Capabilities Deep-Dive Grid */
+.capabilities-section {
+    padding-top: clamp(2rem, 5vw, 4rem);
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.section-eyebrow {
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #666666;
+    margin-bottom: 0.5rem;
+}
+
+.section-main-title {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #000000;
+    margin-bottom: 1.25rem;
+}
+
+/* Sticky Stacking Cards (1 ke upar 1 stacking on scroll like Homepage Services) */
+.capabilities-list-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+    margin-top: 3.5rem;
+    position: relative;
+    padding-bottom: 2.5rem;
+}
+
+.capability-card {
+    position: -webkit-sticky;
+    position: sticky;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 24px;
+    padding: clamp(1.75rem, 3.5vw, 3rem);
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.04), 0 20px 48px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    overflow: hidden;
+    will-change: transform;
+}
+
+/* Progressive Stacking Top Offsets & Z-Indexes */
+.capability-card:nth-child(1) { top: 5.5rem; z-index: 1; }
+.capability-card:nth-child(2) { top: 6.75rem; z-index: 2; }
+.capability-card:nth-child(3) { top: 8.0rem; z-index: 3; }
+.capability-card:nth-child(4) { top: 9.25rem; z-index: 4; }
+.capability-card:nth-child(5) { top: 10.5rem; z-index: 5; }
+.capability-card:nth-child(6) { top: 11.75rem; z-index: 6; }
+.capability-card:nth-child(7) { top: 13.0rem; z-index: 7; }
+.capability-card:nth-child(8) { top: 14.25rem; z-index: 8; }
+
+.capability-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: #000000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.capability-card:hover {
+    border-color: rgba(0, 0, 0, 0.25);
+    box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.06), 0 24px 54px rgba(0, 0, 0, 0.12);
+}
+
+.capability-card:hover::before {
+    opacity: 1;
+}
+
+@media screen and (max-width: 991px) {
+    .capabilities-list-grid {
+        gap: 2.5rem;
+    }
+    .capability-card:nth-child(1) { top: 5.0rem; }
+    .capability-card:nth-child(2) { top: 5.85rem; }
+    .capability-card:nth-child(3) { top: 6.7rem; }
+    .capability-card:nth-child(4) { top: 7.55rem; }
+    .capability-card:nth-child(5) { top: 8.4rem; }
+    .capability-card:nth-child(6) { top: 9.25rem; }
+    .capability-card:nth-child(7) { top: 10.1rem; }
+    .capability-card:nth-child(8) { top: 10.95rem; }
+}
+
+@media screen and (max-width: 767px) {
+    .capabilities-list-grid {
+        gap: 2rem;
+    }
+    .capability-card {
+        top: 4.5rem !important;
+        border-radius: 18px;
+    }
+}
+
+.capability-card-grid {
+    display: grid;
+    grid-template-columns: 80px 1.4fr 1.6fr;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+@media screen and (max-width: 991px) {
+    .capability-card-grid {
+        grid-template-columns: 60px 1fr;
+        gap: 1.5rem;
+    }
+    .capability-col-details {
+        grid-column: 1 / -1;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .capability-card-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+.capability-num-col {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #999999;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.capability-title-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.capability-icon-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #f4f4f5;
+    color: #111111;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.25rem;
+}
+
+.capability-title {
+    font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: #111111;
+    margin: 0;
+}
+
+.capability-summary {
+    font-size: 0.95rem;
+    color: #666666;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.capability-col-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.capability-desc-text {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: #333333;
+    margin: 0;
+}
+
+.capability-subgroup-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #888888;
+    margin-bottom: 0.5rem;
+}
+
+.deliverables-tags-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.deliverable-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.85rem;
+    background: #f5f5f7;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 8px;
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: #222222;
+}
+
+.impact-outcome-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.9rem 1.15rem;
+    background: rgba(34, 197, 94, 0.06);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: #166534;
+    line-height: 1.45;
+}
+
+.impact-outcome-box svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* Strategic 4-Step Process Section */
+.process-section {
+    padding-top: clamp(2.5rem, 5vw, 4.5rem);
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+    background: #fafafa;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.process-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+}
+
+.process-step-num {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #111111;
+    background: #f0f0f2;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.process-step-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #111111;
+    margin: 0;
+}
+
+.process-step-desc {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #555555;
+    margin: 0;
+}
+
+/* Pillar Bottom CTA Banner with Dynamic Video Background */
+.pillar-bottom-cta {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+    background: #0b0c10;
+    border-radius: 28px;
+    padding: clamp(2.5rem, 6vw, 4.5rem);
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+}
+
+.pillar-cta-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.65;
+}
+
+.pillar-cta-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(8, 9, 12, 0.88) 0%, rgba(10, 12, 16, 0.78) 50%, rgba(8, 9, 12, 0.88) 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.pillar-bottom-cta-inner {
+    position: relative;
+    z-index: 3;
+    max-width: 820px;
+}
+
+.pillar-bottom-cta h3 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+    font-weight: 400;
+    font-style: italic;
+    color: #ffffff;
+    line-height: 1.15;
+    margin: 0 0 1.25rem 0;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
+}
+
+.pillar-bottom-cta p {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.92);
+    margin: 0 0 2rem 0;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
+}
+
+.pillar-cta-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.cta-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.95rem 1.85rem;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #111111;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cta-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.25);
+}
+
+.cta-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.95rem 1.85rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.25s ease;
+}
+
+.cta-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.other-pillars-nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+.other-pillar-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.75rem 2rem;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+}
+
+.other-pillar-card:hover {
+    border-color: #000000;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+}
+
+.other-pillar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.other-pillar-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #777777;
+    text-transform: uppercase;
+}
+
+.other-pillar-card h4 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #111111;
+    margin: 0 0 0.5rem 0;
+}
+
+.other-pillar-card p {
+    font-size: 0.9rem;
+    color: #666666;
+    line-height: 1.45;
+    margin: 0;
+}
+
+/* FAQ Centered Layout & Interactive Accordion */
+.faq-section {
+    padding-top: clamp(2.5rem, 5vw, 4.5rem);
+    padding-bottom: clamp(3.5rem, 6vw, 5.5rem);
+}
+
+.faq-wrapper {
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+.faq-header {
+    text-align: center;
+    margin-bottom: 2.75rem;
+}
+
+.faq-header .section-eyebrow {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.faq-header .section-main-title {
+    font-size: clamp(2.2rem, 4.2vw, 3.2rem);
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.faq-accordion-item {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    transition: background 0.25s ease;
+}
+
+.faq-accordion-item:first-child {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.faq-question-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    background: transparent;
+    border: none;
+    text-align: left;
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    font-weight: 600;
+    color: #111111;
+    padding: 1.5rem 0.5rem;
+    cursor: pointer !important;
+    transition: color 0.2s ease;
+    user-select: none;
+}
+
+.faq-question-btn:hover {
+    color: #333333;
+}
+
+.faq-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f4f4f5;
+    color: #111111;
+    font-size: 1.35rem;
+    font-weight: 400;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), background 0.25s ease, color 0.25s ease;
+}
+
+.faq-question-btn:hover .faq-icon {
+    background: #e4e4e7;
+}
+
+.faq-accordion-item.is-open .faq-icon {
+    transform: rotate(45deg);
+    background: #111111;
+    color: #ffffff;
+}
+
+.faq-answer {
+    display: none;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #555555;
+    padding: 0 0.5rem 1.6rem 0.5rem;
+}
+
+.faq-accordion-item.is-open .faq-answer {
+    display: block;
+    animation: faqSlideFade 0.3s ease-out forwards;
+}
+
+@keyframes faqSlideFade {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 
