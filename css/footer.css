@@ -201,8 +201,7 @@
 }
 
 .footer-powered {
-    grid-column: 4;
-    justify-self: end;
+    display: none !important;
 }
 
 /* RESPONSIVE */
