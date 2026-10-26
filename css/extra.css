@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap');
+
 /* ==========================================================================
    BUTTERCUP ADVERTISING STUDIO - PREMIUM SITE OVERRIDES & INTERACTION STYLES
    ========================================================================== */
@@ -1532,7 +1534,59 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     width: 100% !important;
 }
 
-/* 5. Bottom Legal Bar */
+/* 5. Orionix-style Giant Footer Brand Shimmer ("buttercup") */
+.footer-bottom-brand-wrap {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 1320px !important;
+    margin: clamp(2.2rem, 4.5vw, 4.2rem) auto clamp(0.75rem, 1.8vw, 1.5rem) !important;
+    padding: 0 0.5rem !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    user-select: none !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+.footer-bottom-brand-text {
+    font-family: 'Fraunces', Georgia, serif !important;
+    font-weight: 500 !important;
+    font-size: clamp(2.8rem, 14.8vw, 14.5rem) !important;
+    line-height: 0.82 !important;
+    letter-spacing: -0.035em !important;
+    text-transform: lowercase !important;
+    margin: 0 !important;
+    padding: 0 0 0.12em 0 !important;
+    display: inline-block !important;
+    white-space: nowrap !important;
+    background: linear-gradient(
+        90deg,
+        rgba(20, 20, 20, 0.12) 0%,
+        rgba(20, 20, 20, 0.12) 36%,
+        rgba(20, 20, 20, 0.98) 50%,
+        rgba(20, 20, 20, 0.12) 64%,
+        rgba(20, 20, 20, 0.12) 100%
+    ) !important;
+    background-size: 250% 100% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    animation: orionixBrandShimmer 5.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite !important;
+    pointer-events: none !important;
+}
+
+@keyframes orionixBrandShimmer {
+    0% {
+        background-position: 130% 0;
+    }
+    100% {
+        background-position: -30% 0;
+    }
+}
+
+/* 6. Bottom Legal Bar */
 .legal-wrp {
     display: flex !important;
     justify-content: space-between !important;
@@ -1641,6 +1695,13 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     }
     .footer-links-grid .footer-nav-links.is-simple {
         font-size: 1.35rem !important;
+    }
+    .footer-bottom-brand-wrap {
+        margin: 1.6rem auto 0.75rem !important;
+        padding: 0 0.25rem !important;
+    }
+    .footer-bottom-brand-text {
+        font-size: clamp(2.35rem, 14.5vw, 4rem) !important;
     }
 }
 
