@@ -20,7 +20,7 @@ html_content = f'''<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/lenis.css">
-<link rel="stylesheet" href="css/extra.css?v=62">
+<link rel="stylesheet" href="css/extra.css?v=64">
 
 <style>
 * {{

@@ -102,12 +102,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // -----------------------------------------------------------------
       // B. HERO: video follows the scroll and grows into the next section
-      //    (everything except the tablet range, like the original)
       // -----------------------------------------------------------------
       const heroSection = $(".section.is-hero");
       if (heroSection && heroVideo) {
         const mm = gsap.matchMedia();
-        mm.add("(min-width: 992px), (max-width: 767px)", () => {
+        // Desktop (>= 992px): original video travel into next section
+        mm.add("(min-width: 992px)", () => {
           gsap.timeline({
             scrollTrigger: {
               trigger: heroSection,
@@ -118,6 +118,20 @@ document.addEventListener("DOMContentLoaded", () => {
           }).fromTo(heroVideo,
             { width: "55%", y: "0vh" },
             { width: "110%", y: "110vh", ease: "none", duration: 0.5 }, 0);
+        });
+
+        // Mobile & Tablet (< 992px): video scales in-place inside hero, does NOT bleed into about section
+        mm.add("(max-width: 991px)", () => {
+          gsap.timeline({
+            scrollTrigger: {
+              trigger: heroSection,
+              start: "clamp(20% 35%)",
+              end: "clamp(75% top)",
+              scrub: 0.8
+            }
+          }).fromTo(heroVideo,
+            { width: "70%", y: "0vh" },
+            { width: "95%", y: "0vh", ease: "none", duration: 0.5 }, 0);
         });
       }
 
@@ -446,16 +460,71 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================================
-  // 6. MOBILE NAVIGATION TOGGLE
+  // 6. MOBILE NAVIGATION PLUS (+) BUTTON & DRAWER CONTROLLER
   // =========================================================================
-  const menuBtn = document.querySelector(".menu-button");
-  const navMenu = document.querySelector(".nav-menu");
-  if (menuBtn && navMenu) {
-    menuBtn.addEventListener("click", () => {
-      const isOpen = navMenu.classList.toggle("w--open");
-      menuBtn.classList.toggle("w--open", isOpen);
+  function initMobileNav() {
+    const menuButtons = document.querySelectorAll(".menu-button");
+    const navMenuWrapper = document.querySelector(".nav-menu-wrapper, .w-nav-menu");
+    if (!menuButtons.length || !navMenuWrapper) return;
+
+    let backdrop = document.querySelector(".mobile-nav-backdrop");
+    if (!backdrop) {
+      backdrop = document.createElement("div");
+      backdrop.className = "mobile-nav-backdrop";
+      document.body.appendChild(backdrop);
+    }
+
+    function toggleMenu(forceClose = false) {
+      const currentlyOpen = navMenuWrapper.classList.contains("is-mobile-open") || navMenuWrapper.classList.contains("w--open");
+      const shouldOpen = forceClose ? false : !currentlyOpen;
+
+      navMenuWrapper.classList.toggle("is-mobile-open", shouldOpen);
+      navMenuWrapper.classList.toggle("w--open", shouldOpen);
+      backdrop.classList.toggle("is-visible", shouldOpen);
+      document.body.classList.toggle("mobile-menu-active", shouldOpen);
+
+      menuButtons.forEach(btn => {
+        btn.classList.toggle("w--open", shouldOpen);
+      });
+    }
+
+    menuButtons.forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleMenu();
+      });
+    });
+
+    backdrop.addEventListener("click", () => {
+      toggleMenu(true);
+    });
+
+    // Close when clicking normal page links (excluding dropdown triggers)
+    navMenuWrapper.querySelectorAll("a:not(.nav-dropdown-trigger)").forEach(link => {
+      link.addEventListener("click", () => {
+        if (window.innerWidth <= 991) {
+          toggleMenu(true);
+        }
+      });
+    });
+
+    // Close on Escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        toggleMenu(true);
+      }
+    });
+
+    // Close on window resize if larger than 991px
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 991) {
+        toggleMenu(true);
+      }
     });
   }
+
+  initMobileNav();
 
   // =========================================================================
   // 7. INDUSTRY & SERVICES DROPDOWN MEGA POPUPS
