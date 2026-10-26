@@ -233,7 +233,7 @@
     left: 0;
     border-radius: 50%;
     pointer-events: none !important;
-    z-index: 999999 !important;
+    z-index: 2147483647 !important;
     opacity: 0;
     will-change: transform;
     mix-blend-mode: difference;
@@ -2468,5 +2468,453 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     }
 }
 
+/* ==========================================================================
+   12. CASE STUDY "COMING SOON" MODAL & BANNER
+   ========================================================================== */
 
+/* Cursor Follower text adjustments for Case Studies */
+.view-project-cursor {
+    width: 92px !important;
+    height: 92px !important;
+    border-radius: 50% !important;
+    background: #0f080b !important;
+    border: 1.5px solid rgba(244, 63, 94, 0.45) !important;
+    color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-size: 11px !important;
+    letter-spacing: 0.08em !important;
+    line-height: 1.25 !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.6), 0 0 24px rgba(225, 29, 72, 0.3) !important;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease !important;
+}
+
+/* Modal Backdrop */
+.cs-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 99999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: rgba(6, 2, 4, 0.84);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    cursor: default !important;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cs-modal-backdrop.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* Ensure mouse cursor is 100% visible and interactive when modal is active */
+html body.cs-modal-active,
+html body.cs-modal-active *,
+html.custom-cursor-active body.cs-modal-active,
+html.custom-cursor-active body.cs-modal-active *,
+html body .cs-modal-backdrop,
+html body .cs-modal-backdrop * {
+    cursor: default !important;
+}
+
+html body.cs-modal-active button,
+html body.cs-modal-active a,
+html body.cs-modal-active .cs-close-btn,
+html body.cs-modal-active .cs-btn,
+html body.cs-modal-active [role="button"],
+html.custom-cursor-active body.cs-modal-active button,
+html.custom-cursor-active body.cs-modal-active a,
+html.custom-cursor-active body.cs-modal-active .cs-close-btn,
+html.custom-cursor-active body.cs-modal-active .cs-btn,
+html.custom-cursor-active body.cs-modal-active [role="button"],
+html body .cs-modal-backdrop button,
+html body .cs-modal-backdrop a,
+html body .cs-modal-backdrop .cs-close-btn,
+html body .cs-modal-backdrop .cs-btn,
+html body .cs-modal-backdrop [role="button"] {
+    cursor: pointer !important;
+}
+
+body.cs-modal-active .custom-cursor-dot,
+body.cs-modal-active .custom-cursor-ring,
+body.cs-modal-active .project-cursor-wrp {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    display: none !important;
+    pointer-events: none !important;
+}
+
+.cs-modal-container {
+    width: 100%;
+    max-width: 580px;
+    margin: auto;
+}
+
+.cs-modal-card {
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(130% 120% at 50% 0%, #1e0d13 0%, #120609 50%, #0a0406 100%);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    border-radius: 24px;
+    padding: 3rem 2.5rem 2.4rem;
+    color: #ffffff;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85),
+                0 0 60px rgba(190, 18, 60, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transform: scale(0.92) translateY(24px);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0;
+}
+
+.cs-modal-backdrop.is-open .cs-modal-card {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+/* Ambient glow orbs inside modal */
+.cs-glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(60px);
+    opacity: 0.35;
+    z-index: 0;
+}
+
+.cs-glow-1 {
+    top: -50px;
+    left: 20%;
+    width: 240px;
+    height: 180px;
+    background: #e11d48;
+}
+
+.cs-glow-2 {
+    bottom: -60px;
+    right: 15%;
+    width: 190px;
+    height: 160px;
+    background: #881337;
+    opacity: 0.25;
+}
+
+/* Close Button */
+.cs-close-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.05);
+    color: #e4e4e7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 2;
+    padding: 0;
+}
+
+.cs-close-btn:hover {
+    background: rgba(244, 63, 94, 0.25);
+    border-color: rgba(244, 63, 94, 0.55);
+    color: #ffffff;
+    transform: rotate(90deg);
+}
+
+/* Badge */
+.cs-badge {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.95rem;
+    border-radius: 9999px;
+    background: rgba(225, 29, 72, 0.14);
+    border: 1px solid rgba(244, 63, 94, 0.35);
+    margin-bottom: 1.3rem;
+}
+
+.cs-badge-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #f43f5e;
+    box-shadow: 0 0 10px #f43f5e;
+    animation: csBadgePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes csBadgePulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.6; }
+}
+
+.cs-badge-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fda4af;
+}
+
+/* Headings */
+.cs-title {
+    position: relative;
+    z-index: 1;
+    font-size: clamp(2.4rem, 4.8vw, 3.4rem);
+    font-weight: 600;
+    line-height: 1.05;
+    margin: 0 0 0.9rem 0;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #ffffff 0%, #fff1f2 40%, #fecdd3 80%, #fda4af 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.cs-project-heading {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-bottom: 1.25rem;
+}
+
+.cs-project-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+}
+
+.cs-project-tag {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #e4e4e7;
+}
+
+/* Description Text */
+.cs-desc {
+    position: relative;
+    z-index: 1;
+    font-size: 1.02rem;
+    line-height: 1.65;
+    color: #cbd5e1;
+    margin: 0 0 1.8rem 0;
+}
+
+/* Status Progress Box */
+.cs-status-box {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.cs-status-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.65rem;
+}
+
+.cs-status-label {
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.cs-status-pct {
+    color: #f43f5e;
+    font-weight: 600;
+}
+
+.cs-status-track {
+    position: relative;
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.cs-status-fill {
+    width: 90%;
+    height: 100%;
+    background: linear-gradient(90deg, #be123c 0%, #f43f5e 60%, #fda4af 100%);
+    border-radius: 9999px;
+    position: relative;
+    overflow: hidden;
+}
+
+.cs-status-fill::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.45) 50%, transparent 100%);
+    animation: csTrackShimmer 2.2s infinite;
+}
+
+@keyframes csTrackShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+}
+
+/* Action Buttons */
+.cs-actions {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+}
+
+.cs-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.6rem;
+    border-radius: 12px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.cs-btn-secondary {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #f1f5f9;
+}
+
+.cs-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.cs-btn-primary {
+    background: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #9f1239 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    box-shadow: 0 4px 20px rgba(225, 29, 72, 0.45);
+}
+
+.cs-btn-primary:hover {
+    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #be123c 100%);
+    box-shadow: 0 8px 30px rgba(244, 63, 94, 0.6);
+    transform: translateY(-2px);
+    color: #ffffff;
+}
+
+/* Banner for direct visits to projects/*.html */
+.project-cs-status-banner {
+    background: linear-gradient(90deg, #18080c 0%, #2b0b14 50%, #18080c 100%);
+    border-bottom: 1px solid rgba(244, 63, 94, 0.3);
+    color: #fecdd3;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.88rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 99999;
+}
+
+.project-cs-status-banner .cs-banner-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: #e11d48;
+    color: #ffffff;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+}
+
+.project-cs-status-banner a {
+    color: #ffffff;
+    text-decoration: underline;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+@media (max-width: 640px) {
+    .cs-modal-card {
+        padding: 2.2rem 1.5rem 1.8rem;
+        border-radius: 20px;
+    }
+    .cs-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    .cs-btn {
+        width: 100%;
+    }
+}
+
+/* ==========================================================================
+   14. CONTACT FORM 5-FIELD GRID LAYOUT
+   ========================================================================== */
+.contact-form {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-column-gap: 2.2rem !important;
+    grid-row-gap: 2rem !important;
+    width: 100% !important;
+}
+
+.contact-form .contact-field_wrapper.is-full-width {
+    grid-column: 1 / -1 !important;
+}
+
+.contact-form .submit-btn {
+    grid-column: 1 / -1 !important;
+    justify-self: start !important;
+    margin-top: 0.5rem !important;
+}
+
+@media (max-width: 767px) {
+    .contact-form {
+        grid-template-columns: 1fr !important;
+        grid-row-gap: 1.5rem !important;
+    }
+}
 

@@ -721,7 +721,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     requestAnimationFrame(renderRing);
 
-    const interactiveSel = "a, button, input, textarea, select, [role='button'], .nav-links, .cards, .submit-btn, .menu-button, .custom-lightbox-close";
+    const interactiveSel = "a, button, input, textarea, select, [role='button'], .nav-links, .cards, .submit-btn, .menu-button, .custom-lightbox-close, .cs-close-btn, .cs-btn";
     document.addEventListener("mouseover", (e) => {
       if (e.target.closest(interactiveSel)) {
         cursorRing.classList.add("is-hovering");
@@ -1016,5 +1016,202 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   initFaqAccordion();
+
+  // =========================================================================
+  // 12. CASE STUDY "COMING SOON" MODAL & CLICK INTERCEPTOR
+  // =========================================================================
+  function initCaseStudyComingSoon() {
+    const isInsideProjectsFolder = window.location.pathname.includes("/projects/");
+    const contactUrl = isInsideProjectsFolder ? "../contact.html" : "contact.html";
+
+    // 1. Update project hover cursor text to 'COMING SOON'
+    const projectCursorInner = document.querySelectorAll(".view-project-cursor");
+    projectCursorInner.forEach((cur) => {
+      cur.innerHTML = "<div>coming<br/>soon</div>";
+    });
+
+    // 2. Inject Modal Dialog into DOM if not present
+    let modal = document.getElementById("csComingSoonModal");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "csComingSoonModal";
+      modal.className = "cs-modal-backdrop";
+      modal.setAttribute("role", "dialog");
+      modal.setAttribute("aria-modal", "true");
+      modal.setAttribute("aria-hidden", "true");
+      modal.innerHTML = `
+        <div class="cs-modal-container">
+          <div class="cs-modal-card">
+            <div class="cs-glow-orb cs-glow-1"></div>
+            <div class="cs-glow-orb cs-glow-2"></div>
+            <button class="cs-close-btn" id="csModalCloseBtn" aria-label="Close modal">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+            <div class="cs-badge">
+              <span class="cs-badge-dot"></span>
+              <span class="cs-badge-text">Case Study In Progress</span>
+            </div>
+            <h2 class="cs-title">Coming Soon</h2>
+            <div class="cs-project-heading">
+              <span class="cs-project-name" id="csProjectName">Brand Showcase</span>
+              <span class="cs-project-tag" id="csProjectCategory">Case Study</span>
+            </div>
+            <p class="cs-desc" id="csProjectDesc">
+              We are currently curating the complete strategic breakdown, packaging architecture, visual identity deliverables, and commercial ROI metrics for this brand. The comprehensive case study will be published shortly.
+            </p>
+            <div class="cs-status-box">
+              <div class="cs-status-header">
+                <span class="cs-status-label">Editorial &amp; Creative Archival</span>
+                <span class="cs-status-pct">Final Polish · 92%</span>
+              </div>
+              <div class="cs-status-track">
+                <div class="cs-status-fill"></div>
+              </div>
+            </div>
+            <div class="cs-actions">
+              <button class="cs-btn cs-btn-secondary" id="csModalSecondaryBtn">
+                Explore Other Work
+              </button>
+              <a href="${contactUrl}" class="cs-btn cs-btn-primary" id="csModalPrimaryBtn">
+                <span>Discuss Your Project</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    const projectNameEl = modal.querySelector("#csProjectName");
+    const projectCatEl = modal.querySelector("#csProjectCategory");
+    const projectDescEl = modal.querySelector("#csProjectDesc");
+    const closeBtn = modal.querySelector("#csModalCloseBtn");
+    const secondaryBtn = modal.querySelector("#csModalSecondaryBtn");
+    const modalContainer = modal.querySelector(".cs-modal-card");
+
+    function openModal(projectName, category) {
+      if (projectNameEl) projectNameEl.textContent = projectName || "Brand Showcase";
+      if (projectCatEl) {
+        if (category) {
+          projectCatEl.textContent = category;
+          projectCatEl.style.display = "inline-block";
+        } else {
+          projectCatEl.style.display = "none";
+        }
+      }
+      if (projectDescEl) {
+        projectDescEl.textContent = `We are currently curating the complete strategic breakdown, visual identity deliverables, packaging architecture, and ROI results for ${projectName || "this project"}. Check back soon for the full showcase.`;
+      }
+
+      modal.classList.add("is-open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("cs-modal-active");
+      document.body.style.overflow = "hidden";
+      if (window.lenis) window.lenis.stop();
+    }
+
+    function closeModal() {
+      modal.classList.remove("is-open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("cs-modal-active");
+      document.body.style.overflow = "";
+      if (window.lenis) window.lenis.start();
+    }
+
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    if (secondaryBtn) secondaryBtn.addEventListener("click", closeModal);
+
+    // Close on backdrop click outside the card
+    modal.addEventListener("click", (e) => {
+      if (!modalContainer.contains(e.target)) {
+        closeModal();
+      }
+    });
+
+    // Close on Escape key
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("is-open")) {
+        closeModal();
+      }
+    });
+
+    // 3. Helper to detect and extract project info from a clicked element
+    function getProjectInfo(target) {
+      const link = target.closest('a[href*="projects/"], a.cards.is-projects, a.work-elem, .project-grid a, .project-clw_wrapper a, [data-case-study]');
+      if (!link) return null;
+
+      let title = "";
+      let category = "";
+
+      // Try finding title in standard typography classes
+      const titleEl = link.querySelector(
+        ".text-3x_base, .text-2x_base, .works-elements .text-x_base.is-snug:first-child, .project-name_wrapper > div:first-child, .project-title, h1, h2, h3, h4"
+      );
+      if (titleEl && titleEl.textContent.trim()) {
+        title = titleEl.textContent.trim();
+      } else {
+        const img = link.querySelector("img[alt]");
+        if (img && img.alt && !img.alt.includes("Project images") && !img.alt.includes("Project Cms Image") && !img.alt.includes("thumbnail")) {
+          title = img.alt.trim();
+        }
+      }
+
+      // Try finding industry/category
+      const catEl = link.querySelector(".project-industry_text, .works-elements .text-x_base:nth-child(4), .text-x_base.is-snug:nth-child(4)");
+      if (catEl && catEl.textContent.trim()) {
+        category = catEl.textContent.trim();
+      }
+
+      // Fallback title from href if not found
+      if (!title) {
+        const href = link.getAttribute("href") || "";
+        const match = href.match(/projects\/([^.]+)\.html/);
+        if (match) {
+          title = match[1].replace(/-/g, " ").replace(/\\b\\w/g, (c) => c.toUpperCase());
+        }
+      }
+
+      return {
+        link,
+        title: title || "Case Study",
+        category: category || "",
+      };
+    }
+
+    // 4. Delegated Click Interceptor across the whole document
+    document.addEventListener("click", (e) => {
+      const info = getProjectInfo(e.target);
+      if (info) {
+        e.preventDefault();
+        e.stopPropagation();
+        openModal(info.title, info.category);
+      }
+    }, true);
+
+    // 5. If user directly visits a /projects/*.html page, inject a top banner
+    if (isInsideProjectsFolder) {
+      const existingBanner = document.querySelector(".project-cs-status-banner");
+      if (!existingBanner) {
+        const banner = document.createElement("div");
+        banner.className = "project-cs-status-banner";
+        const pageHeading = (document.querySelector("h1")?.textContent || "This Case Study").trim();
+        banner.innerHTML = `
+          <span class="cs-banner-badge">Coming Soon</span>
+          <span>We are actively curating and mastering the strategic assets for <strong>${pageHeading}</strong>. Full case study will be published soon.</span>
+          <a href="../work.html">← Explore All Work</a>
+        `;
+        document.body.prepend(banner);
+      }
+    }
+  }
+
+  initCaseStudyComingSoon();
 
 });
