@@ -460,19 +460,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================================
-  // 6. MOBILE NAVIGATION PLUS (+) BUTTON & DRAWER CONTROLLER
+  // 6. MOBILE NAVIGATION PLUS (+) BUTTON & FULL-SCREEN CONTROLLER
   // =========================================================================
   function initMobileNav() {
     const menuButtons = document.querySelectorAll(".menu-button");
     const navMenuWrapper = document.querySelector(".nav-menu-wrapper, .w-nav-menu");
     if (!menuButtons.length || !navMenuWrapper) return;
 
-    let backdrop = document.querySelector(".mobile-nav-backdrop");
-    if (!backdrop) {
-      backdrop = document.createElement("div");
-      backdrop.className = "mobile-nav-backdrop";
-      document.body.appendChild(backdrop);
-    }
+    // Clean up any lingering backdrops
+    document.querySelectorAll(".mobile-nav-backdrop").forEach(b => b.remove());
 
     function toggleMenu(forceClose = false) {
       const currentlyOpen = navMenuWrapper.classList.contains("is-mobile-open") || navMenuWrapper.classList.contains("w--open");
@@ -480,8 +476,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       navMenuWrapper.classList.toggle("is-mobile-open", shouldOpen);
       navMenuWrapper.classList.toggle("w--open", shouldOpen);
-      backdrop.classList.toggle("is-visible", shouldOpen);
       document.body.classList.toggle("mobile-menu-active", shouldOpen);
+
+      // Lock body scroll when mobile menu is open, restore when closed
+      if (shouldOpen) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "";
+      }
 
       menuButtons.forEach(btn => {
         btn.classList.toggle("w--open", shouldOpen);
@@ -494,10 +496,6 @@ document.addEventListener("DOMContentLoaded", () => {
         e.stopPropagation();
         toggleMenu();
       });
-    });
-
-    backdrop.addEventListener("click", () => {
-      toggleMenu(true);
     });
 
     // Close when clicking normal page links (excluding dropdown triggers)
