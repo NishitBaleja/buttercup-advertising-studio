@@ -1343,8 +1343,8 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     position: relative !important;
     width: 100% !important;
     background: #ffffff !important;
-    padding-top: clamp(2rem, 3.5vw, 4rem) !important;
-    padding-bottom: clamp(1.5rem, 2.5vw, 3rem) !important;
+    padding-top: clamp(1.5rem, 2.5vw, 3rem) !important;
+    padding-bottom: clamp(1.2rem, 2vw, 2.2rem) !important;
     overflow: hidden !important;
 }
 
@@ -1352,9 +1352,9 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     display: grid !important;
     grid-template-columns: 1.15fr 1.35fr 0.65fr 1.25fr !important;
     column-gap: clamp(1.5rem, 2.5vw, 3rem) !important;
-    row-gap: clamp(2.5rem, 4vw, 4.5rem) !important;
+    row-gap: clamp(1.6rem, 2.8vw, 2.8rem) !important;
     border-top: 1px solid rgba(0, 0, 0, 0.12) !important;
-    padding-top: clamp(2.5rem, 4vw, 4rem) !important;
+    padding-top: clamp(1.8rem, 2.8vw, 3rem) !important;
     align-items: start !important;
 }
 
@@ -1369,7 +1369,7 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
 .footer-links-grid > .footer-logo {
     grid-column: 1 !important;
     grid-row: 1 !important;
-    font-size: clamp(1.8rem, 2.4vw, 2.85rem) !important;
+    font-size: clamp(1.35rem, 1.8vw, 2.1rem) !important;
     line-height: 1.12 !important;
     font-weight: 500 !important;
     letter-spacing: -0.035em !important;
@@ -1387,7 +1387,7 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     display: flex !important;
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 0.65rem !important;
+    gap: 0.45rem !important;
 }
 
 .footer-links-grid .footer-nav-links.is-simple {
@@ -1395,7 +1395,7 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     display: inline-flex !important;
     flex-direction: column !important;
     align-items: flex-start !important;
-    font-size: clamp(2.2rem, 3.2vw, 3.25rem) !important;
+    font-size: clamp(1.5rem, 2.2vw, 2.35rem) !important;
     font-weight: 600 !important;
     line-height: 1.2 !important;
     letter-spacing: -0.03em !important;
@@ -1407,7 +1407,7 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
 /* Underline under each page link: 0% by default, 100% on current/hover */
 .footer-links-grid .footer-nav-links.is-simple .main-button-underline {
     width: 0% !important;
-    height: 3px !important;
+    height: 2px !important;
     background-color: #000000 !important;
     margin-top: 2px !important;
     transition: width 0.35s cubic-bezier(0.25, 1, 0.5, 1) !important;
@@ -1435,12 +1435,12 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
 
 .footer-socials-group .footer-link_header,
 .footer-links-grid .footer-link_header {
-    font-size: 0.85rem !important;
+    font-size: 0.82rem !important;
     font-weight: 600 !important;
     letter-spacing: 0.08em !important;
     text-transform: uppercase !important;
     color: #000000 !important;
-    margin-bottom: 0.85rem !important;
+    margin-bottom: 0.75rem !important;
 }
 
 .footer-socials-group .footer-nav-links.social,
@@ -1449,9 +1449,9 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     justify-content: space-between !important;
     align-items: center !important;
     width: 100% !important;
-    padding: 0.65rem 0 !important;
+    padding: 0.5rem 0 !important;
     border-top: 1px solid rgba(0, 0, 0, 0.12) !important;
-    font-size: 0.975rem !important;
+    font-size: 0.925rem !important;
     font-weight: 500 !important;
     color: #000000 !important;
     text-decoration: none !important;
@@ -1467,8 +1467,8 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
 
 .footer-socials-group .social-arrow_icon,
 .footer-links-grid .social-arrow_icon {
-    width: 1.1rem !important;
-    height: 1.1rem !important;
+    width: 1rem !important;
+    height: 1rem !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -1480,7 +1480,7 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     transform: translate(2px, -2px) !important;
 }
 
-/* 4. Giant "Let's Talk" Link (Row 2, spanning Col 2 to 4) */
+/* 4. "Let's Talk" Link (Row 2, spanning Col 2 to 4) - Scaled down & compact */
 .footer-links-grid > .contact_footer-link {
     grid-column: 2 / span 3 !important;
     grid-row: 2 !important;
@@ -1489,16 +1489,16 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     align-items: flex-start !important;
     text-decoration: none !important;
     width: 100% !important;
-    margin-top: 0.5rem !important;
+    margin-top: 0.35rem !important;
 }
 
 .contact_footer-link .contact-text-row,
 .contact_footer-link > div:first-child {
     display: flex !important;
     align-items: baseline !important;
-    gap: clamp(1.2rem, 3vw, 3.5rem) !important;
-    font-size: clamp(5rem, 14.5vw, 14rem) !important;
-    line-height: 0.92 !important;
+    gap: clamp(0.5rem, 1.2vw, 1.35rem) !important;
+    font-size: clamp(2rem, 4.8vw, 4.25rem) !important;
+    line-height: 0.95 !important;
     letter-spacing: -0.04em !important;
     white-space: nowrap !important;
     color: #000000 !important;
@@ -1520,9 +1520,9 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
 
 .contact_footer-link .main-button-underline {
     width: 0% !important;
-    height: clamp(3px, 0.35vw, 6px) !important;
+    height: clamp(2px, 0.2vw, 3.5px) !important;
     background-color: #000000 !important;
-    margin-top: 0.75rem !important;
+    margin-top: 0.45rem !important;
     transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
     display: block !important;
     transform-origin: left center !important;
@@ -1538,11 +1538,11 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     justify-content: space-between !important;
     align-items: center !important;
     width: 100% !important;
-    margin-top: 2rem !important;
-    padding-top: 1.5rem !important;
+    margin-top: 1.5rem !important;
+    padding-top: 1.25rem !important;
     border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
-    gap: 1.5rem !important;
-    font-size: 0.925rem !important;
+    gap: 1.25rem !important;
+    font-size: 0.9rem !important;
     flex-wrap: wrap !important;
 }
 
@@ -1593,7 +1593,8 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
 @media screen and (max-width: 991px) {
     .footer-links-grid {
         grid-template-columns: 1fr 1fr !important;
-        row-gap: 2.5rem !important;
+        row-gap: 2rem !important;
+        padding-top: 1.5rem !important;
     }
     .footer-links-grid > .footer-logo {
         grid-column: 1 / span 2 !important;
@@ -1616,8 +1617,8 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     }
     .contact_footer-link .contact-text-row,
     .contact_footer-link > div:first-child {
-        font-size: clamp(3.2rem, 15vw, 6.5rem) !important;
-        gap: 1rem !important;
+        font-size: clamp(1.85rem, 7vw, 3.2rem) !important;
+        gap: 0.75rem !important;
     }
     .legal-wrp {
         flex-direction: column !important;
@@ -1629,6 +1630,17 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     .legal-wrp > .footer-links-group.horizontal {
         justify-content: center !important;
         text-align: center !important;
+    }
+}
+
+@media screen and (max-width: 479px) {
+    .contact_footer-link .contact-text-row,
+    .contact_footer-link > div:first-child {
+        font-size: clamp(1.6rem, 8.5vw, 2.4rem) !important;
+        gap: 0.5rem !important;
+    }
+    .footer-links-grid .footer-nav-links.is-simple {
+        font-size: 1.35rem !important;
     }
 }
 
