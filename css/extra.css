@@ -1540,8 +1540,8 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     justify-content: center !important;
     align-items: center !important;
     width: 100% !important;
-    max-width: 1320px !important;
-    margin: clamp(2.2rem, 4.5vw, 4.2rem) auto clamp(0.75rem, 1.8vw, 1.5rem) !important;
+    max-width: 100% !important;
+    margin: clamp(2rem, 4.5vw, 4.5rem) auto clamp(0.75rem, 1.8vw, 1.5rem) !important;
     padding: 0 0.5rem !important;
     text-align: center !important;
     text-decoration: none !important;
@@ -1553,12 +1553,12 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
 .footer-bottom-brand-text {
     font-family: 'Fraunces', Georgia, serif !important;
     font-weight: 500 !important;
-    font-size: clamp(2.8rem, 14.8vw, 14.5rem) !important;
+    font-size: clamp(3.6rem, 21.8vw, 25rem) !important;
     line-height: 0.82 !important;
-    letter-spacing: -0.035em !important;
+    letter-spacing: -0.04em !important;
     text-transform: lowercase !important;
     margin: 0 !important;
-    padding: 0 0 0.12em 0 !important;
+    padding: 0 0 0.16em 0 !important;
     display: inline-block !important;
     white-space: nowrap !important;
     background: linear-gradient(
@@ -1697,11 +1697,13 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
         font-size: 1.35rem !important;
     }
     .footer-bottom-brand-wrap {
-        margin: 1.6rem auto 0.75rem !important;
+        margin: 1.5rem auto 0.5rem !important;
         padding: 0 0.25rem !important;
     }
     .footer-bottom-brand-text {
-        font-size: clamp(2.35rem, 14.5vw, 4rem) !important;
+        font-size: clamp(3.2rem, 21.5vw, 5.8rem) !important;
+        letter-spacing: -0.045em !important;
+        padding-bottom: 0.18em !important;
     }
 }
 
