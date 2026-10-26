@@ -446,79 +446,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================================
-  // 6. MOBILE NAVIGATION DRAWER & BACKDROP
+  // 6. MOBILE NAVIGATION TOGGLE
   // =========================================================================
-  function initMobileNav() {
-    const menuButtons = document.querySelectorAll(".menu-button");
-    const navMenuWrapper = document.querySelector(".nav-menu-wrapper, .w-nav-menu");
-    if (!menuButtons.length || !navMenuWrapper) return;
-
-    // Ensure a backdrop exists in the DOM
-    let backdrop = document.querySelector(".mobile-nav-backdrop");
-    if (!backdrop) {
-      backdrop = document.createElement("div");
-      backdrop.className = "mobile-nav-backdrop";
-      backdrop.setAttribute("aria-hidden", "true");
-      document.body.appendChild(backdrop);
-    }
-
-    function setMobileNavState(open) {
-      navMenuWrapper.classList.toggle("is-mobile-open", open);
-      navMenuWrapper.classList.toggle("w--open", open);
-      document.body.classList.toggle("mobile-menu-active", open);
-      backdrop.classList.toggle("is-visible", open);
-
-      menuButtons.forEach(btn => {
-        btn.classList.toggle("w--open", open);
-        btn.setAttribute("aria-expanded", open ? "true" : "false");
-      });
-
-      // If closing, close any open mobile accordion dropdowns
-      if (!open) {
-        document.querySelectorAll(".nav-dropdown-wrapper.is-mobile-open").forEach(w => {
-          w.classList.remove("is-mobile-open", "is-open");
-        });
-      }
-    }
-
-    menuButtons.forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const isOpen = navMenuWrapper.classList.contains("is-mobile-open") || navMenuWrapper.classList.contains("w--open");
-        setMobileNavState(!isOpen);
-      });
-    });
-
-    backdrop.addEventListener("click", () => {
-      setMobileNavState(false);
-    });
-
-    // Close when clicking normal links inside drawer (excluding dropdown triggers)
-    navMenuWrapper.querySelectorAll("a:not(.nav-dropdown-trigger)").forEach(link => {
-      link.addEventListener("click", () => {
-        if (window.innerWidth <= 991) {
-          setMobileNavState(false);
-        }
-      });
-    });
-
-    // Close on escape key
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        setMobileNavState(false);
-      }
-    });
-
-    // Close on resize beyond 991px
-    window.addEventListener("resize", () => {
-      if (window.innerWidth > 991) {
-        setMobileNavState(false);
-      }
+  const menuBtn = document.querySelector(".menu-button");
+  const navMenu = document.querySelector(".nav-menu");
+  if (menuBtn && navMenu) {
+    menuBtn.addEventListener("click", () => {
+      const isOpen = navMenu.classList.toggle("w--open");
+      menuBtn.classList.toggle("w--open", isOpen);
     });
   }
-
-  initMobileNav();
 
   // =========================================================================
   // 7. INDUSTRY & SERVICES DROPDOWN MEGA POPUPS

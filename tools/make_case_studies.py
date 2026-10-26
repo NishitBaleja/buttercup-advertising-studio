@@ -20,7 +20,7 @@ html_content = f'''<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/lenis.css">
-<link rel="stylesheet" href="css/extra.css?v=60">
+<link rel="stylesheet" href="css/extra.css?v=62">
 
 <style>
 * {{
@@ -647,73 +647,9 @@ html, body {{
 }}
 
 @media (max-width: 768px) {{
-  #header-bar {{
-    height: 62px;
-    padding: 0 16px;
-  }}
-  .glass-pill {{
-    padding: 0.5rem 0.9rem;
-    font-size: 0.75rem;
-    gap: 0.45rem;
-  }}
-  .sound-btn {{
-    width: 36px;
-    height: 36px;
-  }}
-  #bottom-bar {{
-    height: 64px;
-    padding: 0 16px;
-  }}
-  .bottom-left-badge {{
-    padding: 0.4rem 0.75rem;
-    font-size: 0.72rem;
-  }}
-  .icon-pill-btn {{
-    width: 38px;
-    height: 38px;
-  }}
-  .fw-root {{
-    top: 64px;
-    bottom: 64px;
-    left: 8px;
-    right: 8px;
-  }}
-  #home-words h1 {{
-    font-size: clamp(2.5rem, 14vw, 5rem);
-  }}
-  .fw-card {{
-    max-width: min(92vw, 540px);
-    border-radius: 12px;
-  }}
-  .fw-card-overlay {{
-    padding: 1rem 1.15rem;
-  }}
-  .fw-card-title {{
-    font-size: 1.25rem;
-  }}
-  .fw-card-link-btn {{
-    width: 36px;
-    height: 36px;
-  }}
-  .grid-header {{
-    padding: 1rem 1.25rem;
-  }}
-  .grid-content {{
-    padding: 1.25rem;
-  }}
-  .grid-cards {{
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }}
-}}
-
-@media (max-width: 480px) {{
-  .bottom-left-badge {{
-    display: none;
-  }}
-  #bottom-bar {{
-    justify-content: flex-end;
-  }}
+  #home-words h1 {{ font-size: clamp(3rem, 16vw, 6rem); }}
+  .fw-card {{ max-width: 90vw; }}
+  .grid-cards {{ grid-template-columns: 1fr; }}
 }}
 </style>
 </head>
