@@ -2916,6 +2916,24 @@ body.cs-modal-active .project-cursor-wrp {
         grid-template-columns: 1fr !important;
         grid-row-gap: 1.5rem !important;
     }
+/* ==========================================================================
+   14. CLIENT TESTIMONIALS & REVIEWS STYLING
+   ========================================================================== */
+.testimonial-person_image {
+    background-color: #ffffff !important;
+    object-fit: contain !important;
+    padding: 6px !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-radius: 50% !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06) !important;
+}
+
+.testimonial-content_wrapper .heading-2x_medium.testimonial {
+    font-size: clamp(1.25rem, 2.2vw, 1.85rem) !important;
+    line-height: 1.45 !important;
+    letter-spacing: -0.015em !important;
+    font-weight: 400 !important;
+    color: #121212 !important;
 }
 
 /* ==========================================================================
