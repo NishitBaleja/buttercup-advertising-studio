@@ -446,16 +446,79 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================================
-  // 6. MOBILE NAVIGATION TOGGLE
+  // 6. MOBILE NAVIGATION DRAWER & BACKDROP
   // =========================================================================
-  const menuBtn = document.querySelector(".menu-button");
-  const navMenu = document.querySelector(".nav-menu");
-  if (menuBtn && navMenu) {
-    menuBtn.addEventListener("click", () => {
-      const isOpen = navMenu.classList.toggle("w--open");
-      menuBtn.classList.toggle("w--open", isOpen);
+  function initMobileNav() {
+    const menuButtons = document.querySelectorAll(".menu-button");
+    const navMenuWrapper = document.querySelector(".nav-menu-wrapper, .w-nav-menu");
+    if (!menuButtons.length || !navMenuWrapper) return;
+
+    // Ensure a backdrop exists in the DOM
+    let backdrop = document.querySelector(".mobile-nav-backdrop");
+    if (!backdrop) {
+      backdrop = document.createElement("div");
+      backdrop.className = "mobile-nav-backdrop";
+      backdrop.setAttribute("aria-hidden", "true");
+      document.body.appendChild(backdrop);
+    }
+
+    function setMobileNavState(open) {
+      navMenuWrapper.classList.toggle("is-mobile-open", open);
+      navMenuWrapper.classList.toggle("w--open", open);
+      document.body.classList.toggle("mobile-menu-active", open);
+      backdrop.classList.toggle("is-visible", open);
+
+      menuButtons.forEach(btn => {
+        btn.classList.toggle("w--open", open);
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+
+      // If closing, close any open mobile accordion dropdowns
+      if (!open) {
+        document.querySelectorAll(".nav-dropdown-wrapper.is-mobile-open").forEach(w => {
+          w.classList.remove("is-mobile-open", "is-open");
+        });
+      }
+    }
+
+    menuButtons.forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const isOpen = navMenuWrapper.classList.contains("is-mobile-open") || navMenuWrapper.classList.contains("w--open");
+        setMobileNavState(!isOpen);
+      });
+    });
+
+    backdrop.addEventListener("click", () => {
+      setMobileNavState(false);
+    });
+
+    // Close when clicking normal links inside drawer (excluding dropdown triggers)
+    navMenuWrapper.querySelectorAll("a:not(.nav-dropdown-trigger)").forEach(link => {
+      link.addEventListener("click", () => {
+        if (window.innerWidth <= 991) {
+          setMobileNavState(false);
+        }
+      });
+    });
+
+    // Close on escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        setMobileNavState(false);
+      }
+    });
+
+    // Close on resize beyond 991px
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 991) {
+        setMobileNavState(false);
+      }
     });
   }
+
+  initMobileNav();
 
   // =========================================================================
   // 7. INDUSTRY & SERVICES DROPDOWN MEGA POPUPS
@@ -595,14 +658,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const trigger = wrapper.querySelector(".nav-dropdown-trigger");
     if (trigger) {
       trigger.addEventListener("click", (e) => {
-        if (window.innerWidth <= 991) {
-          e.preventDefault();
-          wrapper.classList.toggle("is-mobile-open");
-          if (video && video.paused) {
-            video.play().catch(() => {});
+        e.preventDefault();
+        e.stopPropagation();
+        const wasOpen = wrapper.classList.contains("is-open");
+        dropdownWrappers.forEach(other => {
+          if (other !== wrapper) {
+            other.classList.remove("is-open", "is-mobile-open");
           }
+        });
+        wrapper.classList.toggle("is-open", !wasOpen);
+        if (window.innerWidth <= 991) {
+          wrapper.classList.toggle("is-mobile-open", !wasOpen);
+        }
+        if (video && video.paused) {
+          video.play().catch(() => {});
         }
       });
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".nav-dropdown-wrapper")) {
+      dropdownWrappers.forEach(w => w.classList.remove("is-open", "is-mobile-open"));
     }
   });
 
@@ -1126,7 +1203,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (closeBtn) closeBtn.addEventListener("click", closeModal);
-    if (secondaryBtn) secondaryBtn.addEventListener("click", closeModal);
+    if (secondaryBtn) {
+      secondaryBtn.addEventListener("click", () => {
+        if (isInsideProjectsFolder) {
+          window.location.href = "../case-studies.html";
+        } else {
+          closeModal();
+        }
+      });
+    }
 
     // Close on backdrop click outside the card
     modal.addEventListener("click", (e) => {
@@ -1144,7 +1229,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 3. Helper to detect and extract project info from a clicked element
     function getProjectInfo(target) {
-      const link = target.closest('a[href*="projects/"], a.cards.is-projects, a.work-elem, .project-grid a, .project-clw_wrapper a, [data-case-study]');
+      const link = target.closest('a[href*="projects/"], a.cards.is-projects, a.cards, a.work-elem, .project-grid a, .project-clw_wrapper a, [data-case-study], .fw-card, .grid-card-item');
       if (!link) return null;
 
       let title = "";
@@ -1174,7 +1259,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const href = link.getAttribute("href") || "";
         const match = href.match(/projects\/([^.]+)\.html/);
         if (match) {
-          title = match[1].replace(/-/g, " ").replace(/\\b\\w/g, (c) => c.toUpperCase());
+          title = match[1].replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
         }
       }
 
@@ -1195,19 +1280,24 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }, true);
 
-    // 5. If user directly visits a /projects/*.html page, inject a top banner
+    // 5. If user directly visits a /projects/*.html page, inject a top banner and trigger modal
     if (isInsideProjectsFolder) {
       const existingBanner = document.querySelector(".project-cs-status-banner");
       if (!existingBanner) {
         const banner = document.createElement("div");
         banner.className = "project-cs-status-banner";
         const pageHeading = (document.querySelector("h1")?.textContent || "This Case Study").trim();
+        const pageCat = (document.querySelector(".project-header p, .project-detail-row p")?.textContent || "Case Study").trim();
         banner.innerHTML = `
           <span class="cs-banner-badge">Coming Soon</span>
           <span>We are actively curating and mastering the strategic assets for <strong>${pageHeading}</strong>. Full case study will be published soon.</span>
-          <a href="../work.html">← Explore All Work</a>
+          <a href="../case-studies.html">← Explore All Work</a>
         `;
         document.body.prepend(banner);
+
+        setTimeout(() => {
+          openModal(pageHeading, pageCat);
+        }, 350);
       }
     }
   }

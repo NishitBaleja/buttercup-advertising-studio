@@ -1,0 +1,1258 @@
+import json, os
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+data_file = os.path.join(ROOT, 'scratch', 'projects_data.json')
+
+with open(data_file) as f:
+    projects = json.load(f)
+
+projects_json = json.dumps(projects)
+
+html_content = f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Buttercup Advertising Studio | Case Studies</title>
+<meta name="description" content="Case Studies by Buttercup Advertising Studio - Branding, Strategy, and Digital Experiences.">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="icon" href="images/695d1ca93d6f12cb8592c30a_Favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/lenis.css">
+<link rel="stylesheet" href="css/extra.css?v=60">
+
+<style>
+* {{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}}
+
+body.cs-modal-active #cursor {{
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}}
+
+body.cs-modal-active, body.cs-modal-active * {{
+  cursor: default !important;
+}}
+
+body.cs-modal-active button,
+body.cs-modal-active a,
+body.cs-modal-active .cs-close-btn,
+body.cs-modal-active .cs-btn,
+body.cs-modal-active [role="button"] {{
+  cursor: pointer !important;
+}}
+
+:root {{
+  --bg-color: #f7f7f5;
+  --text-dark: #121212;
+  --text-muted: #888888;
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --card-radius: 16px;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+}}
+
+html, body {{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+  font-family: var(--font-sans);
+  user-select: none;
+  -webkit-user-select: none;
+}}
+
+/* ==================== LOADER ==================== */
+#loader {{
+  position: fixed;
+  inset: 0;
+  background-color: #ffffff;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.65s cubic-bezier(0.33, 1, 0.68, 1), visibility 0.65s ease;
+}}
+
+#loader.loaded {{
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}}
+
+.loader-inner {{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}}
+
+.loader-spinner {{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3.5px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #121212;
+  animation: spin 1s linear infinite;
+}}
+
+.loader-brand {{
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #121212;
+}}
+
+@keyframes spin {{
+  to {{ transform: rotate(360deg); }}
+}}
+
+/* ==================== CUSTOM CURSOR ==================== */
+#cursor {{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background-color: #121212;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: width 0.25s ease, height 0.25s ease, background-color 0.25s ease, opacity 0.25s ease;
+  display: none;
+}}
+
+@media (hover: hover) {{
+  #cursor {{ display: block; }}
+}}
+
+#cursor.hover {{
+  width: 36px;
+  height: 36px;
+  background-color: rgba(18, 18, 18, 0.12);
+  backdrop-filter: blur(2px);
+}}
+
+/* ==================== HEADER BAR ==================== */
+#header-bar {{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 500;
+  pointer-events: none;
+}}
+
+.glass-pill {{
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  padding: 0.65rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-dark);
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}}
+
+.glass-pill:hover {{
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+}}
+
+.nav-dots {{
+  display: inline-flex;
+  gap: 3px;
+}}
+
+.nav-dots span {{
+  width: 4px;
+  height: 4px;
+  background: #121212;
+  border-radius: 50%;
+}}
+
+.header-right {{
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}}
+
+.sound-btn {{
+  pointer-events: auto;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s ease;
+}}
+
+.sound-btn:hover {{
+  transform: translateY(-1px);
+}}
+
+.sound-icon {{
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}}
+
+/* ==================== HERO SECTION ==================== */
+#home-hero {{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}}
+
+/* ==================== SPLIT WORDS (BACKGROUND) ==================== */
+#home-words {{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}}
+
+#home-words h1 {{
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1em;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: clamp(4rem, 11vw, 12rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.85;
+  white-space: nowrap;
+  color: rgba(18, 18, 18, 0.92);
+}}
+
+#home-words span.word {{
+  position: absolute;
+  top: 0;
+  height: 100%;
+  white-space: nowrap;
+  transition: transform 0.85s cubic-bezier(0.666, 0, 0.333, 1);
+}}
+
+#home-words span.word:first-child {{
+  left: 0;
+  transform: translate(calc(50vw - 100% - 0.25ch));
+}}
+
+#home-words span.word:last-child {{
+  right: 0;
+  transform: translate(calc(-50vw + 100% + 0.25ch));
+}}
+
+#home-words.split span.word:first-child {{
+  transform: translate(clamp(20px, 6vw, 120px));
+}}
+
+#home-words.split span.word:last-child {{
+  transform: translate(clamp(-120px, -6vw, -20px));
+}}
+
+#home-words span.word span {{
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.35em);
+  transition: opacity 0.5s cubic-bezier(0.33, 1, 0.68, 1), transform 0.65s cubic-bezier(0.33, 1, 0.68, 1);
+}}
+
+#home-words.init span.word span {{
+  opacity: 1;
+  transform: translateY(0);
+}}
+
+#home-words.init span.word:first-child span:nth-child(1) {{ transition-delay: 0.05s; }}
+#home-words.init span.word:first-child span:nth-child(2) {{ transition-delay: 0.10s; }}
+#home-words.init span.word:first-child span:nth-child(3) {{ transition-delay: 0.15s; }}
+#home-words.init span.word:first-child span:nth-child(4) {{ transition-delay: 0.20s; }}
+
+#home-words.init span.word:last-child span:nth-child(1) {{ transition-delay: 0.45s; }}
+#home-words.init span.word:last-child span:nth-child(2) {{ transition-delay: 0.40s; }}
+#home-words.init span.word:last-child span:nth-child(3) {{ transition-delay: 0.35s; }}
+#home-words.init span.word:last-child span:nth-child(4) {{ transition-delay: 0.30s; }}
+#home-words.init span.word:last-child span:nth-child(5) {{ transition-delay: 0.25s; }}
+#home-words.init span.word:last-child span:nth-child(6) {{ transition-delay: 0.20s; }}
+#home-words.init span.word:last-child span:nth-child(7) {{ transition-delay: 0.15s; }}
+
+/* ==================== 3D FERRIS WHEEL (CARDS) ==================== */
+.fw-root {{
+  position: absolute;
+  top: 80px;
+  bottom: 80px;
+  left: 20px;
+  right: 20px;
+  z-index: 50;
+  touch-action: none;
+  cursor: grab;
+}}
+
+.fw-root:active {{
+  cursor: grabbing;
+}}
+
+.fw-stage {{
+  position: relative;
+  width: 100%;
+  max-width: 820px;
+  height: 100%;
+  margin: 0 auto;
+  opacity: 0;
+  transform: scale(0.5);
+  transform-origin: 50% 50%;
+  transition: opacity 1s cubic-bezier(0.33, 1, 0.68, 1), transform 1s cubic-bezier(0.33, 1, 0.68, 1);
+  will-change: transform, opacity;
+}}
+
+.fw-stage.ready {{
+  opacity: 1;
+  transform: scale(1);
+}}
+
+.fw-track {{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}}
+
+.fw-card {{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 740px;
+  aspect-ratio: 5 / 3;
+  background-color: #ffffff;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.08);
+  will-change: transform, opacity;
+  transform-style: flat;
+  backface-visibility: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.3s ease;
+}}
+
+.fw-card img {{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}}
+
+/* Card Overlay */
+.fw-card-overlay {{
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.75) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem 1.75rem;
+  color: #ffffff;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}}
+
+.fw-card.is-active .fw-card-overlay {{
+  opacity: 1;
+}}
+
+.fw-card-top {{
+  display: flex;
+  justify-content: flex-end;
+}}
+
+.fw-card-badge {{
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}}
+
+.fw-card-bottom {{
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}}
+
+.fw-card-title {{
+  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}}
+
+.fw-card-link-btn {{
+  background: #ffffff;
+  color: #121212;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease;
+}}
+
+.fw-card:hover .fw-card-link-btn {{
+  transform: scale(1.1);
+}}
+
+/* ==================== BOTTOM CONTROLS ==================== */
+#bottom-bar {{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 500;
+  pointer-events: none;
+}}
+
+.bottom-left-badge {{
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}}
+
+.live-dot {{
+  width: 7px;
+  height: 7px;
+  background-color: #10b981;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}}
+
+@keyframes pulse {{
+  0% {{ transform: scale(0.95); opacity: 0.8; }}
+  50% {{ transform: scale(1.2); opacity: 1; }}
+  100% {{ transform: scale(0.95); opacity: 0.8; }}
+}}
+
+.bottom-right-controls {{
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}}
+
+.icon-pill-btn {{
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s ease, background 0.25s ease;
+  color: var(--text-dark);
+}}
+
+.icon-pill-btn:hover {{
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.95);
+}}
+
+.icon-pill-btn svg {{
+  width: 18px;
+  height: 18px;
+}}
+
+/* ==================== GRID VIEW MODAL ==================== */
+#grid-modal {{
+  position: fixed;
+  inset: 0;
+  background-color: #ffffff;
+  z-index: 2000;
+  overflow-y: auto;
+  padding: 90px 32px 60px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}}
+
+#grid-modal.open {{
+  opacity: 1;
+  visibility: visible;
+}}
+
+.grid-header {{
+  max-width: 1300px;
+  margin: 0 auto 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}}
+
+.grid-header h2 {{
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}}
+
+.close-grid-btn {{
+  background: #121212;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}}
+
+.close-grid-btn:hover {{
+  transform: scale(1.05);
+}}
+
+.grid-cards {{
+  max-width: 1300px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 2rem;
+}}
+
+.grid-card-item {{
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}}
+
+.grid-card-thumb {{
+  width: 100%;
+  aspect-ratio: 5/3;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #eee;
+}}
+
+.grid-card-thumb img {{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}}
+
+.grid-card-item:hover .grid-card-thumb img {{
+  transform: scale(1.05);
+}}
+
+.grid-card-meta {{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}}
+
+.grid-card-title {{
+  font-weight: 700;
+  font-size: 1.15rem;
+}}
+
+.grid-card-ind {{
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}}
+
+@media (max-width: 768px) {{
+  #header-bar {{
+    height: 62px;
+    padding: 0 16px;
+  }}
+  .glass-pill {{
+    padding: 0.5rem 0.9rem;
+    font-size: 0.75rem;
+    gap: 0.45rem;
+  }}
+  .sound-btn {{
+    width: 36px;
+    height: 36px;
+  }}
+  #bottom-bar {{
+    height: 64px;
+    padding: 0 16px;
+  }}
+  .bottom-left-badge {{
+    padding: 0.4rem 0.75rem;
+    font-size: 0.72rem;
+  }}
+  .icon-pill-btn {{
+    width: 38px;
+    height: 38px;
+  }}
+  .fw-root {{
+    top: 64px;
+    bottom: 64px;
+    left: 8px;
+    right: 8px;
+  }}
+  #home-words h1 {{
+    font-size: clamp(2.5rem, 14vw, 5rem);
+  }}
+  .fw-card {{
+    max-width: min(92vw, 540px);
+    border-radius: 12px;
+  }}
+  .fw-card-overlay {{
+    padding: 1rem 1.15rem;
+  }}
+  .fw-card-title {{
+    font-size: 1.25rem;
+  }}
+  .fw-card-link-btn {{
+    width: 36px;
+    height: 36px;
+  }}
+  .grid-header {{
+    padding: 1rem 1.25rem;
+  }}
+  .grid-content {{
+    padding: 1.25rem;
+  }}
+  .grid-cards {{
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }}
+}}
+
+@media (max-width: 480px) {{
+  .bottom-left-badge {{
+    display: none;
+  }}
+  #bottom-bar {{
+    justify-content: flex-end;
+  }}
+}}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-inner">
+    <div class="loader-spinner"></div>
+    <div class="loader-brand">Buttercup Advertising Studio</div>
+  </div>
+</div>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+
+<!-- HEADER NAVIGATION -->
+<header id="header-bar">
+  <a href="index.html" class="glass-pill" id="brand-pill">
+    <div class="nav-dots"><span></span><span></span><span></span></div>
+    <span>BUTTERCUP</span>
+  </a>
+
+  <div class="header-right">
+    <button class="sound-btn" id="sound-toggle" aria-label="Toggle Sound" title="Toggle Sound">
+      <svg class="sound-icon" viewBox="0 0 24 24">
+        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+      </svg>
+    </button>
+    <a href="contact.html" class="glass-pill">
+      <span>LET'S TALK</span>
+      <span style="font-size: 1rem;">→</span>
+    </a>
+  </div>
+</header>
+
+<!-- MAIN HERO VIEW WITH 3D WHEEL -->
+<main id="home-hero">
+  <!-- Background Split Typography -->
+  <div id="home-words">
+    <h1>
+      <span class="word">
+        <span>c</span><span>a</span><span>s</span><span>e</span>
+      </span>
+      <span class="word">
+        <span>s</span><span>t</span><span>u</span><span>d</span><span>i</span><span>e</span><span>s</span>
+      </span>
+    </h1>
+  </div>
+
+  <!-- 3D Ferris Wheel Cards Container -->
+  <div class="fw-root" id="fw-root">
+    <div class="fw-stage" id="fw-stage">
+      <div class="fw-track" id="fw-track">
+        <!-- Cards generated by JS -->
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- BOTTOM BAR -->
+<footer id="bottom-bar">
+  <div class="bottom-left-badge">
+    <span class="live-dot"></span>
+    <span id="project-counter">1 / 38 CASE STUDIES</span>
+  </div>
+
+  <div class="bottom-right-controls">
+    <button class="icon-pill-btn" id="toggle-grid" title="Toggle Grid View" aria-label="Toggle Grid View">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+        <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+        <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+        <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+      </svg>
+    </button>
+    <a href="index.html" class="icon-pill-btn" title="Go to Home Page" aria-label="Go to Home Page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+    </a>
+  </div>
+</footer>
+
+<!-- GRID VIEW MODAL -->
+<section id="grid-modal">
+  <div class="grid-header">
+    <div>
+      <span style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.15em; color: #888;">Archive</span>
+      <h2>All Case Studies</h2>
+    </div>
+    <button class="close-grid-btn" id="close-grid-btn">Close Grid ✕</button>
+  </div>
+  <div class="grid-cards" id="grid-cards-container">
+    <!-- Grid items generated by JS -->
+  </div>
+</section>
+
+<!-- COMING SOON MODAL -->
+<div id="csComingSoonModal" class="cs-modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="cs-modal-container">
+    <div class="cs-modal-card">
+      <div class="cs-glow-orb cs-glow-1"></div>
+      <div class="cs-glow-orb cs-glow-2"></div>
+      <button class="cs-close-btn" id="csModalCloseBtn" aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="cs-badge">
+        <span class="cs-badge-dot"></span>
+        <span class="cs-badge-text">Case Study In Progress</span>
+      </div>
+      <h2 class="cs-title">Coming Soon</h2>
+      <div class="cs-project-heading">
+        <span class="cs-project-name" id="csProjectName">Brand Showcase</span>
+        <span class="cs-project-tag" id="csProjectCategory">Case Study</span>
+      </div>
+      <p class="cs-desc" id="csProjectDesc">
+        We are currently curating the complete strategic breakdown, packaging architecture, visual identity deliverables, and commercial ROI metrics for this brand. The comprehensive case study will be published shortly.
+      </p>
+      <div class="cs-status-box">
+        <div class="cs-status-header">
+          <span class="cs-status-label">Editorial &amp; Creative Archival</span>
+          <span class="cs-status-pct">Final Polish · 92%</span>
+        </div>
+        <div class="cs-status-track">
+          <div class="cs-status-fill"></div>
+        </div>
+      </div>
+      <div class="cs-actions">
+        <button class="cs-btn cs-btn-secondary" id="csModalSecondaryBtn">
+          Explore Other Work
+        </button>
+        <a href="contact.html" class="cs-btn cs-btn-primary" id="csModalPrimaryBtn">
+          <span>Discuss Your Project</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="js/vendor/gsap.min.js"></script>
+<script>
+// Project Data
+const projects = {projects_json};
+
+// Setup Cards in DOM
+const track = document.getElementById('fw-track');
+const gridContainer = document.getElementById('grid-cards-container');
+
+projects.forEach((p, idx) => {{
+  // Ferris Wheel Card
+  const card = document.createElement('a');
+  card.href = 'javascript:void(0);';
+  card.className = 'fw-card';
+  card.setAttribute('data-index', idx);
+  card.innerHTML = `
+    <img src="${{p.img}}" alt="${{p.name}}" loading="eager" />
+    <div class="fw-card-overlay">
+      <div class="fw-card-top">
+        <span class="fw-card-badge">${{p.industry}}</span>
+      </div>
+      <div class="fw-card-bottom">
+        <div class="fw-card-title">${{p.name}}</div>
+        <div class="fw-card-link-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="7" y1="17" x2="17" y2="7"></line>
+            <polyline points="7 7 17 7 17 17"></polyline>
+          </svg>
+        </div>
+      </div>
+    </div>
+  `;
+  card.addEventListener('click', (e) => {{
+    e.preventDefault();
+    if (dragDist > 8) return;
+    openComingSoonModal(p.name, p.industry);
+  }});
+  track.appendChild(card);
+
+  // Grid Card
+  const gridItem = document.createElement('a');
+  gridItem.href = 'javascript:void(0);';
+  gridItem.className = 'grid-card-item';
+  gridItem.innerHTML = `
+    <div class="grid-card-thumb">
+      <img src="${{p.img}}" alt="${{p.name}}" loading="lazy" />
+    </div>
+    <div class="grid-card-meta">
+      <div class="grid-card-title">${{p.name}}</div>
+      <div class="grid-card-ind">${{p.industry}}</div>
+    </div>
+  `;
+  gridItem.addEventListener('click', (e) => {{
+    e.preventDefault();
+    openComingSoonModal(p.name, p.industry);
+  }});
+  gridContainer.appendChild(gridItem);
+}});
+
+// Custom Cursor
+const cursor = document.getElementById('cursor');
+window.addEventListener('mousemove', (e) => {{
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+}});
+
+document.querySelectorAll('a, button, .fw-card').forEach(el => {{
+  el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+}});
+
+// Sound Click Effect using Web Audio
+let soundEnabled = true;
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playCardSound() {{
+  if (!soundEnabled || audioCtx.state === 'suspended') return;
+  try {{
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.04);
+    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.04);
+  }} catch(e) {{}}
+}}
+
+const soundBtn = document.getElementById('sound-toggle');
+soundBtn.addEventListener('click', () => {{
+  soundEnabled = !soundEnabled;
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  soundBtn.style.opacity = soundEnabled ? '1' : '0.4';
+}});
+
+// Grid Modal Toggle
+const gridModal = document.getElementById('grid-modal');
+const toggleGridBtn = document.getElementById('toggle-grid');
+const closeGridBtn = document.getElementById('close-grid-btn');
+
+toggleGridBtn.addEventListener('click', () => {{
+  gridModal.classList.add('open');
+}});
+
+closeGridBtn.addEventListener('click', () => {{
+  gridModal.classList.remove('open');
+}});
+
+// Coming Soon Modal Controls
+const csModal = document.getElementById('csComingSoonModal');
+const csProjectName = document.getElementById('csProjectName');
+const csProjectCategory = document.getElementById('csProjectCategory');
+const csProjectDesc = document.getElementById('csProjectDesc');
+const csCloseBtn = document.getElementById('csModalCloseBtn');
+const csSecondaryBtn = document.getElementById('csModalSecondaryBtn');
+const csModalCard = csModal ? csModal.querySelector('.cs-modal-card') : null;
+
+function openComingSoonModal(name, category) {{
+  if (csProjectName) csProjectName.textContent = name || 'Brand Showcase';
+  if (csProjectCategory) {{
+    if (category) {{
+      csProjectCategory.textContent = category;
+      csProjectCategory.style.display = 'inline-block';
+    }} else {{
+      csProjectCategory.style.display = 'none';
+    }}
+  }}
+  if (csProjectDesc) {{
+    csProjectDesc.textContent = `We are currently curating the complete strategic breakdown, visual identity deliverables, packaging architecture, and ROI results for ${{name || 'this project'}}. Check back soon for the full showcase.`;
+  }}
+  if (csModal) {{
+    csModal.classList.add('is-open');
+    csModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('cs-modal-active');
+  }}
+}}
+
+function closeComingSoonModal() {{
+  if (csModal) {{
+    csModal.classList.remove('is-open');
+    csModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('cs-modal-active');
+  }}
+}}
+
+if (csCloseBtn) csCloseBtn.addEventListener('click', closeComingSoonModal);
+if (csSecondaryBtn) csSecondaryBtn.addEventListener('click', closeComingSoonModal);
+
+if (csModal) {{
+  csModal.addEventListener('click', (e) => {{
+    if (csModalCard && !csModalCard.contains(e.target)) {{
+      closeComingSoonModal();
+    }}
+  }});
+}}
+
+// ==================== YUNGBLD FERRIS WHEEL PHYSICS ====================
+const cards = Array.from(document.querySelectorAll('.fw-card'));
+const total = cards.length;
+const n = 4; // number of steps in depth
+const speed = 0.25;
+
+// Exact curves from Yungbld:
+const curveMobile = {{ scale: [1, 0.7, 0.6, 0.5, 0.4], y: [0, 0.37, 0.61, 0.82, 1] }};
+const curveDesktop = {{ scale: [1, 0.55, 0.46, 0.37, 0.28], y: [0, 0.49, 0.68, 0.85, 1] }};
+
+let scales = [...curveDesktop.scale];
+let yOffsets = [...curveDesktop.y];
+
+let curPos = 0;
+let targetPos = 0;
+let isDragging = false;
+let startY = 0;
+let lastY = 0;
+let dragDist = 0;
+let velY = 0;
+let lastMoveTime = 0;
+let maxStackHeight = 0;
+let activeIndex = 0;
+
+const rootEl = document.getElementById('fw-root');
+const stageEl = document.getElementById('fw-stage');
+const homeWords = document.getElementById('home-words');
+const counterEl = document.getElementById('project-counter');
+
+function lerp(start, end, amt) {{
+  return start + (end - start) * amt;
+}}
+
+function getInterpolatedY(d) {{
+  const clamped = Math.min(d, n);
+  const base = Math.floor(clamped);
+  const frac = clamped - base;
+  const v1 = yOffsets[base];
+  const v2 = yOffsets[Math.min(base + 1, n)];
+  return lerp(v1, v2, frac);
+}}
+
+function getInterpolatedScale(d) {{
+  const clamped = Math.min(d, n);
+  const base = Math.floor(clamped);
+  const frac = clamped - base;
+  const v1 = scales[base];
+  const v2 = scales[Math.min(base + 1, n)];
+  return lerp(v1, v2, frac);
+}}
+
+function wrapIndex(e) {{
+  let val = (e % total + total) % total;
+  if (val > total / 2) val -= total;
+  return val;
+}}
+
+function updateResponsive() {{
+  const isMobile = window.innerWidth < 768;
+  scales = isMobile ? [...curveMobile.scale] : [...curveDesktop.scale];
+  yOffsets = isMobile ? [...curveMobile.y] : [...curveDesktop.y];
+  
+  const rootH = rootEl.clientHeight || window.innerHeight - 160;
+  const cardH = (cards[0] ? cards[0].offsetHeight : 440) || 440;
+  const scaledCardH = cardH * scales[n];
+  maxStackHeight = Math.max(0, (rootH - scaledCardH) / 2);
+}}
+
+function render(p) {{
+  const normActive = (Math.round(p) % total + total) % total;
+  if (normActive !== activeIndex) {{
+    activeIndex = normActive;
+    counterEl.textContent = `${{activeIndex + 1}} / ${{total}} CASE STUDIES`;
+    playCardSound();
+  }}
+
+  const activeWrap = (p % total + total) % total;
+
+  for (let i = 0; i < total; i++) {{
+    const d = wrapIndex(i - activeWrap);
+    const absD = Math.abs(d);
+
+    if (absD > n + 1) {{
+      cards[i].style.visibility = 'hidden';
+      cards[i].classList.remove('is-active');
+      continue;
+    }}
+
+    const normFraction = Math.max(0, Math.min(1, Math.min(absD, n) / n));
+    const yFactor = getInterpolatedY(absD);
+    const yPos = (Math.sign(d) || 1) * yFactor * maxStackHeight;
+    const cardScale = getInterpolatedScale(absD);
+    
+    let zIdx = Math.round((1 - normFraction) * 100);
+    if (absD > n) zIdx -= Math.round((absD - n) * 100);
+
+    cards[i].style.visibility = 'visible';
+    cards[i].style.zIndex = zIdx;
+    cards[i].style.transform = `translate(-50%, calc(-50% + ${{yPos}}px)) scale(${{cardScale}})`;
+
+    if (absD < 0.4) {{
+      cards[i].classList.add('is-active');
+    }} else {{
+      cards[i].classList.remove('is-active');
+    }}
+  }}
+}}
+
+function animate() {{
+  if (!isDragging) {{
+    curPos = lerp(curPos, targetPos, 0.12);
+    if (Math.abs(targetPos - curPos) < 0.0005) {{
+      curPos = targetPos;
+    }}
+  }}
+  render(curPos);
+  requestAnimationFrame(animate);
+}}
+
+// Wheel Scroll Listener
+window.addEventListener('wheel', (e) => {{
+  if (gridModal.classList.contains('open') || (csModal && csModal.classList.contains('is-open'))) return;
+  e.preventDefault();
+  targetPos += e.deltaY * 0.003 * speed * 2;
+}}, {{ passive: false }});
+
+// Touch & Mouse Drag Listeners
+rootEl.addEventListener('pointerdown', (e) => {{
+  if (gridModal.classList.contains('open') || (csModal && csModal.classList.contains('is-open'))) return;
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  isDragging = true;
+  startY = e.clientY;
+  lastY = e.clientY;
+  dragDist = 0;
+  velY = 0;
+  lastMoveTime = performance.now();
+}});
+
+window.addEventListener('pointermove', (e) => {{
+  if (!isDragging) return;
+  const delta = e.clientY - lastY;
+  const now = performance.now();
+  const dt = Math.max(1, now - lastMoveTime);
+  velY = delta / dt;
+  lastMoveTime = now;
+  lastY = e.clientY;
+  dragDist += Math.abs(delta);
+
+  const sensitivity = 0.004;
+  curPos -= delta * sensitivity;
+  targetPos = curPos;
+}});
+
+window.addEventListener('pointerup', (e) => {{
+  if (!isDragging) return;
+  isDragging = false;
+  targetPos = Math.round(curPos - velY * 30);
+}});
+
+// Arrow & Escape Keys
+window.addEventListener('keydown', (e) => {{
+  if (e.key === 'Escape') {{
+    if (csModal && csModal.classList.contains('is-open')) {{
+      closeComingSoonModal();
+      return;
+    }}
+    if (gridModal.classList.contains('open')) {{
+      gridModal.classList.remove('open');
+      return;
+    }}
+  }}
+  if (gridModal.classList.contains('open') || (csModal && csModal.classList.contains('is-open'))) return;
+  if (e.key === 'ArrowUp') {{
+    targetPos = Math.round(targetPos) - 1;
+  }} else if (e.key === 'ArrowDown') {{
+    targetPos = Math.round(targetPos) + 1;
+  }}
+}});
+
+window.addEventListener('resize', () => {{
+  updateResponsive();
+  render(curPos);
+}});
+
+// Intro Sequence
+window.addEventListener('DOMContentLoaded', () => {{
+  updateResponsive();
+  render(0);
+
+  // 1. Hide Loader
+  setTimeout(() => {{
+    document.getElementById('loader').classList.add('loaded');
+    
+    // 2. Letters Reveal
+    setTimeout(() => {{
+      homeWords.classList.add('init');
+
+      // 3. Split Words & Fade in 3D Stack
+      setTimeout(() => {{
+        homeWords.classList.add('split');
+        stageEl.classList.add('ready');
+
+        // Animate cards wheel entry
+        const introAnim = {{ p: total - 1 }};
+        gsap.to(introAnim, {{
+          p: 0,
+          duration: 1.4,
+          ease: 'power3.inOut',
+          onUpdate: () => {{
+            targetPos = introAnim.p;
+            curPos = introAnim.p;
+            render(curPos);
+          }}
+        }});
+      }}, 500);
+    }}, 200);
+  }}, 400);
+
+  animate();
+}});
+</script>
+</body>
+</html>
+'''
+
+out_path = os.path.join(ROOT, 'case-studies.html')
+with open(out_path, 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+out_work = os.path.join(ROOT, 'work.html')
+with open(out_work, 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print('Generated case-studies.html and work.html successfully! File size:', len(html_content), 'bytes')
