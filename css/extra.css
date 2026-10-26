@@ -2922,10 +2922,20 @@ body.cs-modal-active .project-cursor-wrp {
    15. MOBILE NAVBAR PLUS (+) BUTTON & FULL-SCREEN NAVIGATION (<= 991px)
    ========================================================================== */
 @media screen and (max-width: 991px) {
-    /* Prevent Hero Video bleeding down into About section on mobile */
+    /* Allow Hero Video to travel visibly into the white space above Delivered More on mobile */
     .section.is-hero {
         position: relative !important;
-        overflow: hidden !important;
+        overflow: visible !important;
+    }
+
+    .hero-video-wrp {
+        position: relative !important;
+        overflow: visible !important;
+        z-index: 5 !important;
+    }
+
+    .hero-video {
+        z-index: 5 !important;
     }
 
     .navbar-wrapper {

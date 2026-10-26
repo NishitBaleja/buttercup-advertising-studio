@@ -120,18 +120,32 @@ document.addEventListener("DOMContentLoaded", () => {
             { width: "110%", y: "110vh", ease: "none", duration: 0.5 }, 0);
         });
 
-        // Mobile & Tablet (< 992px): video scales in-place inside hero, does NOT bleed into about section
-        mm.add("(max-width: 991px)", () => {
+        // Tablet (768px - 991px): video moves down into the white space above 'Delivered More'
+        mm.add("(min-width: 768px) and (max-width: 991px)", () => {
           gsap.timeline({
             scrollTrigger: {
               trigger: heroSection,
-              start: "clamp(20% 35%)",
-              end: "clamp(75% top)",
+              start: "top top",
+              end: "bottom top",
               scrub: 0.8
             }
           }).fromTo(heroVideo,
-            { width: "70%", y: "0vh" },
-            { width: "95%", y: "0vh", ease: "none", duration: 0.5 }, 0);
+            { width: "65%", y: "0vh" },
+            { width: "88%", y: "40vh", ease: "none", duration: 0.5 }, 0);
+        });
+
+        // Mobile (<= 767px): video travels smoothly from BAS down into the white blank space right above 'Delivered More'
+        mm.add("(max-width: 767px)", () => {
+          gsap.timeline({
+            scrollTrigger: {
+              trigger: heroSection,
+              start: "top top",
+              end: "bottom top",
+              scrub: 0.8
+            }
+          }).fromTo(heroVideo,
+            { width: "68%", y: "0vh" },
+            { width: "90%", y: "34vh", ease: "none", duration: 0.5 }, 0);
         });
       }
 
