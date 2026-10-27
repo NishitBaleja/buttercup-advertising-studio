@@ -158,7 +158,7 @@ html, body {{
   -webkit-user-select: none;
 }}
 
-/* Desktop custom cursor hides system cursor on interactive areas */
+/* Desktop custom cursor replaces system cursor seamlessly */
 @media (hover: hover) and (pointer: fine) {{
   html, body, #em-viewport, #em-stage, .em-card, .em-card-link, button, a {{
     cursor: none !important;
@@ -227,38 +227,40 @@ html, body {{
   height: 52%;
   pointer-events: none;
   z-index: 2;
-  perspective: 700px;
   overflow: hidden;
-  mask-image: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, transparent 100%);
+  perspective: 700px;
 }}
 
 .em-floor-grid {{
   position: absolute;
   bottom: -20%;
-  left: -20%;
-  width: 140%;
+  left: -50%;
+  width: 200%;
   height: 140%;
-  background-size: 60px 60px;
   background-image: 
-    linear-gradient(to right, rgba(144, 71, 255, 0.12) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(144, 71, 255, 0.12) 1px, transparent 1px);
-  transform: rotateX(72deg);
-  transform-origin: 50% 100%;
+    linear-gradient(rgba(144, 71, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(144, 71, 255, 0.12) 1px, transparent 1px);
+  background-size: 64px 64px;
+  transform: rotateX(78deg);
+  transform-origin: 50% 0%;
+  mask-image: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 80%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 80%);
 }}
 
+/* Vivid Neon Ground Ring directly under Cards */
 .em-floor-ring {{
   position: absolute;
-  top: 45%;
+  top: 18%;
   left: 50%;
-  transform: translate(-50%, -50%) rotateX(75deg);
-  width: 1800px;
-  height: 1800px;
+  width: min(1500px, 92vw);
+  height: 480px;
+  transform: translate(-50%, -50%) rotateX(78deg);
   border-radius: 50%;
-  border: 1px solid rgba(144, 71, 255, 0.22);
+  border: 2px solid rgba(175, 105, 255, 0.7);
   box-shadow: 
-    0 0 60px rgba(144, 71, 255, 0.25),
-    inset 0 0 60px rgba(144, 71, 255, 0.15);
+    0 0 35px rgba(144, 71, 255, 0.65),
+    0 0 80px rgba(144, 71, 255, 0.35),
+    inset 0 0 40px rgba(144, 71, 255, 0.45);
   pointer-events: none;
 }}
 
@@ -536,7 +538,7 @@ body.is-dragging .em-card-link,
   box-shadow: 
     0 0 22px rgba(144, 71, 255, 0.4),
     0 18px 45px rgba(0, 0, 0, 0.85);
-  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
 }}
 
 .em-card.is-active .em-card-inner {{
@@ -694,21 +696,24 @@ body.is-dragging .em-card-link,
   color: var(--em-neon-cyan);
 }}
 
-/* Real-time Floor Reflection for 3D realism */
+/* ==========================================================================
+   REAL-TIME FLOOR REFLECTION (Crisp, High-Fidelity Mirror)
+   ========================================================================== */
+
 .em-card-reflection {{
   position: absolute;
   top: 100%;
   left: 0;
   width: 100%;
-  height: 70%;
-  margin-top: 14px;
+  height: 55%;
+  margin-top: 10px;
+  pointer-events: none;
   transform: scaleY(-1);
   transform-origin: 50% 0%;
-  pointer-events: none;
-  opacity: 0.45;
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
-  filter: blur(3px) brightness(0.7);
+  opacity: 0.55;
+  filter: blur(1.2px);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.38) 50%, transparent 95%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.38) 50%, transparent 95%);
 }}
 
 .em-reflection-inner {{
@@ -717,18 +722,33 @@ body.is-dragging .em-card-link,
   height: 100%;
   border-radius: 22px;
   overflow: hidden;
+  border: 1.5px solid rgba(165, 85, 255, 0.5);
+  box-shadow: 0 0 18px rgba(144, 71, 255, 0.35);
+}}
+
+.em-card.is-active .em-reflection-inner {{
+  border-color: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 0 28px rgba(144, 71, 255, 0.65);
 }}
 
 .em-reflection-img {{
   width: 100%;
-  height: 100%;
+  height: var(--em-card-h);
   object-fit: cover;
+  display: block;
 }}
 
 .em-reflection-mask {{
   position: absolute;
   inset: 0;
-  background: rgba(7, 5, 13, 0.5);
+  background: linear-gradient(to top, rgba(7, 5, 13, 0.15) 0%, rgba(7, 5, 13, 0.65) 100%);
+}}
+
+.em-reflection-border {{
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  pointer-events: none;
 }}
 
 /* ==========================================================================
@@ -1065,7 +1085,7 @@ body.is-dragging .em-card-link,
 }}
 
 /* ==========================================================================
-   EMOTION AGENCY CUSTOM CURSOR EFFECT
+   FEATHER-LIGHT EMOTION AGENCY CUSTOM CURSOR
    ========================================================================== */
 
 .em-cursor {{
@@ -1077,7 +1097,7 @@ body.is-dragging .em-card-link,
   pointer-events: none;
   z-index: 999999;
   opacity: 0;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.2s ease;
   will-change: transform;
 }}
 
@@ -1085,36 +1105,35 @@ body.is-dragging .em-card-link,
   opacity: 1;
 }}
 
-/* Precise Center Dot */
+/* Precise Center Dot (Zero-Latency GPU Positioned) */
 .em-cursor-dot {{
   position: absolute;
   top: 0;
   left: 0;
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   background: #ffffff;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px #ffffff, 0 0 18px var(--em-primary);
-  transition: transform 0.15s ease, opacity 0.2s ease;
-  will-change: transform, opacity;
+  box-shadow: 0 0 8px #ffffff, 0 0 16px var(--em-primary);
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  will-change: transform;
 }}
 
-/* Smooth Spring Follower Ring / Morphing Pill */
+/* Agile Follower Ring / Morphing Pill (NO transform in transition to prevent lag!) */
 .em-cursor-ring {{
   position: absolute;
   top: 0;
   left: 0;
-  width: 36px;
-  height: 36px;
-  margin-left: -18px;
-  margin-top: -18px;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  margin-top: -16px;
   border-radius: 9999px;
-  border: 1.5px solid rgba(165, 85, 255, 0.7);
+  border: 1px solid rgba(175, 105, 255, 0.8);
   background: rgba(144, 71, 255, 0.08);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  box-shadow: 0 0 20px rgba(144, 71, 255, 0.4);
+  box-shadow: 0 0 16px rgba(144, 71, 255, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1126,14 +1145,14 @@ body.is-dragging .em-card-link,
   letter-spacing: 0.12em;
   text-transform: uppercase;
   overflow: hidden;
-  transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-              height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-              margin 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.25s ease,
-              border-color 0.25s ease,
-              box-shadow 0.25s ease,
-              transform 0.15s ease;
-  will-change: width, height, margin, transform;
+  pointer-events: none;
+  transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              margin 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.2s ease,
+              border-color 0.2s ease,
+              box-shadow 0.2s ease;
+  will-change: transform, width, height, margin;
 }}
 
 .em-cursor-label,
@@ -1141,7 +1160,7 @@ body.is-dragging .em-card-link,
   display: inline-block;
   opacity: 0;
   transform: scale(0.6);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.15s ease, transform 0.15s ease;
   white-space: nowrap;
   pointer-events: none;
 }}
@@ -1153,19 +1172,16 @@ body.is-dragging .em-card-link,
 /* State: Hovering Blog Card (Expands to Pill "EXPLORE ↗") */
 .em-cursor.is-hovering-card .em-cursor-dot {{
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0.1);
 }}
 
 .em-cursor.is-hovering-card .em-cursor-ring {{
-  width: 124px;
-  height: 40px;
-  margin-left: -62px;
-  margin-top: -20px;
+  width: 114px;
+  height: 36px;
+  margin-left: -57px;
+  margin-top: -18px;
   background: rgba(18, 10, 36, 0.88);
   border-color: rgba(210, 150, 255, 0.95);
-  box-shadow: 0 0 32px rgba(144, 71, 255, 0.7), 0 10px 25px rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 0 25px rgba(144, 71, 255, 0.65), 0 8px 20px rgba(0, 0, 0, 0.6);
 }}
 
 .em-cursor.is-hovering-card .em-cursor-label,
@@ -1177,17 +1193,16 @@ body.is-dragging .em-card-link,
 /* State: Hovering Buttons / Links (Scales up glass circle) */
 .em-cursor.is-hovering-btn .em-cursor-dot {{
   opacity: 0.3;
-  transform: translate(-50%, -50%) scale(1.4);
 }}
 
 .em-cursor.is-hovering-btn .em-cursor-ring {{
-  width: 48px;
-  height: 48px;
-  margin-left: -24px;
-  margin-top: -24px;
+  width: 44px;
+  height: 44px;
+  margin-left: -22px;
+  margin-top: -22px;
   background: rgba(92, 225, 230, 0.12);
   border-color: rgba(92, 225, 230, 0.85);
-  box-shadow: 0 0 22px rgba(92, 225, 230, 0.45);
+  box-shadow: 0 0 20px rgba(92, 225, 230, 0.4);
 }}
 
 /* State: Dragging Carousel Stage */
@@ -1196,13 +1211,13 @@ body.is-dragging .em-card-link,
 }}
 
 .em-cursor.is-dragging-stage .em-cursor-ring {{
-  width: 90px;
-  height: 36px;
-  margin-left: -45px;
-  margin-top: -18px;
+  width: 84px;
+  height: 32px;
+  margin-left: -42px;
+  margin-top: -16px;
   background: rgba(25, 12, 50, 0.92);
   border-color: var(--em-primary);
-  box-shadow: 0 0 32px var(--em-primary-glow);
+  box-shadow: 0 0 28px var(--em-primary-glow);
 }}
 
 .em-cursor.is-dragging-stage .em-cursor-label {{
@@ -1216,7 +1231,7 @@ body.is-dragging .em-card-link,
 
 /* State: Clicking / Press Pulse */
 .em-cursor.is-clicking .em-cursor-ring {{
-  transform: scale(0.88);
+  transform: scale(0.9);
 }}
 
 /* Hide completely on mobile/touch screens */
@@ -1249,7 +1264,7 @@ body.is-dragging .em-card-link,
   <!-- Perspective Ceiling Grid -->
   <div class="em-ceiling-grid" aria-hidden="true"></div>
 
-  <!-- Perspective Floor Surface & Neon Ring -->
+  <!-- Perspective Floor Surface & Vivid Neon Ground Ring -->
   <div class="em-floor-layer" aria-hidden="true">
     <div class="em-floor-grid"></div>
     <div class="em-floor-ring"></div>
@@ -1514,22 +1529,22 @@ window.__BLOGS_DATA__ = {blogs_json_str};
   let lastReportedIdx = activeIndex;
 
   function render() {{
-    // Apply inertia decay only when dragging has ended
+    // Apply inertia decay after dragging release
     if (!isDragging) {{
       if (Math.abs(velocity) > 0.001) {{
         targetAngle += velocity;
-        velocity *= 0.86; // Quick, controlled damping
+        velocity *= 0.88;
       }} else {{
         velocity = 0;
       }}
     }}
 
-    // Lerp rotation smoothly
+    // Responsive, silky smooth lerp (0.12 gives agile, effortless motion)
     const diff = targetAngle - currentAngle;
-    currentAngle += diff * 0.088;
+    currentAngle += diff * 0.12;
 
     // Banking tilt when rotating fast
-    const tilt = Math.max(-5, Math.min(5, diff * 0.28));
+    const tilt = Math.max(-5, Math.min(5, diff * 0.25));
 
     track.style.transform = `translateZ(${{-radius}}px) rotateX(${{-tilt * 0.4}}deg) rotateY(${{currentAngle}}deg) rotateZ(${{tilt * 0.2}}deg)`;
 
@@ -1544,19 +1559,19 @@ window.__BLOGS_DATA__ = {blogs_json_str};
       playClickSound();
     }}
 
-    // Lerp custom cursor ring smoothly
+    // Feather-light, instant-response cursor lerp (0.35 spring lerp, zero lag)
     if (isCursorVisible) {{
-      cursorRingX += (targetCursorX - cursorRingX) * 0.18;
-      cursorRingY += (targetCursorY - cursorRingY) * 0.18;
-      cursorDot.style.transform = `translate(${{targetCursorX}}px, ${{targetCursorY}}px) translate(-50%, -50%)`;
-      cursorRing.style.transform = `translate(${{cursorRingX}}px, ${{cursorRingY}}px)`;
+      cursorRingX += (targetCursorX - cursorRingX) * 0.35;
+      cursorRingY += (targetCursorY - cursorRingY) * 0.35;
+      cursorDot.style.transform = `translate3d(${{targetCursorX}}px, ${{targetCursorY}}px, 0) translate(-50%, -50%)`;
+      cursorRing.style.transform = `translate3d(${{cursorRingX}}px, ${{cursorRingY}}px, 0)`;
     }}
 
     requestAnimationFrame(render);
   }}
 
   // ==========================================================================
-  // CUSTOM CURSOR ENGINE (EMOTION AGENCY STYLE)
+  // CUSTOM CURSOR ENGINE (Lightweight, Feather-Smooth)
   // ==========================================================================
   const cursorWrap = document.getElementById('em-cursor');
   const cursorDot = document.getElementById('em-cursor-dot');
@@ -1667,12 +1682,12 @@ window.__BLOGS_DATA__ = {blogs_json_str};
     const deltaX = e.clientX - lastX;
     const dt = Math.max(1, now - lastTime);
 
-    // Controlled rotational speed
-    const factor = (360 / (radius * 2 * Math.PI)) * 1.35;
+    // Agile rotational responsiveness
+    const factor = (360 / (radius * 2 * Math.PI)) * 1.4;
     targetAngle += deltaX * factor;
 
-    velocity = (deltaX / dt) * 5 * factor;
-    velocity = Math.max(-3.5, Math.min(3.5, velocity));
+    velocity = (deltaX / dt) * 6 * factor;
+    velocity = Math.max(-4, Math.min(4, velocity));
 
     lastX = e.clientX;
     lastTime = now;
@@ -1701,10 +1716,9 @@ window.__BLOGS_DATA__ = {blogs_json_str};
   stage.addEventListener('pointercancel', endDrag);
 
   // ==========================================================================
-  // WHEEL SCROLL (Gentle, Smooth, Non-Compounding Rotation)
+  // WHEEL SCROLL (Fluid, Effortless, Soft & Natural)
   // ==========================================================================
   window.addEventListener('wheel', (e) => {{
-    // Don't intercept wheel if inside filter drawer
     if (e.target.closest('.em-filter-drawer')) return;
     
     if (!hasInteracted) {{
@@ -1718,23 +1732,23 @@ window.__BLOGS_DATA__ = {blogs_json_str};
     // Pick dominant axis
     const rawDelta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
     
-    // Normalize delta across browsers
-    let normDelta = rawDelta;
-    if (e.deltaMode === 1) normDelta *= 16;
-    else if (e.deltaMode === 2) normDelta *= 60;
+    // Normalize delta across input devices
+    let delta = rawDelta;
+    if (e.deltaMode === 1) delta *= 20;
+    else if (e.deltaMode === 2) delta *= 80;
 
-    // Strict clamp per event to avoid hyperspeed spinning
-    const clamped = Math.max(-24, Math.min(24, normDelta));
+    // Soft, responsive clamping (allows fluid, effortless glide without runaway spin)
+    const clamped = Math.max(-50, Math.min(50, delta));
 
-    // Zero out old momentum so wheel turns cleanly
+    // Reset previous drag velocity so wheel takes over cleanly
     velocity = 0;
 
-    // Gentle displacement: ~0.7 degrees per event
-    targetAngle -= clamped * 0.038;
+    // 0.09 factor: gentle swipe (~80-120 delta) moves comfortably to next card
+    targetAngle -= clamped * 0.09;
 
-    // Debounce snap to nearest card
+    // Debounce snap (240ms gives natural gesture completion)
     clearTimeout(window.__wheelSnapTimeout);
-    window.__wheelSnapTimeout = setTimeout(snapToNearest, 180);
+    window.__wheelSnapTimeout = setTimeout(snapToNearest, 240);
   }}, {{ passive: false }});
 
   // ==========================================================================
