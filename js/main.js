@@ -405,13 +405,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // 4B. PROJECT CATEGORY ROUTING FALLBACK
   // =========================================================================
   const currentPath = window.location.pathname.toLowerCase();
-  if (currentPath.includes("work.html") || currentPath.endsWith("/work")) {
+  if (currentPath.includes("work")) {
     const urlParams = new URLSearchParams(window.location.search);
     const cat = (urlParams.get("category") || "").toLowerCase();
+    const isInsidePagesWork = currentPath.includes("/pages/work");
     if (cat === "product") {
-      window.location.replace("product-base.html");
+      window.location.replace(isInsidePagesWork ? "../industries/product-base/index.html" : "pages/industries/product-base/index.html");
     } else if (cat === "service") {
-      window.location.replace("service-base.html");
+      window.location.replace(isInsidePagesWork ? "../industries/service-base/index.html" : "pages/industries/service-base/index.html");
     }
   }
 
@@ -1116,8 +1117,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // 12. CASE STUDY "COMING SOON" MODAL & CLICK INTERCEPTOR
   // =========================================================================
   function initCaseStudyComingSoon() {
-    const isInsideProjectsFolder = window.location.pathname.includes("/projects/");
-    const contactUrl = isInsideProjectsFolder ? "../contact.html" : "contact.html";
+    const pPath = window.location.pathname;
+    let contactUrl = "pages/contact/index.html";
+    if (pPath.includes("/projects/") || pPath.includes("/blogs/") || pPath.includes("/utilities/")) {
+      contactUrl = "../pages/contact/index.html";
+    } else if (pPath.includes("/pages/services/") || pPath.includes("/pages/industries/")) {
+      contactUrl = "../../contact/index.html";
+    } else if (pPath.includes("/pages/")) {
+      contactUrl = "../contact/index.html";
+    }
 
     // 1. Update project hover cursor text to 'COMING SOON'
     const projectCursorInner = document.querySelectorAll(".view-project-cursor");
@@ -1223,8 +1231,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (closeBtn) closeBtn.addEventListener("click", closeModal);
     if (secondaryBtn) {
       secondaryBtn.addEventListener("click", () => {
-        if (isInsideProjectsFolder) {
-          window.location.href = "../case-studies.html";
+        if (window.location.pathname.includes("/projects/")) {
+          window.location.href = "../pages/case-studies/index.html";
         } else {
           closeModal();
         }
@@ -1309,7 +1317,7 @@ document.addEventListener("DOMContentLoaded", () => {
         banner.innerHTML = `
           <span class="cs-banner-badge">Coming Soon</span>
           <span>We are actively curating and mastering the strategic assets for <strong>${pageHeading}</strong>. Full case study will be published soon.</span>
-          <a href="../case-studies.html">← Explore All Work</a>
+          <a href="../pages/case-studies/index.html">← Explore All Work</a>
         `;
         document.body.prepend(banner);
 

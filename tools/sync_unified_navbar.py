@@ -103,24 +103,13 @@ def update_file(filepath, prefix=""):
     print(f"Updated {filepath} (replaced {len(old_nav)} bytes with {len(new_nav)} bytes)")
     return True
 
-# 1. Update Root pages
-root_pages = [
-    'about.html',
-    'contact.html',
-    'brand-strategy.html',
-    'visual-identity.html',
-    'marketing-communication.html',
-    'product-base.html',
-    'service-base.html',
-    'work-classic.html',
-    'blogs.html',
-    '404.html'
-]
-
-for p in root_pages:
-    fpath = os.path.join(ROOT, p)
-    if os.path.exists(fpath):
-        update_file(fpath, prefix="")
+# 1. Update pages/ directory
+pages_pattern = os.path.join(ROOT, 'pages', '**', '*.html')
+for fpath in glob.glob(pages_pattern, recursive=True):
+    rel = os.path.relpath(fpath, ROOT)
+    depth = rel.count('/')
+    prefix = '../' * depth
+    update_file(fpath, prefix=prefix)
 
 # 2. Update blogs/
 blog_files = glob.glob(os.path.join(ROOT, 'blogs', '*.html'))
