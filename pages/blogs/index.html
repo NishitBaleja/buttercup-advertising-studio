@@ -77,6 +77,13 @@ html, body {
   -webkit-user-select: none;
 }
 
+/* Desktop custom cursor hides system cursor on interactive areas */
+@media (hover: hover) and (pointer: fine) {
+  html, body, #em-viewport, #em-stage, .em-card, .em-card-link, button, a {
+    cursor: none !important;
+  }
+}
+
 /* Deep Cosmic Container */
 .em-viewport {
   position: fixed;
@@ -119,18 +126,18 @@ html, body {
   content: "";
   position: absolute;
   top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
+  left: -20%;
+  width: 140%;
+  height: 150%;
+  background-size: 50px 50px;
   background-image: 
-    linear-gradient(rgba(144, 71, 255, 0.22) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(144, 71, 255, 0.22) 1px, transparent 1px);
-  background-size: 64px 64px;
-  transform: rotateX(75deg);
-  transform-origin: 50% 100%;
+    linear-gradient(to right, rgba(144, 71, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(144, 71, 255, 0.08) 1px, transparent 1px);
+  transform: rotateX(65deg);
+  transform-origin: 50% 0%;
 }
 
-/* Floor Surface & Glow Ring */
+/* Perspective Floor Surface with Reflections */
 .em-floor-layer {
   position: absolute;
   bottom: 0;
@@ -139,64 +146,58 @@ html, body {
   height: 52%;
   pointer-events: none;
   z-index: 2;
-  overflow: hidden;
   perspective: 700px;
+  overflow: hidden;
+  mask-image: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, transparent 100%);
 }
 
 .em-floor-grid {
   position: absolute;
   bottom: -20%;
-  left: -50%;
-  width: 200%;
+  left: -20%;
+  width: 140%;
   height: 140%;
+  background-size: 60px 60px;
   background-image: 
-    linear-gradient(rgba(144, 71, 255, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(144, 71, 255, 0.12) 1px, transparent 1px);
-  background-size: 64px 64px;
-  transform: rotateX(78deg);
-  transform-origin: 50% 0%;
-  mask-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 80%);
-  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 80%);
+    linear-gradient(to right, rgba(144, 71, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(144, 71, 255, 0.12) 1px, transparent 1px);
+  transform: rotateX(72deg);
+  transform-origin: 50% 100%;
 }
 
-/* Neon Ground Ring under Cards */
 .em-floor-ring {
   position: absolute;
-  top: 18%;
+  top: 45%;
   left: 50%;
-  width: min(1500px, 92vw);
-  height: 480px;
-  transform: translate(-50%, -50%) rotateX(78deg);
+  transform: translate(-50%, -50%) rotateX(75deg);
+  width: 1800px;
+  height: 1800px;
   border-radius: 50%;
-  border: 2px solid rgba(175, 105, 255, 0.7);
+  border: 1px solid rgba(144, 71, 255, 0.22);
   box-shadow: 
-    0 0 35px rgba(144, 71, 255, 0.65),
-    0 0 80px rgba(144, 71, 255, 0.35),
-    inset 0 0 40px rgba(144, 71, 255, 0.45);
+    0 0 60px rgba(144, 71, 255, 0.25),
+    inset 0 0 60px rgba(144, 71, 255, 0.15);
   pointer-events: none;
 }
 
 /* ==========================================================================
-   TOP NAVIGATION BAR (FUTURISTIC DARK THEME)
+   HEADER NAVIGATION
    ========================================================================== */
 
 .em-header {
   position: relative;
-  z-index: 50;
-  width: 100%;
-  padding: 1.25rem 2.5rem;
+  z-index: 100;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  background: rgba(7, 5, 13, 0.6);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  justify-content: space-between;
+  padding: 1.5rem 3rem;
+  width: 100%;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .em-header {
-    padding: 1rem 1.25rem;
+    padding: 1rem 1.5rem;
   }
 }
 
@@ -207,28 +208,32 @@ html, body {
   text-decoration: none;
   color: var(--em-white);
   font-family: var(--font-sans);
+  font-weight: 700;
   font-size: 0.95rem;
-  font-weight: 600;
   letter-spacing: -0.01em;
+  transition: opacity 0.3s ease;
+}
+
+.em-logo:hover {
+  opacity: 0.85;
 }
 
 .em-logo-dot {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
   background: var(--em-primary);
-  box-shadow: 0 0 10px var(--em-primary);
-  display: inline-block;
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--em-primary-glow);
 }
 
 .em-nav-menu {
   display: flex;
   align-items: center;
-  gap: 1.8rem;
+  gap: 2.2rem;
   list-style: none;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 900px) {
   .em-nav-menu {
     display: none;
   }
@@ -238,66 +243,22 @@ html, body {
   position: relative;
 }
 
-.em-nav-dropdown {
-  position: absolute;
-  top: calc(100% + 12px);
-  left: 50%;
-  transform: translateX(-50%) translateY(6px);
-  background: rgba(14, 10, 24, 0.96);
-  border: 1px solid rgba(175, 105, 255, 0.35);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(144, 71, 255, 0.25);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 14px;
-  padding: 0.5rem;
-  min-width: 210px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease, transform 0.25s ease;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.em-nav-item:hover .em-nav-dropdown {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
-}
-
-.em-dropdown-link {
-  display: block;
-  padding: 0.55rem 0.95rem;
-  color: rgba(255, 255, 255, 0.78);
-  text-decoration: none;
-  font-family: var(--font-sans);
-  font-size: 0.82rem;
-  font-weight: 500;
-  border-radius: 9px;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.em-dropdown-link:hover {
-  background: rgba(144, 71, 255, 0.28);
-  color: #ffffff;
-}
-
 .em-nav-link {
-  color: var(--em-text-muted);
   text-decoration: none;
-  font-size: 0.82rem;
+  color: var(--em-text-muted);
   font-family: var(--font-mono);
+  font-size: 0.75rem;
   font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  position: relative;
-  padding: 0.35rem 0;
   transition: color 0.3s ease;
+  padding: 0.5rem 0;
+  display: inline-block;
+  position: relative;
 }
 
-.em-nav-link:hover, .em-nav-link.is-active {
+.em-nav-link:hover,
+.em-nav-link.is-active {
   color: var(--em-white);
 }
 
@@ -309,7 +270,56 @@ html, body {
   width: 100%;
   height: 2px;
   background: var(--em-primary);
-  box-shadow: 0 0 8px var(--em-primary);
+  box-shadow: 0 0 8px var(--em-primary-glow);
+}
+
+/* Navbar Dropdowns for Services & Industry */
+.em-nav-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: rgba(14, 9, 28, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(144, 71, 255, 0.25);
+  border-radius: 12px;
+  padding: 0.6rem 0.5rem;
+  min-width: 200px;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.6), 0 0 25px rgba(144,71,255,0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  z-index: 150;
+}
+
+.em-nav-item:hover .em-nav-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.em-dropdown-link {
+  display: block;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: #ccc;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.em-dropdown-link:hover {
+  background: rgba(144, 71, 255, 0.2);
+  color: var(--em-white);
+  transform: translateX(3px);
 }
 
 .em-header-actions {
@@ -325,7 +335,6 @@ html, body {
   gap: 3px;
   background: transparent;
   border: none;
-  cursor: pointer;
   padding: 0.5rem;
   color: var(--em-white);
 }
@@ -392,11 +401,7 @@ html, body {
   perspective-origin: 50% 46%;
   overflow: visible;
   z-index: 10;
-  cursor: grab;
-}
-
-.em-stage.is-dragging {
-  cursor: grabbing;
+  touch-action: pan-y;
 }
 
 .em-carousel-track {
@@ -420,8 +425,23 @@ html, body {
   margin-top: calc(var(--em-card-h) / -2);
   transform-style: preserve-3d;
   will-change: transform, opacity;
-  cursor: pointer;
   outline: none;
+}
+
+/* Clickable card link */
+.em-card-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  outline: none;
+}
+
+/* When actively dragging, prevent link accidental activation */
+body.is-dragging .em-card-link,
+.em-stage.is-dragging .em-card-link {
+  pointer-events: none;
 }
 
 .em-card-inner {
@@ -439,25 +459,23 @@ html, body {
 }
 
 .em-card.is-active .em-card-inner {
-  border-color: rgba(200, 140, 255, 0.95);
+  border-color: #ffffff;
   box-shadow: 
-    0 0 35px rgba(175, 105, 255, 0.8),
-    0 0 70px rgba(144, 71, 255, 0.45),
-    inset 0 0 20px rgba(144, 71, 255, 0.35),
-    0 24px 60px rgba(0, 0, 0, 0.95);
+    0 0 35px rgba(255, 255, 255, 0.8),
+    0 0 65px var(--em-primary-glow),
+    0 25px 60px rgba(0, 0, 0, 0.95);
+  transform: scale(1.035);
 }
 
-.em-card:hover .em-card-inner {
-  border-color: rgba(220, 170, 255, 1);
+.em-card-inner:hover {
+  border-color: rgba(220, 180, 255, 0.95);
   box-shadow: 
-    0 0 40px rgba(185, 115, 255, 0.9),
-    0 0 80px rgba(144, 71, 255, 0.55),
-    0 25px 65px rgba(0, 0, 0, 0.95);
+    0 0 30px rgba(144, 71, 255, 0.7),
+    0 20px 50px rgba(0, 0, 0, 0.9);
 }
 
 .em-card-media {
-  position: absolute;
-  inset: 0;
+  position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -467,145 +485,149 @@ html, body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
-  transform: scale(1.02);
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+  object-position: center;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+  filter: contrast(1.08) brightness(0.92);
+  pointer-events: none;
 }
 
 .em-card:hover .em-card-img {
-  transform: scale(1.08);
+  transform: scale(1.06);
+  filter: contrast(1.15) brightness(1.02);
+}
+
+/* Scanline and CRT subtle effect */
+.em-card-scanline {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.3));
+  background-size: 100% 4px;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+.em-card-glitch-layer {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, transparent 40%, rgba(7, 5, 13, 0.85) 100%);
+  pointer-events: none;
 }
 
 .em-card-vignette {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(7, 5, 13, 0.3) 0%,
-    transparent 35%,
-    rgba(7, 5, 13, 0.75) 75%,
-    rgba(7, 5, 13, 0.95) 100%
-  );
+  background: linear-gradient(to top, rgba(7, 5, 13, 0.96) 0%, rgba(7, 5, 13, 0.6) 45%, transparent 100%);
   pointer-events: none;
 }
 
-/* Cybernetic Scanlines */
-.em-card-scanline {
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 3px,
-    rgba(255, 255, 255, 0.03) 3px,
-    rgba(255, 255, 255, 0.03) 4px
-  );
-  pointer-events: none;
-  opacity: 0.6;
-}
-
-/* Card Top Badge */
+/* Floating Badges */
 .em-card-badge {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
-  right: 1rem;
+  top: 1.1rem;
+  left: 1.1rem;
+  right: 1.1rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   z-index: 3;
 }
 
 .em-tag {
+  background: rgba(144, 71, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  padding: 0.32rem 0.75rem;
+  border-radius: 9999px;
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding: 0.28rem 0.65rem;
-  border-radius: 9999px;
-  background: rgba(144, 71, 255, 0.4);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(8px);
+  color: var(--em-white);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 
 .em-time {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  color: rgba(255, 255, 255, 0.75);
-  background: rgba(0, 0, 0, 0.4);
-  padding: 0.25rem 0.5rem;
-  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(8px);
+  padding: 0.3rem 0.65rem;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: #c4c6db;
 }
 
-/* Card Bottom Info */
+/* Card Info / Bottom Overlay */
 .em-card-info {
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 0;
-  padding: 1.25rem 1.2rem;
+  width: 100%;
+  padding: 1.5rem 1.4rem;
   z-index: 3;
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.5rem;
 }
 
 .em-card-num {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  font-weight: 600;
   color: var(--em-primary);
-  letter-spacing: 0.05em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
 }
 
 .em-card-title {
   font-family: var(--font-sans);
   font-size: 1.05rem;
   font-weight: 700;
-  line-height: 1.28;
+  line-height: 1.3;
   color: var(--em-white);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.8);
 }
 
 .em-card-action {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  font-size: 0.75rem;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 0.3rem;
-  transition: color 0.3s ease, transform 0.3s ease;
+  color: #dedeff;
+  opacity: 0.85;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .em-card:hover .em-card-action {
+  opacity: 1;
+  transform: translateX(4px);
   color: var(--em-neon-cyan);
-  transform: translateX(3px);
 }
 
-/* Floor Reflection of Card */
+/* Real-time Floor Reflection for 3D realism */
 .em-card-reflection {
   position: absolute;
   top: 100%;
   left: 0;
   width: 100%;
-  height: 55%;
-  margin-top: 10px;
-  pointer-events: none;
+  height: 70%;
+  margin-top: 14px;
   transform: scaleY(-1);
+  transform-origin: 50% 0%;
+  pointer-events: none;
   opacity: 0.45;
-  filter: blur(1.5px);
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, transparent 95%);
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, transparent 95%);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+  filter: blur(3px) brightness(0.7);
 }
 
 .em-reflection-inner {
@@ -618,29 +640,33 @@ html, body {
 
 .em-reflection-img {
   width: 100%;
-  height: var(--em-card-h);
+  height: 100%;
   object-fit: cover;
-  display: block;
+}
+
+.em-reflection-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 5, 13, 0.5);
 }
 
 /* ==========================================================================
-   DYNAMIC BOTTOM-LEFT HEADLINE
+   DYNAMIC BOTTOM-LEFT ACTIVE ARTICLE HEADLINE
    ========================================================================== */
 
 .em-headline-panel {
   position: fixed;
-  bottom: 2.2rem;
+  bottom: 2.5rem;
   left: 3rem;
-  max-width: 460px;
-  z-index: 25;
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  max-width: 440px;
+  z-index: 50;
+  pointer-events: auto;
 }
 
 @media (max-width: 1024px) {
   .em-headline-panel {
-    bottom: 8.5rem;
     left: 1.5rem;
+    bottom: 5.5rem;
     max-width: 320px;
   }
 }
@@ -654,11 +680,11 @@ html, body {
 .em-headline-meta {
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
+  font-weight: 500;
   letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--em-primary);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -666,177 +692,186 @@ html, body {
 
 .em-headline-title {
   font-family: var(--font-serif);
-  font-size: clamp(1.8rem, 3.2vw, 2.9rem);
+  font-size: 2.3rem;
   font-weight: 400;
   line-height: 1.1;
   color: var(--em-white);
   letter-spacing: -0.02em;
-  margin-bottom: 0.65rem;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
-}
-
-.em-headline-desc {
-  font-size: 0.85rem;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.7rem;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.8);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-bottom: 0.9rem;
+}
+
+.em-headline-desc {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--em-text-muted);
+  margin-bottom: 1.1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .em-headline-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--em-white);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  pointer-events: auto;
-  padding: 0.5rem 1rem;
+  gap: 0.6rem;
+  padding: 0.65rem 1.4rem;
   border-radius: 9999px;
-  background: rgba(144, 71, 255, 0.2);
-  border: 1px solid rgba(144, 71, 255, 0.45);
-  backdrop-filter: blur(8px);
-  transition: all 0.25s ease;
+  background: var(--em-primary);
+  color: var(--em-white);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 0 25px var(--em-primary-glow);
+  transition: all 0.3s ease;
 }
 
 .em-headline-btn:hover {
-  background: var(--em-primary);
-  border-color: var(--em-primary);
-  box-shadow: 0 0 16px var(--em-primary-glow);
-  transform: translateY(-1px);
+  background: #ffffff;
+  color: #07050d;
+  box-shadow: 0 0 35px rgba(255, 255, 255, 0.8);
+  transform: translateY(-2px);
 }
 
 /* ==========================================================================
-   BOTTOM CENTER CONTROLS (FILTER PILL + SCRUBBER PAGINATION)
+   BOTTOM CENTER CONTROLS: FILTER PILL & SCRUBBER BAR
    ========================================================================== */
 
 .em-bottom-controls {
   position: fixed;
-  bottom: 1.4rem;
+  bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.85rem;
-  z-index: 30;
-  pointer-events: auto;
+  gap: 1rem;
+  z-index: 50;
 }
 
 @media (max-width: 640px) {
   .em-bottom-controls {
-    bottom: 1rem;
+    bottom: 1.5rem;
     width: 90%;
   }
 }
 
-/* Filter Pill Button */
+/* Frosted Glass Filter Pill Button */
 .em-filter-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.65rem 1.5rem;
+  gap: 0.65rem;
+  padding: 0.7rem 1.6rem;
   border-radius: 9999px;
-  background: linear-gradient(90deg, rgba(45, 37, 125, 0.65) 0%, rgba(142, 45, 226, 0.65) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: var(--em-white);
   font-family: var(--font-sans);
-  font-size: 0.84rem;
-  font-weight: 500;
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(144, 71, 255, 0.35);
-  transition: all 0.3s ease;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--em-white);
+  background: linear-gradient(135deg, rgba(65, 30, 130, 0.65) 0%, rgba(144, 71, 255, 0.45) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(144, 71, 255, 0.35);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.em-filter-pill:hover, .em-filter-pill.is-open {
-  border-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 6px 28px rgba(144, 71, 255, 0.6);
-  transform: translateY(-1px);
+.em-filter-pill:hover,
+.em-filter-pill.is-open {
+  background: linear-gradient(135deg, rgba(144, 71, 255, 0.8) 0%, rgba(200, 130, 255, 0.6) 100%);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 
+    0 10px 35px rgba(0, 0, 0, 0.6),
+    0 0 35px var(--em-primary-glow);
+  transform: translateY(-2px);
 }
 
 .em-filter-icon {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
+  color: var(--em-neon-cyan);
 }
 
-/* Filter Popover Drawer */
+/* Filter Drawer / Popover Menu */
 .em-filter-drawer {
   position: absolute;
-  bottom: calc(100% + 10px);
+  bottom: calc(100% + 14px);
   left: 50%;
-  transform: translateX(-50%) translateY(8px);
-  background: rgba(14, 10, 24, 0.88);
-  border: 1px solid rgba(175, 105, 255, 0.35);
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.75), 0 0 30px rgba(144, 71, 255, 0.25);
+  transform: translateX(-50%) translateY(15px);
+  background: rgba(14, 9, 28, 0.95);
+  border: 1px solid rgba(144, 71, 255, 0.35);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-radius: 1.25rem;
-  padding: 0.5rem;
+  border-radius: 20px;
+  padding: 1rem 0.8rem;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  min-width: 240px;
+  gap: 0.35rem;
+  min-width: 250px;
+  max-height: 380px;
+  overflow-y: auto;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  visibility: hidden;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(144, 71, 255, 0.3);
+  z-index: 100;
 }
 
 .em-filter-drawer.is-open {
   opacity: 1;
   pointer-events: auto;
+  visibility: visible;
   transform: translateX(-50%) translateY(0);
 }
 
 .em-filter-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0.65rem 1rem;
-  border-radius: 0.85rem;
+  justify-content: space-between;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.75);
+  color: #dedeff;
   font-family: var(--font-sans);
   font-size: 0.82rem;
   font-weight: 500;
-  cursor: pointer;
+  text-align: left;
   transition: all 0.2s ease;
-  width: 100%;
 }
 
-.em-filter-item:hover, .em-filter-item.is-active {
-  background: rgba(144, 71, 255, 0.28);
+.em-filter-item:hover {
+  background: rgba(144, 71, 255, 0.2);
   color: var(--em-white);
 }
 
-.em-filter-item .em-count {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--em-primary);
-  background: rgba(144, 71, 255, 0.2);
-  padding: 0.15rem 0.45rem;
-  border-radius: 9999px;
+.em-filter-item.is-active {
+  background: var(--em-primary);
+  color: var(--em-white);
+  box-shadow: 0 0 15px var(--em-primary-glow);
 }
 
-/* Draggable Scrubber Bar */
+.em-count {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+/* Draggable Scrubber Pagination */
 .em-scrubber-wrap {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  padding: 0.4rem 0.75rem;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 0.8rem;
 }
 
 .em-counter {
@@ -844,129 +879,95 @@ html, body {
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--em-text-muted);
   min-width: 2ch;
-  text-align: center;
 }
 
 .em-counter-current {
   color: var(--em-white);
 }
 
-.em-counter-total {
-  color: rgba(255, 255, 255, 0.5);
-}
-
 .em-scrubber-ticks {
   display: flex;
   align-items: center;
-  gap: 3px;
-  padding: 0 0.25rem;
+  gap: 4px;
+  padding: 0.5rem 0.4rem;
 }
 
 .em-scrubber-tick {
-  background: transparent;
+  background: none;
   border: none;
-  cursor: pointer;
-  padding: 4px 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  outline: none;
-  transition: transform 0.2s ease;
+  padding: 4px 1px;
 }
 
 .em-tick-bar {
+  display: block;
   width: 2px;
-  height: 10px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 1px;
-  transition: all 0.25s ease;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 2px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .em-scrubber-tick:hover .em-tick-bar {
-  background: rgba(255, 255, 255, 0.85);
-  height: 14px;
+  background: rgba(255, 255, 255, 0.8);
+  height: 16px;
 }
 
 .em-scrubber-tick.is-active .em-tick-bar {
-  background: transparent;
-  border: 1.5px solid var(--em-white);
-  border-radius: 3px;
-  width: 12px;
+  width: 10px;
   height: 16px;
-  box-shadow: 0 0 10px var(--em-primary);
+  background: transparent;
+  border: 1.5px solid var(--em-primary);
+  border-radius: 4px;
+  box-shadow: 0 0 10px var(--em-primary-glow);
 }
 
-/* ==========================================================================
-   BOTTOM RIGHT IRIDESCENT AI / AUDIO ORB
-   ========================================================================== */
-
+/* Iridescent 3D Orb Bottom Right */
 .em-orb-toggle {
   position: fixed;
   bottom: 2rem;
   right: 2.5rem;
-  width: 52px;
-  height: 52px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
-  z-index: 30;
-  cursor: pointer;
   background: transparent;
   border: none;
-  padding: 0;
-  outline: none;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
 }
 
-@media (max-width: 768px) {
-  .em-orb-toggle {
-    bottom: 1.25rem;
-    right: 1.25rem;
-    width: 44px;
-    height: 44px;
-  }
+.em-orb-toggle:hover {
+  transform: scale(1.12);
 }
 
 .em-orb-canvas {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  display: block;
-  box-shadow: 
-    0 0 25px rgba(144, 71, 255, 0.7),
-    0 0 50px rgba(92, 225, 230, 0.35);
-  animation: em-orb-breathe 4s ease-in-out infinite alternate;
-  transition: transform 0.3s ease;
+  filter: drop-shadow(0 0 20px rgba(144, 71, 255, 0.7));
 }
 
-.em-orb-toggle:hover .em-orb-canvas {
-  transform: scale(1.12);
-  box-shadow: 
-    0 0 35px rgba(185, 115, 255, 0.9),
-    0 0 70px rgba(92, 225, 230, 0.5);
-}
-
-@keyframes em-orb-breathe {
-  0% { transform: scale(0.96); }
-  100% { transform: scale(1.04); }
-}
-
-/* Drag Hint for First-time Viewers */
+/* Drag Instruction Hint Overlay */
 .em-drag-hint {
   position: absolute;
-  top: 72%;
+  top: 78%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
   pointer-events: none;
   z-index: 15;
-  transition: opacity 0.6s ease;
+  transition: opacity 0.5s ease;
 }
 
 .em-drag-hint.is-hidden {
@@ -981,9 +982,183 @@ html, body {
   0% { transform: translateX(-4px); }
   100% { transform: translateX(4px); }
 }
+
+/* ==========================================================================
+   EMOTION AGENCY CUSTOM CURSOR EFFECT
+   ========================================================================== */
+
+.em-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 999999;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  will-change: transform;
+}
+
+.em-cursor.is-visible {
+  opacity: 1;
+}
+
+/* Precise Center Dot */
+.em-cursor-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  background: #ffffff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px #ffffff, 0 0 18px var(--em-primary);
+  transition: transform 0.15s ease, opacity 0.2s ease;
+  will-change: transform, opacity;
+}
+
+/* Smooth Spring Follower Ring / Morphing Pill */
+.em-cursor-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  margin-left: -18px;
+  margin-top: -18px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(165, 85, 255, 0.7);
+  background: rgba(144, 71, 255, 0.08);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 0 20px rgba(144, 71, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: var(--em-white);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  overflow: hidden;
+  transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              margin 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.25s ease,
+              border-color 0.25s ease,
+              box-shadow 0.25s ease,
+              transform 0.15s ease;
+  will-change: width, height, margin, transform;
+}
+
+.em-cursor-label,
+.em-cursor-arrow {
+  display: inline-block;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.em-cursor-arrow {
+  color: var(--em-neon-cyan);
+}
+
+/* State: Hovering Blog Card (Expands to Pill "EXPLORE ↗") */
+.em-cursor.is-hovering-card .em-cursor-dot {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.1);
+}
+
+.em-cursor.is-hovering-card .em-cursor-ring {
+  width: 124px;
+  height: 40px;
+  margin-left: -62px;
+  margin-top: -20px;
+  background: rgba(18, 10, 36, 0.88);
+  border-color: rgba(210, 150, 255, 0.95);
+  box-shadow: 0 0 32px rgba(144, 71, 255, 0.7), 0 10px 25px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.em-cursor.is-hovering-card .em-cursor-label,
+.em-cursor.is-hovering-card .em-cursor-arrow {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* State: Hovering Buttons / Links (Scales up glass circle) */
+.em-cursor.is-hovering-btn .em-cursor-dot {
+  opacity: 0.3;
+  transform: translate(-50%, -50%) scale(1.4);
+}
+
+.em-cursor.is-hovering-btn .em-cursor-ring {
+  width: 48px;
+  height: 48px;
+  margin-left: -24px;
+  margin-top: -24px;
+  background: rgba(92, 225, 230, 0.12);
+  border-color: rgba(92, 225, 230, 0.85);
+  box-shadow: 0 0 22px rgba(92, 225, 230, 0.45);
+}
+
+/* State: Dragging Carousel Stage */
+.em-cursor.is-dragging-stage .em-cursor-dot {
+  opacity: 0;
+}
+
+.em-cursor.is-dragging-stage .em-cursor-ring {
+  width: 90px;
+  height: 36px;
+  margin-left: -45px;
+  margin-top: -18px;
+  background: rgba(25, 12, 50, 0.92);
+  border-color: var(--em-primary);
+  box-shadow: 0 0 32px var(--em-primary-glow);
+}
+
+.em-cursor.is-dragging-stage .em-cursor-label {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.em-cursor.is-dragging-stage .em-cursor-arrow {
+  display: none;
+}
+
+/* State: Clicking / Press Pulse */
+.em-cursor.is-clicking .em-cursor-ring {
+  transform: scale(0.88);
+}
+
+/* Hide completely on mobile/touch screens */
+@media (hover: none) or (pointer: coarse) {
+  .em-cursor {
+    display: none !important;
+  }
+}
 </style>
 </head>
 <body data-page="blogs">
+
+<!-- Emotion Agency Custom Cursor -->
+<div class="em-cursor" id="em-cursor" aria-hidden="true">
+  <div class="em-cursor-dot" id="em-cursor-dot"></div>
+  <div class="em-cursor-ring" id="em-cursor-ring">
+    <span class="em-cursor-label" id="em-cursor-label">EXPLORE</span>
+    <svg class="em-cursor-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <line x1="7" y1="17" x2="17" y2="7"></line>
+      <polyline points="7 7 17 7 17 17"></polyline>
+    </svg>
+  </div>
+</div>
 
 <div class="em-viewport" id="em-viewport">
   
@@ -1049,39 +1224,41 @@ html, body {
   </header>
 
   <!-- 3D CAROUSEL STAGE -->
-  <main class="em-stage" id="em-stage" aria-label="3D Cylindrical Blogs Carousel">
+  <main class="em-stage" id="em-stage" aria-label="Interactive 3D Carousel of Articles">
     <div class="em-carousel-track" id="em-track">
       
         <!-- Card 01 -->
-        <div class="em-card" data-index="0" data-slug="brand-positioning-strategy-guide" data-category="Brand Strategy" tabindex="0" role="button" aria-label="The Modern Brand Positioning Playbook: Winning Heart Share in 2026">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-1.jpg" alt="The Modern Brand Positioning Playbook: Winning Heart Share in 2026" loading="eager" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Brand Strategy</span>
-              <span class="em-time">6 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">01</div>
-              <h3 class="em-card-title">The Modern Brand Positioning Playbook: Winning Heart Share in 2026</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="0" data-slug="brand-positioning-strategy-guide" data-category="Brand Strategy">
+          <a href="../../blogs/brand-positioning-strategy-guide.html" class="em-card-link" aria-label="The Modern Brand Positioning Playbook: Winning Heart Share in 2026" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-1.jpg" alt="The Modern Brand Positioning Playbook: Winning Heart Share in 2026" loading="eager" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Brand Strategy</span>
+                <span class="em-time">6 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">01</div>
+                <h3 class="em-card-title">The Modern Brand Positioning Playbook: Winning Heart Share in 2026</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-1.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-1.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1090,35 +1267,37 @@ html, body {
     
 
         <!-- Card 02 -->
-        <div class="em-card" data-index="1" data-slug="psychology-of-packaging-design" data-category="Packaging Design" tabindex="0" role="button" aria-label="The Psychology of Packaging Design: How to Win the 3-Second Shelf Battle">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-2.jpg" alt="The Psychology of Packaging Design: How to Win the 3-Second Shelf Battle" loading="eager" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Packaging Design</span>
-              <span class="em-time">5 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">02</div>
-              <h3 class="em-card-title">The Psychology of Packaging Design: How to Win the 3-Second Shelf Battle</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="1" data-slug="psychology-of-packaging-design" data-category="Packaging Design">
+          <a href="../../blogs/psychology-of-packaging-design.html" class="em-card-link" aria-label="The Psychology of Packaging Design: How to Win the 3-Second Shelf Battle" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-2.jpg" alt="The Psychology of Packaging Design: How to Win the 3-Second Shelf Battle" loading="eager" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Packaging Design</span>
+                <span class="em-time">5 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">02</div>
+                <h3 class="em-card-title">The Psychology of Packaging Design: How to Win the 3-Second Shelf Battle</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-2.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-2.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1127,35 +1306,37 @@ html, body {
     
 
         <!-- Card 03 -->
-        <div class="em-card" data-index="2" data-slug="typography-in-branding-perception" data-category="Visual Identity" tabindex="0" role="button" aria-label="Typography as a Voice: How Custom Letterforms Define Brand Authority">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-3.jpg" alt="Typography as a Voice: How Custom Letterforms Define Brand Authority" loading="eager" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Visual Identity</span>
-              <span class="em-time">7 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">03</div>
-              <h3 class="em-card-title">Typography as a Voice: How Custom Letterforms Define Brand Authority</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="2" data-slug="typography-in-branding-perception" data-category="Visual Identity">
+          <a href="../../blogs/typography-in-branding-perception.html" class="em-card-link" aria-label="Typography as a Voice: How Custom Letterforms Define Brand Authority" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-3.jpg" alt="Typography as a Voice: How Custom Letterforms Define Brand Authority" loading="eager" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Visual Identity</span>
+                <span class="em-time">7 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">03</div>
+                <h3 class="em-card-title">Typography as a Voice: How Custom Letterforms Define Brand Authority</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-3.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-3.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1164,35 +1345,37 @@ html, body {
     
 
         <!-- Card 04 -->
-        <div class="em-card" data-index="3" data-slug="creative-campaign-direction-roi" data-category="Marketing Campaigns" tabindex="0" role="button" aria-label="Creative Campaign Direction: Blending Human Intelligence with Commercial ROI">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-4.jpg" alt="Creative Campaign Direction: Blending Human Intelligence with Commercial ROI" loading="eager" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Marketing Campaigns</span>
-              <span class="em-time">6 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">04</div>
-              <h3 class="em-card-title">Creative Campaign Direction: Blending Human Intelligence with Commercial ROI</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="3" data-slug="creative-campaign-direction-roi" data-category="Marketing Campaigns">
+          <a href="../../blogs/creative-campaign-direction-roi.html" class="em-card-link" aria-label="Creative Campaign Direction: Blending Human Intelligence with Commercial ROI" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-4.jpg" alt="Creative Campaign Direction: Blending Human Intelligence with Commercial ROI" loading="eager" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Marketing Campaigns</span>
+                <span class="em-time">6 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">04</div>
+                <h3 class="em-card-title">Creative Campaign Direction: Blending Human Intelligence with Commercial ROI</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-4.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-4.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1201,35 +1384,37 @@ html, body {
     
 
         <!-- Card 05 -->
-        <div class="em-card" data-index="4" data-slug="brand-storytelling-narrative-frameworks" data-category="Brand Strategy" tabindex="0" role="button" aria-label="Storytelling That Converts: Crafting a Signature Narrative That Sticks">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-5.jpg" alt="Storytelling That Converts: Crafting a Signature Narrative That Sticks" loading="eager" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Brand Strategy</span>
-              <span class="em-time">5 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">05</div>
-              <h3 class="em-card-title">Storytelling That Converts: Crafting a Signature Narrative That Sticks</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="4" data-slug="brand-storytelling-narrative-frameworks" data-category="Brand Strategy">
+          <a href="../../blogs/brand-storytelling-narrative-frameworks.html" class="em-card-link" aria-label="Storytelling That Converts: Crafting a Signature Narrative That Sticks" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-5.jpg" alt="Storytelling That Converts: Crafting a Signature Narrative That Sticks" loading="eager" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Brand Strategy</span>
+                <span class="em-time">5 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">05</div>
+                <h3 class="em-card-title">Storytelling That Converts: Crafting a Signature Narrative That Sticks</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-5.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-5.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1238,35 +1423,37 @@ html, body {
     
 
         <!-- Card 06 -->
-        <div class="em-card" data-index="5" data-slug="color-theory-for-luxury-brands" data-category="Visual Identity" tabindex="0" role="button" aria-label="Color Theory for Luxury Brands: Crafting Scarcity and Distinction">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-6.jpg" alt="Color Theory for Luxury Brands: Crafting Scarcity and Distinction" loading="eager" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Visual Identity</span>
-              <span class="em-time">5 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">06</div>
-              <h3 class="em-card-title">Color Theory for Luxury Brands: Crafting Scarcity and Distinction</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="5" data-slug="color-theory-for-luxury-brands" data-category="Visual Identity">
+          <a href="../../blogs/color-theory-for-luxury-brands.html" class="em-card-link" aria-label="Color Theory for Luxury Brands: Crafting Scarcity and Distinction" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-6.jpg" alt="Color Theory for Luxury Brands: Crafting Scarcity and Distinction" loading="eager" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Visual Identity</span>
+                <span class="em-time">5 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">06</div>
+                <h3 class="em-card-title">Color Theory for Luxury Brands: Crafting Scarcity and Distinction</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-6.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-6.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1275,35 +1462,37 @@ html, body {
     
 
         <!-- Card 07 -->
-        <div class="em-card" data-index="6" data-slug="fmcg-brand-strategy-differentiation" data-category="Packaging Design" tabindex="0" role="button" aria-label="How FMCG Challengers Cut Through Grocery Noise and Dominate Retail">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-7.jpg" alt="How FMCG Challengers Cut Through Grocery Noise and Dominate Retail" loading="lazy" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Packaging Design</span>
-              <span class="em-time">8 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">07</div>
-              <h3 class="em-card-title">How FMCG Challengers Cut Through Grocery Noise and Dominate Retail</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="6" data-slug="fmcg-brand-strategy-differentiation" data-category="Packaging Design">
+          <a href="../../blogs/fmcg-brand-strategy-differentiation.html" class="em-card-link" aria-label="How FMCG Challengers Cut Through Grocery Noise and Dominate Retail" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-7.jpg" alt="How FMCG Challengers Cut Through Grocery Noise and Dominate Retail" loading="lazy" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Packaging Design</span>
+                <span class="em-time">8 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">07</div>
+                <h3 class="em-card-title">How FMCG Challengers Cut Through Grocery Noise and Dominate Retail</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-7.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-7.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1312,35 +1501,37 @@ html, body {
     
 
         <!-- Card 08 -->
-        <div class="em-card" data-index="7" data-slug="b2b-industrial-branding-secrets" data-category="Brand Strategy" tabindex="0" role="button" aria-label="The New Era of B2B Branding: Why Industrial Giants Need Emotion Too">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-8.jpg" alt="The New Era of B2B Branding: Why Industrial Giants Need Emotion Too" loading="lazy" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Brand Strategy</span>
-              <span class="em-time">6 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">08</div>
-              <h3 class="em-card-title">The New Era of B2B Branding: Why Industrial Giants Need Emotion Too</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="7" data-slug="b2b-industrial-branding-secrets" data-category="Brand Strategy">
+          <a href="../../blogs/b2b-industrial-branding-secrets.html" class="em-card-link" aria-label="The New Era of B2B Branding: Why Industrial Giants Need Emotion Too" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-8.jpg" alt="The New Era of B2B Branding: Why Industrial Giants Need Emotion Too" loading="lazy" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Brand Strategy</span>
+                <span class="em-time">6 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">08</div>
+                <h3 class="em-card-title">The New Era of B2B Branding: Why Industrial Giants Need Emotion Too</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-8.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-8.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1349,35 +1540,37 @@ html, body {
     
 
         <!-- Card 09 -->
-        <div class="em-card" data-index="8" data-slug="web-design-development-insights" data-category="Brand Strategy" tabindex="0" role="button" aria-label="The 10 Commandments of Proper Branding for Visionary Founders">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-9.jpg" alt="The 10 Commandments of Proper Branding for Visionary Founders" loading="lazy" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Brand Strategy</span>
-              <span class="em-time">7 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">09</div>
-              <h3 class="em-card-title">The 10 Commandments of Proper Branding for Visionary Founders</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="8" data-slug="web-design-development-insights" data-category="Brand Strategy">
+          <a href="../../blogs/web-design-development-insights.html" class="em-card-link" aria-label="The 10 Commandments of Proper Branding for Visionary Founders" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-9.jpg" alt="The 10 Commandments of Proper Branding for Visionary Founders" loading="lazy" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Brand Strategy</span>
+                <span class="em-time">7 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">09</div>
+                <h3 class="em-card-title">The 10 Commandments of Proper Branding for Visionary Founders</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-9.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-9.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1386,35 +1579,37 @@ html, body {
     
 
         <!-- Card 10 -->
-        <div class="em-card" data-index="9" data-slug="the-digital-craft-journal" data-category="Brand Strategy" tabindex="0" role="button" aria-label="Core Branding Tips That Define Internal Culture and Drive Team Alignment">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-10.jpg" alt="Core Branding Tips That Define Internal Culture and Drive Team Alignment" loading="lazy" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Brand Strategy</span>
-              <span class="em-time">6 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">10</div>
-              <h3 class="em-card-title">Core Branding Tips That Define Internal Culture and Drive Team Alignment</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="9" data-slug="the-digital-craft-journal" data-category="Brand Strategy">
+          <a href="../../blogs/the-digital-craft-journal.html" class="em-card-link" aria-label="Core Branding Tips That Define Internal Culture and Drive Team Alignment" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-10.jpg" alt="Core Branding Tips That Define Internal Culture and Drive Team Alignment" loading="lazy" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Brand Strategy</span>
+                <span class="em-time">6 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">10</div>
+                <h3 class="em-card-title">Core Branding Tips That Define Internal Culture and Drive Team Alignment</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-10.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-10.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1423,35 +1618,37 @@ html, body {
     
 
         <!-- Card 11 -->
-        <div class="em-card" data-index="10" data-slug="interface-code-chronicles" data-category="Visual Identity" tabindex="0" role="button" aria-label="The Enduring Power of Print: Why Bespoke Brochures Close Multi-Million Deals">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-11.jpg" alt="The Enduring Power of Print: Why Bespoke Brochures Close Multi-Million Deals" loading="lazy" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Visual Identity</span>
-              <span class="em-time">5 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">11</div>
-              <h3 class="em-card-title">The Enduring Power of Print: Why Bespoke Brochures Close Multi-Million Deals</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="10" data-slug="interface-code-chronicles" data-category="Visual Identity">
+          <a href="../../blogs/interface-code-chronicles.html" class="em-card-link" aria-label="The Enduring Power of Print: Why Bespoke Brochures Close Multi-Million Deals" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-11.jpg" alt="The Enduring Power of Print: Why Bespoke Brochures Close Multi-Million Deals" loading="lazy" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Visual Identity</span>
+                <span class="em-time">5 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">11</div>
+                <h3 class="em-card-title">The Enduring Power of Print: Why Bespoke Brochures Close Multi-Million Deals</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-11.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-11.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1460,35 +1657,37 @@ html, body {
     
 
         <!-- Card 12 -->
-        <div class="em-card" data-index="11" data-slug="creative-web-development-notes" data-category="Brand Strategy" tabindex="0" role="button" aria-label="Is It Necessary to Hire a Professional Branding Agency? The Truth About ROI">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-12.jpg" alt="Is It Necessary to Hire a Professional Branding Agency? The Truth About ROI" loading="lazy" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Brand Strategy</span>
-              <span class="em-time">7 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">12</div>
-              <h3 class="em-card-title">Is It Necessary to Hire a Professional Branding Agency? The Truth About ROI</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="11" data-slug="creative-web-development-notes" data-category="Brand Strategy">
+          <a href="../../blogs/creative-web-development-notes.html" class="em-card-link" aria-label="Is It Necessary to Hire a Professional Branding Agency? The Truth About ROI" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-12.jpg" alt="Is It Necessary to Hire a Professional Branding Agency? The Truth About ROI" loading="lazy" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Brand Strategy</span>
+                <span class="em-time">7 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">12</div>
+                <h3 class="em-card-title">Is It Necessary to Hire a Professional Branding Agency? The Truth About ROI</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-12.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-12.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1497,35 +1696,37 @@ html, body {
     
 
         <!-- Card 13 -->
-        <div class="em-card" data-index="12" data-slug="why-rebranding-fails-and-how-to-succeed" data-category="Brand Strategy" tabindex="0" role="button" aria-label="Why Most Rebrands Fail (And How to Protect Your Brand Equity)">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-13.jpg" alt="Why Most Rebrands Fail (And How to Protect Your Brand Equity)" loading="lazy" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Brand Strategy</span>
-              <span class="em-time">6 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">13</div>
-              <h3 class="em-card-title">Why Most Rebrands Fail (And How to Protect Your Brand Equity)</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="12" data-slug="why-rebranding-fails-and-how-to-succeed" data-category="Brand Strategy">
+          <a href="../../blogs/why-rebranding-fails-and-how-to-succeed.html" class="em-card-link" aria-label="Why Most Rebrands Fail (And How to Protect Your Brand Equity)" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-13.jpg" alt="Why Most Rebrands Fail (And How to Protect Your Brand Equity)" loading="lazy" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Brand Strategy</span>
+                <span class="em-time">6 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">13</div>
+                <h3 class="em-card-title">Why Most Rebrands Fail (And How to Protect Your Brand Equity)</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-13.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-13.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1534,35 +1735,37 @@ html, body {
     
 
         <!-- Card 14 -->
-        <div class="em-card" data-index="13" data-slug="building-functional-brand-guidelines" data-category="Visual Identity" tabindex="0" role="button" aria-label="Building Living Brand Guidelines: Moving Beyond Static PDF Stylebooks">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-14.jpg" alt="Building Living Brand Guidelines: Moving Beyond Static PDF Stylebooks" loading="lazy" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Visual Identity</span>
-              <span class="em-time">6 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">14</div>
-              <h3 class="em-card-title">Building Living Brand Guidelines: Moving Beyond Static PDF Stylebooks</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="13" data-slug="building-functional-brand-guidelines" data-category="Visual Identity">
+          <a href="../../blogs/building-functional-brand-guidelines.html" class="em-card-link" aria-label="Building Living Brand Guidelines: Moving Beyond Static PDF Stylebooks" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-14.jpg" alt="Building Living Brand Guidelines: Moving Beyond Static PDF Stylebooks" loading="lazy" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Visual Identity</span>
+                <span class="em-time">6 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">14</div>
+                <h3 class="em-card-title">Building Living Brand Guidelines: Moving Beyond Static PDF Stylebooks</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-14.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-14.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1571,35 +1774,37 @@ html, body {
     
 
         <!-- Card 15 -->
-        <div class="em-card" data-index="14" data-slug="omnichannel-visual-consistency-revenue" data-category="Marketing Campaigns" tabindex="0" role="button" aria-label="Visual Consistency Across Touchpoints: The Secret Compounding Engine of Revenue">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-15.jpg" alt="Visual Consistency Across Touchpoints: The Secret Compounding Engine of Revenue" loading="lazy" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Marketing Campaigns</span>
-              <span class="em-time">5 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">15</div>
-              <h3 class="em-card-title">Visual Consistency Across Touchpoints: The Secret Compounding Engine of Revenue</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="14" data-slug="omnichannel-visual-consistency-revenue" data-category="Marketing Campaigns">
+          <a href="../../blogs/omnichannel-visual-consistency-revenue.html" class="em-card-link" aria-label="Visual Consistency Across Touchpoints: The Secret Compounding Engine of Revenue" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-15.jpg" alt="Visual Consistency Across Touchpoints: The Secret Compounding Engine of Revenue" loading="lazy" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Marketing Campaigns</span>
+                <span class="em-time">5 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">15</div>
+                <h3 class="em-card-title">Visual Consistency Across Touchpoints: The Secret Compounding Engine of Revenue</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-15.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-15.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1608,35 +1813,37 @@ html, body {
     
 
         <!-- Card 16 -->
-        <div class="em-card" data-index="15" data-slug="power-of-brand-voice-tone-copywriting" data-category="Marketing Campaigns" tabindex="0" role="button" aria-label="Commanding Brand Voice: Crafting Words That Resonate and Convert">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-16.jpg" alt="Commanding Brand Voice: Crafting Words That Resonate and Convert" loading="lazy" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Marketing Campaigns</span>
-              <span class="em-time">5 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">16</div>
-              <h3 class="em-card-title">Commanding Brand Voice: Crafting Words That Resonate and Convert</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="15" data-slug="power-of-brand-voice-tone-copywriting" data-category="Marketing Campaigns">
+          <a href="../../blogs/power-of-brand-voice-tone-copywriting.html" class="em-card-link" aria-label="Commanding Brand Voice: Crafting Words That Resonate and Convert" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-16.jpg" alt="Commanding Brand Voice: Crafting Words That Resonate and Convert" loading="lazy" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Marketing Campaigns</span>
+                <span class="em-time">5 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">16</div>
+                <h3 class="em-card-title">Commanding Brand Voice: Crafting Words That Resonate and Convert</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-16.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-16.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1645,35 +1852,37 @@ html, body {
     
 
         <!-- Card 17 -->
-        <div class="em-card" data-index="16" data-slug="corporate-brand-architecture-models" data-category="Brand Strategy" tabindex="0" role="button" aria-label="Corporate Brand Architecture: Masterbrand, Sub-Brand, or House of Brands?">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-17.jpg" alt="Corporate Brand Architecture: Masterbrand, Sub-Brand, or House of Brands?" loading="lazy" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Brand Strategy</span>
-              <span class="em-time">7 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">17</div>
-              <h3 class="em-card-title">Corporate Brand Architecture: Masterbrand, Sub-Brand, or House of Brands?</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="16" data-slug="corporate-brand-architecture-models" data-category="Brand Strategy">
+          <a href="../../blogs/corporate-brand-architecture-models.html" class="em-card-link" aria-label="Corporate Brand Architecture: Masterbrand, Sub-Brand, or House of Brands?" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-17.jpg" alt="Corporate Brand Architecture: Masterbrand, Sub-Brand, or House of Brands?" loading="lazy" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Brand Strategy</span>
+                <span class="em-time">7 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">17</div>
+                <h3 class="em-card-title">Corporate Brand Architecture: Masterbrand, Sub-Brand, or House of Brands?</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-17.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-17.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1682,35 +1891,37 @@ html, body {
     
 
         <!-- Card 18 -->
-        <div class="em-card" data-index="17" data-slug="minimalist-vs-maximalist-branding" data-category="Visual Identity" tabindex="0" role="button" aria-label="Minimalism vs. Maximalism: Navigating the Pendulum of Contemporary Design">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-18.jpg" alt="Minimalism vs. Maximalism: Navigating the Pendulum of Contemporary Design" loading="lazy" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Visual Identity</span>
-              <span class="em-time">6 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">18</div>
-              <h3 class="em-card-title">Minimalism vs. Maximalism: Navigating the Pendulum of Contemporary Design</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="17" data-slug="minimalist-vs-maximalist-branding" data-category="Visual Identity">
+          <a href="../../blogs/minimalist-vs-maximalist-branding.html" class="em-card-link" aria-label="Minimalism vs. Maximalism: Navigating the Pendulum of Contemporary Design" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-18.jpg" alt="Minimalism vs. Maximalism: Navigating the Pendulum of Contemporary Design" loading="lazy" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Visual Identity</span>
+                <span class="em-time">6 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">18</div>
+                <h3 class="em-card-title">Minimalism vs. Maximalism: Navigating the Pendulum of Contemporary Design</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-18.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-18.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1719,35 +1930,37 @@ html, body {
     
 
         <!-- Card 19 -->
-        <div class="em-card" data-index="18" data-slug="designing-for-gen-z-authenticity" data-category="Marketing Campaigns" tabindex="0" role="button" aria-label="Branding for the Next Generation: Why Polish Loses to Raw Authenticity">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-19.jpg" alt="Branding for the Next Generation: Why Polish Loses to Raw Authenticity" loading="lazy" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Marketing Campaigns</span>
-              <span class="em-time">6 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">19</div>
-              <h3 class="em-card-title">Branding for the Next Generation: Why Polish Loses to Raw Authenticity</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="18" data-slug="designing-for-gen-z-authenticity" data-category="Marketing Campaigns">
+          <a href="../../blogs/designing-for-gen-z-authenticity.html" class="em-card-link" aria-label="Branding for the Next Generation: Why Polish Loses to Raw Authenticity" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-19.jpg" alt="Branding for the Next Generation: Why Polish Loses to Raw Authenticity" loading="lazy" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Marketing Campaigns</span>
+                <span class="em-time">6 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">19</div>
+                <h3 class="em-card-title">Branding for the Next Generation: Why Polish Loses to Raw Authenticity</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-19.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-19.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1756,35 +1969,37 @@ html, body {
     
 
         <!-- Card 20 -->
-        <div class="em-card" data-index="19" data-slug="anatomy-of-high-converting-brand-identity" data-category="Visual Identity" tabindex="0" role="button" aria-label="The Anatomy of a Category-Leading Brand Identity: What Sets the Top 1% Apart">
-          <div class="em-card-inner">
-            <div class="em-card-media">
-              <img src="../../images/blogs/blog-20.jpg" alt="The Anatomy of a Category-Leading Brand Identity: What Sets the Top 1% Apart" loading="lazy" class="em-card-img" />
-              <div class="em-card-scanline"></div>
-              <div class="em-card-glitch-layer"></div>
-              <div class="em-card-vignette"></div>
-            </div>
-            <div class="em-card-badge">
-              <span class="em-tag">Visual Identity</span>
-              <span class="em-time">8 min read</span>
-            </div>
-            <div class="em-card-info">
-              <div class="em-card-num">20</div>
-              <h3 class="em-card-title">The Anatomy of a Category-Leading Brand Identity: What Sets the Top 1% Apart</h3>
-              <div class="em-card-action">
-                <span>Explore Article</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
+        <div class="em-card" data-index="19" data-slug="anatomy-of-high-converting-brand-identity" data-category="Visual Identity">
+          <a href="../../blogs/anatomy-of-high-converting-brand-identity.html" class="em-card-link" aria-label="The Anatomy of a Category-Leading Brand Identity: What Sets the Top 1% Apart" draggable="false">
+            <div class="em-card-inner">
+              <div class="em-card-media">
+                <img src="../../images/blogs/blog-20.jpg" alt="The Anatomy of a Category-Leading Brand Identity: What Sets the Top 1% Apart" loading="lazy" class="em-card-img" draggable="false" />
+                <div class="em-card-scanline"></div>
+                <div class="em-card-glitch-layer"></div>
+                <div class="em-card-vignette"></div>
               </div>
+              <div class="em-card-badge">
+                <span class="em-tag">Visual Identity</span>
+                <span class="em-time">8 min read</span>
+              </div>
+              <div class="em-card-info">
+                <div class="em-card-num">20</div>
+                <h3 class="em-card-title">The Anatomy of a Category-Leading Brand Identity: What Sets the Top 1% Apart</h3>
+                <div class="em-card-action">
+                  <span>Explore Article</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="em-card-neon-border"></div>
             </div>
-            <div class="em-card-neon-border"></div>
-          </div>
+          </a>
           <!-- Real-time Floor Reflection -->
           <div class="em-card-reflection" aria-hidden="true">
             <div class="em-reflection-inner">
-              <img src="../../images/blogs/blog-20.jpg" alt="" class="em-reflection-img" />
+              <img src="../../images/blogs/blog-20.jpg" alt="" class="em-reflection-img" draggable="false" />
               <div class="em-reflection-mask"></div>
               <div class="em-reflection-border"></div>
             </div>
@@ -1793,10 +2008,10 @@ html, body {
     
     </div>
 
-    <!-- Drag / Scroll Indicator Hint -->
+    <!-- Drag / Swipe Hint -->
     <div class="em-drag-hint" id="em-drag-hint">
       <span class="em-drag-arrow">←</span>
-      <span>Drag or Scroll to Explore (20 Articles)</span>
+      <span>Scroll or Drag to Orbit</span>
       <span class="em-drag-arrow">→</span>
     </div>
   </main>
@@ -1931,8 +2146,11 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
   let currentAngle = 0;
   let targetAngle = 0;
   let velocity = 0;
+  let isPointerDown = false;
   let isDragging = false;
+  let justDragged = false;
   let startX = 0;
+  let startY = 0;
   let lastX = 0;
   let lastTime = 0;
   let activeIndex = 0;
@@ -1952,34 +2170,15 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
     }
   }
 
-  // Position cards initially
-  cards.forEach((card, i) => {
-    const angle = i * angleStep;
-    card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
-  });
-
-  // Update Headline content
+  // Update Headline Panel
   function updateHeadline(idx) {
-    const b = blogs[idx];
-    if (!b) return;
+    const blog = blogs[idx];
+    if (!blog) return;
 
-    const numStr = (idx + 1).toString().padStart(2, '0');
-    headlineMeta.textContent = `${numStr} / ${totalCards.toString().padStart(2, '0')} • ${b.category.toUpperCase()}`;
-    headlineTitle.textContent = b.title;
-    headlineDesc.textContent = b.desc;
-    headlineCta.href = `../../blogs/${b.slug}.html`;
-
-    // Update scrubber counter
-    scrubberCurr.textContent = numStr;
-
-    // Update scrubber tick bars
-    scrubberTicks.forEach((tick, i) => {
-      if (i === idx) {
-        tick.classList.add('is-active');
-      } else {
-        tick.classList.remove('is-active');
-      }
-    });
+    headlineMeta.textContent = `${String(idx + 1).padStart(2, '0')} / ${String(totalCards).padStart(2, '0')} • ${blog.category.toUpperCase()}`;
+    headlineTitle.textContent = blog.title;
+    headlineDesc.textContent = blog.desc;
+    headlineCta.href = `../../blogs/${blog.slug}.html`;
 
     // Update active class on cards
     cards.forEach((c, i) => {
@@ -1989,6 +2188,12 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
         c.classList.remove('is-active');
       }
     });
+
+    // Update scrubber ticks
+    scrubberTicks.forEach((t, i) => {
+      t.classList.toggle('is-active', i === idx);
+    });
+    scrubberCurr.textContent = String(idx + 1).padStart(2, '0');
   }
 
   updateHeadline(activeIndex);
@@ -2020,27 +2225,36 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
     } catch(e) {}
   }
 
+  // Snap to Nearest Card
+  function snapToNearest() {
+    const rawIdx = Math.round(-targetAngle / angleStep);
+    targetAngle = -rawIdx * angleStep;
+  }
+
   // Physics Animation Loop
   let lastReportedIdx = activeIndex;
 
   function render() {
+    // Apply inertia decay only when dragging has ended
     if (!isDragging) {
-      targetAngle += velocity;
-      velocity *= 0.92;
-      if (Math.abs(velocity) < 0.001) velocity = 0;
+      if (Math.abs(velocity) > 0.001) {
+        targetAngle += velocity;
+        velocity *= 0.86; // Quick, controlled damping
+      } else {
+        velocity = 0;
+      }
     }
 
     // Lerp rotation smoothly
     const diff = targetAngle - currentAngle;
-    currentAngle += diff * 0.09;
+    currentAngle += diff * 0.088;
 
     // Banking tilt when rotating fast
-    const tilt = Math.max(-6, Math.min(6, diff * 0.35));
+    const tilt = Math.max(-5, Math.min(5, diff * 0.28));
 
     track.style.transform = `translateZ(${-radius}px) rotateX(${-tilt * 0.4}deg) rotateY(${currentAngle}deg) rotateZ(${tilt * 0.2}deg)`;
 
     // Calculate nearest active index
-    // Note: each step of angleStep rotates cards
     const rawIdx = Math.round(-currentAngle / angleStep);
     const normalizedIdx = ((rawIdx % totalCards) + totalCards) % totalCards;
 
@@ -2051,81 +2265,202 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
       playClickSound();
     }
 
+    // Lerp custom cursor ring smoothly
+    if (isCursorVisible) {
+      cursorRingX += (targetCursorX - cursorRingX) * 0.18;
+      cursorRingY += (targetCursorY - cursorRingY) * 0.18;
+      cursorDot.style.transform = `translate(${targetCursorX}px, ${targetCursorY}px) translate(-50%, -50%)`;
+      cursorRing.style.transform = `translate(${cursorRingX}px, ${cursorRingY}px)`;
+    }
+
     requestAnimationFrame(render);
   }
 
-  requestAnimationFrame(render);
+  // ==========================================================================
+  // CUSTOM CURSOR ENGINE (EMOTION AGENCY STYLE)
+  // ==========================================================================
+  const cursorWrap = document.getElementById('em-cursor');
+  const cursorDot = document.getElementById('em-cursor-dot');
+  const cursorRing = document.getElementById('em-cursor-ring');
+  const cursorLabel = document.getElementById('em-cursor-label');
 
-  // Snap to Nearest Card on Drag Release
-  function snapToNearest() {
-    const rawIdx = Math.round(-targetAngle / angleStep);
-    targetAngle = -rawIdx * angleStep;
-  }
+  let targetCursorX = -100;
+  let targetCursorY = -100;
+  let cursorRingX = -100;
+  let cursorRingY = -100;
+  let isCursorVisible = false;
 
-  // Drag Interaction (Mouse / Pointer)
-  stage.addEventListener('pointerdown', (e) => {
-    // Don't drag if clicking directly on a link or button
-    if (e.target.closest('a') || e.target.closest('button')) return;
+  window.addEventListener('pointermove', (e) => {
+    targetCursorX = e.clientX;
+    targetCursorY = e.clientY;
 
-    isDragging = true;
-    startX = e.clientX;
-    lastX = e.clientX;
-    lastTime = performance.now();
-    velocity = 0;
-    stage.classList.add('is-dragging');
-    stage.setPointerCapture(e.pointerId);
-
-    if (!hasInteracted) {
-      hasInteracted = true;
-      dragHint.classList.add('is-hidden');
+    if (!isCursorVisible) {
+      isCursorVisible = true;
+      cursorWrap.classList.add('is-visible');
+      cursorRingX = targetCursorX;
+      cursorRingY = targetCursorY;
     }
   });
 
+  document.documentElement.addEventListener('mouseleave', () => {
+    isCursorVisible = false;
+    cursorWrap.classList.remove('is-visible');
+  });
+
+  window.addEventListener('pointerdown', () => {
+    cursorWrap.classList.add('is-clicking');
+  });
+
+  window.addEventListener('pointerup', () => {
+    cursorWrap.classList.remove('is-clicking');
+  });
+
+  // Cursor Hover Effects on Cards
+  cards.forEach((card) => {
+    card.addEventListener('pointerenter', () => {
+      cursorWrap.classList.add('is-hovering-card');
+      if (cursorLabel) cursorLabel.textContent = 'EXPLORE';
+    });
+    card.addEventListener('pointerleave', () => {
+      cursorWrap.classList.remove('is-hovering-card');
+    });
+  });
+
+  // Cursor Hover Effects on Interactive Controls
+  const interactiveEls = document.querySelectorAll('button, .em-nav-link, .em-dropdown-link, .em-logo, .em-btn-contact, .em-headline-btn, .em-filter-pill, .em-filter-item, .em-scrubber-tick, .em-orb-toggle');
+  interactiveEls.forEach((el) => {
+    el.addEventListener('pointerenter', () => {
+      cursorWrap.classList.add('is-hovering-btn');
+    });
+    el.addEventListener('pointerleave', () => {
+      cursorWrap.classList.remove('is-hovering-btn');
+    });
+  });
+
+  // Start Animation Loop
+  requestAnimationFrame(render);
+
+  // ==========================================================================
+  // DRAG & POINTER INTERACTION (Controlled Threshold: Drag vs Click)
+  // ==========================================================================
+  stage.addEventListener('pointerdown', (e) => {
+    // Don't drag if clicking buttons, header or controls
+    if (e.target.closest('.em-header') || e.target.closest('.em-bottom-controls') || e.target.closest('.em-orb-toggle')) return;
+
+    isPointerDown = true;
+    isDragging = false;
+    startX = e.clientX;
+    startY = e.clientY;
+    lastX = e.clientX;
+    lastTime = performance.now();
+    velocity = 0;
+  });
+
   stage.addEventListener('pointermove', (e) => {
-    if (!isDragging) return;
+    if (!isPointerDown) return;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    const dist = Math.hypot(dx, dy);
+
+    // Only initiate drag if moved more than 6px
+    if (!isDragging) {
+      if (dist > 6) {
+        isDragging = true;
+        stage.classList.add('is-dragging');
+        document.body.classList.add('is-dragging');
+        try { stage.setPointerCapture(e.pointerId); } catch(err) {}
+        
+        if (!hasInteracted) {
+          hasInteracted = true;
+          dragHint.classList.add('is-hidden');
+        }
+
+        cursorWrap.classList.add('is-dragging-stage');
+        cursorWrap.classList.remove('is-hovering-card');
+        if (cursorLabel) cursorLabel.textContent = 'DRAG';
+      } else {
+        return;
+      }
+    }
+
     const now = performance.now();
     const deltaX = e.clientX - lastX;
     const dt = Math.max(1, now - lastTime);
 
-    // Degree conversion factor
-    const factor = (360 / (radius * 2 * Math.PI)) * 1.5;
+    // Controlled rotational speed
+    const factor = (360 / (radius * 2 * Math.PI)) * 1.35;
     targetAngle += deltaX * factor;
 
-    velocity = (deltaX / dt) * 8 * factor;
+    velocity = (deltaX / dt) * 5 * factor;
+    velocity = Math.max(-3.5, Math.min(3.5, velocity));
+
     lastX = e.clientX;
     lastTime = now;
   });
 
   function endDrag(e) {
-    if (!isDragging) return;
-    isDragging = false;
-    stage.classList.remove('is-dragging');
-    try { stage.releasePointerCapture(e.pointerId); } catch(err) {}
-    snapToNearest();
+    if (!isPointerDown) return;
+    isPointerDown = false;
+
+    if (isDragging) {
+      isDragging = false;
+      justDragged = true;
+      stage.classList.remove('is-dragging');
+      document.body.classList.remove('is-dragging');
+      try { stage.releasePointerCapture(e.pointerId); } catch(err) {}
+      
+      cursorWrap.classList.remove('is-dragging-stage');
+      if (cursorLabel) cursorLabel.textContent = 'EXPLORE';
+
+      setTimeout(() => { justDragged = false; }, 140);
+      snapToNearest();
+    }
   }
 
   stage.addEventListener('pointerup', endDrag);
   stage.addEventListener('pointercancel', endDrag);
 
-  // Mouse Wheel Scroll (Horizontal & Vertical)
+  // ==========================================================================
+  // WHEEL SCROLL (Gentle, Smooth, Non-Compounding Rotation)
+  // ==========================================================================
   window.addEventListener('wheel', (e) => {
-    // Ignore if modal open or hovering header
-    if (e.target.closest('.em-header') || e.target.closest('.em-filter-drawer')) return;
+    // Don't intercept wheel if inside filter drawer
+    if (e.target.closest('.em-filter-drawer')) return;
     
     if (!hasInteracted) {
       hasInteracted = true;
       dragHint.classList.add('is-hidden');
     }
 
-    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-    velocity -= delta * 0.035;
-    
-    // Debounce snap
-    clearTimeout(window.__wheelSnapTimeout);
-    window.__wheelSnapTimeout = setTimeout(snapToNearest, 250);
-  }, { passive: true });
+    // Prevent background page bouncing
+    e.preventDefault();
 
-  // Keyboard Navigation
+    // Pick dominant axis
+    const rawDelta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    
+    // Normalize delta across browsers
+    let normDelta = rawDelta;
+    if (e.deltaMode === 1) normDelta *= 16;
+    else if (e.deltaMode === 2) normDelta *= 60;
+
+    // Strict clamp per event to avoid hyperspeed spinning
+    const clamped = Math.max(-24, Math.min(24, normDelta));
+
+    // Zero out old momentum so wheel turns cleanly
+    velocity = 0;
+
+    // Gentle displacement: ~0.7 degrees per event
+    targetAngle -= clamped * 0.038;
+
+    // Debounce snap to nearest card
+    clearTimeout(window.__wheelSnapTimeout);
+    window.__wheelSnapTimeout = setTimeout(snapToNearest, 180);
+  }, { passive: false });
+
+  // ==========================================================================
+  // KEYBOARD NAVIGATION
+  // ==========================================================================
   window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') {
       targetAngle += angleStep;
@@ -2136,26 +2471,28 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
     }
   });
 
-  // Card Click: If active card -> open article; if other card -> rotate to it!
+  // ==========================================================================
+  // CARD CLICK NAVIGATION (Instant Opening for Any Card)
+  // ==========================================================================
   cards.forEach((card) => {
-    card.addEventListener('click', (e) => {
-      const idx = parseInt(card.getAttribute('data-index'), 10);
-      const slug = card.getAttribute('data-slug');
+    const link = card.querySelector('.em-card-link');
+    const slug = card.getAttribute('data-slug');
+    const targetUrl = `../../blogs/${slug}.html`;
 
-      if (idx === activeIndex) {
-        // Navigate to full article
-        window.location.href = `../../blogs/${slug}.html`;
-      } else {
-        // Rotate carousel to center this card
-        // Calculate shortest angular distance
-        let diffIdx = idx - activeIndex;
-        if (diffIdx > totalCards / 2) diffIdx -= totalCards;
-        if (diffIdx < -totalCards / 2) diffIdx += totalCards;
-
-        targetAngle -= diffIdx * angleStep;
-        snapToNearest();
+    function handleCardOpen(e) {
+      if (justDragged) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
       }
-    });
+      // Open blog article directly!
+      window.location.href = targetUrl;
+    }
+
+    if (link) {
+      link.addEventListener('click', handleCardOpen);
+    }
+    card.addEventListener('click', handleCardOpen);
   });
 
   // Scrubber Ticks Click
@@ -2203,7 +2540,6 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
           c.style.pointerEvents = 'auto';
         });
       } else {
-        // Highlight matching cards & dim non-matching
         let firstMatchingIdx = -1;
         cards.forEach((c, i) => {
           const cardCat = c.getAttribute('data-category');
@@ -2217,7 +2553,6 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
           }
         });
 
-        // Rotate to first matching card
         if (firstMatchingIdx !== -1) {
           let diffIdx = firstMatchingIdx - activeIndex;
           if (diffIdx > totalCards / 2) diffIdx -= totalCards;
@@ -2322,7 +2657,6 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
     const cy = h / 2;
     const r = w * 0.46;
 
-    // Moving radial gradient
     const gx = cx + Math.cos(orbAngle) * (r * 0.35);
     const gy = cy + Math.sin(orbAngle) * (r * 0.35);
 
@@ -2338,7 +2672,6 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
     orbCtx.arc(cx, cy, r, 0, Math.PI * 2);
     orbCtx.fill();
 
-    // Specular highlight
     const hl = orbCtx.createRadialGradient(cx - r * 0.35, cy - r * 0.35, 1, cx, cy, r * 0.8);
     hl.addColorStop(0, 'rgba(255, 255, 255, 0.7)');
     hl.addColorStop(0.4, 'rgba(255, 255, 255, 0.15)');
