@@ -77,9 +77,14 @@ html, body {
   -webkit-user-select: none;
 }
 
-/* Desktop custom cursor replaces system cursor seamlessly */
+/* Desktop custom cursor replaces system cursor on 3D canvas */
 @media (hover: hover) and (pointer: fine) {
-  html, body, #em-viewport, #em-stage, .em-card, .em-card-link, button, a {
+  html:not(.em-modal-open),
+  html:not(.em-modal-open) body,
+  html:not(.em-modal-open) #em-viewport,
+  html:not(.em-modal-open) #em-stage,
+  html:not(.em-modal-open) .em-card,
+  html:not(.em-modal-open) .em-card-link {
     cursor: none !important;
   }
 }
@@ -339,6 +344,7 @@ html, body {
   border: none;
   padding: 0.5rem;
   color: var(--em-white);
+  cursor: pointer;
 }
 
 .em-sound-bar {
@@ -943,34 +949,6 @@ body.is-dragging .em-card-link,
   box-shadow: 0 0 10px var(--em-primary-glow);
 }
 
-/* Iridescent 3D Orb Bottom Right */
-.em-orb-toggle {
-  position: fixed;
-  bottom: 2rem;
-  right: 2.5rem;
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s ease;
-}
-
-.em-orb-toggle:hover {
-  transform: scale(1.12);
-}
-
-.em-orb-canvas {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  filter: drop-shadow(0 0 20px rgba(144, 71, 255, 0.7));
-}
-
 /* Drag Instruction Hint Overlay */
 .em-drag-hint {
   position: absolute;
@@ -1001,6 +979,95 @@ body.is-dragging .em-card-link,
 @keyframes em-hint-slide {
   0% { transform: translateX(-4px); }
   100% { transform: translateX(4px); }
+}
+
+/* ==========================================================================
+   IRIDESCENT AI ORB BUTTON & HOVER CALLOUT BUBBLE (Bottom Right)
+   ========================================================================== */
+
+/* Iridescent 3D Orb Bottom Right Button */
+.em-orb-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2.5rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.em-orb-toggle:hover {
+  transform: scale(1.14);
+}
+
+.em-orb-canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 22px rgba(144, 71, 255, 0.75));
+}
+
+/* Floating Purple Speech Bubble on Hover / Idle */
+.em-ai-bubble {
+  position: fixed;
+  bottom: 2.2rem;
+  right: 6.8rem;
+  background: linear-gradient(135deg, #9047ff 0%, #b85eff 100%);
+  color: #ffffff;
+  padding: 0.75rem 1.15rem;
+  border-radius: 1rem 1rem 0.25rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 30px rgba(144, 71, 255, 0.5), 0 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 60;
+  pointer-events: auto;
+  cursor: pointer;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(12px) scale(0.96);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.em-ai-bubble::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -6px;
+  transform: translateY(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: #b85eff;
+}
+
+/* Show bubble on hovering the orb button or when hovered directly */
+.em-orb-toggle:hover ~ .em-ai-bubble,
+.em-ai-bubble:hover,
+.em-ai-bubble.is-active {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+@media (max-width: 768px) {
+  .em-ai-bubble {
+    display: none;
+  }
+  .em-orb-toggle {
+    bottom: 1.2rem;
+    right: 1.2rem;
+    width: 50px;
+    height: 50px;
+  }
 }
 
 /* ==========================================================================
@@ -1157,6 +1224,386 @@ body.is-dragging .em-card-link,
 @media (hover: none) or (pointer: coarse) {
   .em-cursor {
     display: none !important;
+  }
+}
+
+/* ==========================================================================
+   FULL-SCREEN AI ASSISTANT MODAL OVERLAY (EMOTION AGENCY STYLE)
+   ========================================================================== */
+
+.em-ai-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999999;
+  background: radial-gradient(circle at 75% 50%, #ffffff 0%, #f6efff 55%, #ede2ff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s;
+  overflow: hidden;
+  color: #1e1035;
+}
+
+.em-ai-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* Restore standard cursor inside AI modal for normal comfortable typing */
+.em-ai-overlay,
+.em-ai-overlay * {
+  cursor: auto !important;
+}
+
+.em-ai-overlay input {
+  cursor: text !important;
+}
+
+.em-ai-overlay button,
+.em-ai-overlay a,
+.em-ai-chip {
+  cursor: pointer !important;
+}
+
+/* Top Right Action Controls */
+.em-ai-top-actions {
+  position: absolute;
+  top: 2rem;
+  right: 2.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  z-index: 20;
+}
+
+.em-ai-btn-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid rgba(144, 71, 255, 0.16);
+  color: #7928ca;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(144, 71, 255, 0.08);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.em-ai-btn-icon:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(144, 71, 255, 0.18);
+  border-color: #9047ff;
+}
+
+.em-ai-btn-close {
+  color: #e63946;
+}
+
+.em-ai-btn-close:hover {
+  background: #fff0f3;
+  border-color: #e63946;
+}
+
+/* Two Column Layout Container */
+.em-ai-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  max-width: 1350px;
+  height: 85vh;
+  gap: 4rem;
+  position: relative;
+}
+
+/* Left Column: Chat Conversation, Suggestion Chips & Input */
+.em-ai-chat-col {
+  flex: 1;
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+/* Messages List */
+.em-ai-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 48vh;
+  overflow-y: auto;
+  padding-right: 0.6rem;
+  scrollbar-width: thin;
+}
+
+.em-ai-messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+.em-ai-messages::-webkit-scrollbar-thumb {
+  background: rgba(144, 71, 255, 0.25);
+  border-radius: 4px;
+}
+
+.em-ai-msg {
+  display: flex;
+  flex-direction: column;
+  animation: em-msg-appear 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes em-msg-appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Assistant Bubble (White Pill Card) */
+.em-ai-msg-assistant .em-ai-bubble-content {
+  background: #ffffff;
+  color: #22123d;
+  padding: 1.15rem 1.5rem;
+  border-radius: 1.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.55;
+  box-shadow: 0 6px 24px rgba(100, 50, 180, 0.06);
+  border: 1px solid rgba(144, 71, 255, 0.1);
+  max-width: 92%;
+}
+
+/* User Bubble (Purple Pill) */
+.em-ai-msg-user {
+  align-self: flex-end;
+}
+
+.em-ai-msg-user .em-ai-bubble-content {
+  background: linear-gradient(135deg, #9047ff 0%, #a855f7 100%);
+  color: #ffffff;
+  padding: 0.85rem 1.4rem;
+  border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  box-shadow: 0 6px 20px rgba(144, 71, 255, 0.35);
+  max-width: 85%;
+}
+
+/* Suggestion Chips */
+.em-ai-chips-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 1.25rem;
+}
+
+.em-ai-chip {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(144, 71, 255, 0.2);
+  border-radius: 9999px;
+  padding: 0.52rem 1.1rem;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #40206e;
+  transition: all 0.22s ease;
+  box-shadow: 0 2px 10px rgba(144, 71, 255, 0.05);
+  white-space: nowrap;
+  outline: none;
+}
+
+.em-ai-chip:hover {
+  background: #ffffff;
+  border-color: #9047ff;
+  color: #9047ff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(144, 71, 255, 0.18);
+}
+
+/* Floating Glow Input Bar */
+.em-ai-input-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: #ffffff;
+  border: 1.5px solid rgba(144, 71, 255, 0.22);
+  border-radius: 9999px;
+  padding: 0.55rem 0.65rem 0.55rem 1.25rem;
+  box-shadow: 0 12px 40px rgba(144, 71, 255, 0.2), 0 0 25px rgba(144, 71, 255, 0.12);
+  margin-top: 1.5rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.em-ai-input-bar:focus-within {
+  border-color: #9047ff;
+  box-shadow: 0 15px 45px rgba(144, 71, 255, 0.3), 0 0 35px rgba(144, 71, 255, 0.2);
+}
+
+.em-ai-mic-btn {
+  background: none;
+  border: none;
+  color: #7928ca;
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.em-ai-mic-btn:hover {
+  color: #9047ff;
+  transform: scale(1.1);
+}
+
+.em-ai-mic-btn.is-listening {
+  color: #e63946;
+  animation: em-mic-pulse 1s infinite alternate;
+}
+
+@keyframes em-mic-pulse {
+  0% { transform: scale(1); filter: drop-shadow(0 0 2px #e63946); }
+  100% { transform: scale(1.25); filter: drop-shadow(0 0 12px #e63946); }
+}
+
+.em-ai-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: #1e0d3b;
+}
+
+.em-ai-input::placeholder {
+  color: #a49bb5;
+}
+
+.em-ai-send-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a855f7 0%, #9047ff 100%);
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.22s ease;
+  outline: none;
+}
+
+.em-ai-send-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 15px rgba(144, 71, 255, 0.45);
+}
+
+/* Google Gemini Status & Config Row */
+.em-ai-api-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.9rem;
+  padding: 0 0.5rem;
+}
+
+.em-ai-api-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: #6d5494;
+  letter-spacing: 0.04em;
+}
+
+.em-ai-api-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.em-ai-key-btn {
+  background: none;
+  border: 1px solid rgba(144, 71, 255, 0.2);
+  border-radius: 9999px;
+  padding: 0.2rem 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: #7928ca;
+  transition: all 0.2s ease;
+}
+
+.em-ai-key-btn:hover {
+  background: rgba(144, 71, 255, 0.1);
+  border-color: #9047ff;
+}
+
+/* Right Column: Giant Pulsating 3D Iridescent Fluid AI Orb */
+.em-ai-orb-col {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.em-ai-large-orb-wrap {
+  position: relative;
+  width: 520px;
+  height: 520px;
+  max-width: 44vw;
+  max-height: 44vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.em-ai-large-canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 60px rgba(180, 90, 255, 0.45)) drop-shadow(0 0 100px rgba(255, 120, 220, 0.35));
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .em-ai-container {
+    flex-direction: column-reverse;
+    justify-content: center;
+    gap: 1.5rem;
+    height: 90vh;
+  }
+  .em-ai-chat-col {
+    max-width: 100%;
+    width: 100%;
+  }
+  .em-ai-large-orb-wrap {
+    width: 220px;
+    height: 220px;
+    max-width: 220px;
+    max-height: 220px;
+  }
+  .em-ai-top-actions {
+    top: 1rem;
+    right: 1.2rem;
   }
 }
 </style>
@@ -2093,11 +2540,106 @@ body.is-dragging .em-card-link,
 
   </div>
 
-  <!-- Iridescent AI Audio Orb in Bottom Right -->
-  <button class="em-orb-toggle" id="orb-toggle" title="Interactive Audio Ambient Orb" aria-label="Toggle Spatial Audio">
+  <!-- Floating Hover Bubble for AI Assistant (Screenshot 1) -->
+  <div class="em-ai-bubble" id="em-ai-bubble" role="tooltip">
+    <span>I'M BUTTERCUP AI ASSISTANT. CLICK TO INTERACT WITH ME.</span>
+  </div>
+
+  <!-- Iridescent AI Orb Button in Bottom Right -->
+  <button class="em-orb-toggle" id="orb-toggle" title="Chat with Buttercup AI" aria-label="Open Buttercup AI Assistant">
     <canvas id="orb-canvas" class="em-orb-canvas" width="120" height="120"></canvas>
   </button>
 
+</div>
+
+<!-- Full-Screen AI Assistant Modal (Screenshots 2 & 3: emotion-agency.com/projects?emi=open style) -->
+<div class="em-ai-overlay" id="em-ai-overlay" aria-hidden="true" role="dialog" aria-label="Buttercup AI Assistant">
+  
+  <!-- Top Right Action Controls -->
+  <div class="em-ai-top-actions">
+    <button class="em-ai-btn-icon" id="em-ai-sound-toggle" title="Toggle AI Voice" aria-label="Toggle Voice Sound">
+      <svg id="em-icon-sound-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+      </svg>
+      <svg id="em-icon-sound-off" style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <line x1="23" y1="9" x2="17" y2="15"></line>
+        <line x1="17" y1="9" x2="23" y2="15"></line>
+      </svg>
+    </button>
+
+    <button class="em-ai-btn-icon em-ai-btn-close" id="em-ai-close" title="Close AI Assistant" aria-label="Close Assistant">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <div class="em-ai-container">
+    
+    <!-- Left Column: Chat Conversation, Suggestion Chips & Input -->
+    <div class="em-ai-chat-col">
+      <div class="em-ai-messages" id="em-ai-messages">
+        <!-- Initial Greeting Bubble -->
+        <div class="em-ai-msg em-ai-msg-assistant">
+          <div class="em-ai-bubble-content">
+            Hey, I'm Buttercup AI! Ask me anything or tap a chip below.
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Suggestion Chips -->
+      <div class="em-ai-chips-wrap" id="em-ai-chips">
+        <button type="button" class="em-ai-chip" data-query="What do you do?">What do you do?</button>
+        <button type="button" class="em-ai-chip" data-query="Show me your projects">Show me your projects</button>
+        <button type="button" class="em-ai-chip" data-query="Services & Capabilities">Services &amp; Capabilities</button>
+        <button type="button" class="em-ai-chip" data-query="How much does a project cost?">How much does a project cost?</button>
+        <button type="button" class="em-ai-chip" data-query="Contact team">Contact team</button>
+      </div>
+
+      <!-- Bottom Floating Glow Input Bar -->
+      <form class="em-ai-input-bar" id="em-ai-form">
+        <button type="button" class="em-ai-mic-btn" id="em-ai-mic-btn" title="Speak via Microphone" aria-label="Voice Dictation">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+        </button>
+
+        <input type="text" id="em-ai-input" class="em-ai-input" placeholder="Ask me anything..." autocomplete="off" />
+
+        <button type="submit" class="em-ai-send-btn" id="em-ai-send-btn" title="Send message" aria-label="Send">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="7" y1="17" x2="17" y2="7"></line>
+            <polyline points="7 7 17 7 17 17"></polyline>
+          </svg>
+        </button>
+      </form>
+
+      <!-- Google Gemini Connection Indicator & Key Config -->
+      <div class="em-ai-api-status">
+        <span class="em-ai-api-badge" id="em-ai-api-badge" title="Powered by Google Gemini conversational intelligence">
+          <span class="em-ai-api-dot"></span>
+          <span id="em-ai-status-text">Connected: Google Gemini AI</span>
+        </span>
+        <button type="button" class="em-ai-key-btn" id="em-ai-key-btn" title="Configure Google Gemini API Key">
+          <span>Gemini API Key</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Column: Giant Pulsating 3D Iridescent Fluid AI Orb -->
+    <div class="em-ai-orb-col">
+      <div class="em-ai-large-orb-wrap">
+        <canvas id="em-ai-large-orb" width="560" height="560" class="em-ai-large-canvas"></canvas>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <!-- Data & Logic -->
@@ -2131,6 +2673,7 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
 
   const soundToggle = document.getElementById('sound-toggle');
   const orbToggle = document.getElementById('orb-toggle');
+  const aiBubble = document.getElementById('em-ai-bubble');
 
   // Math & Config
   const angleStep = 360 / totalCards; // 18 degrees per card
@@ -2281,7 +2824,7 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
     }
 
     // Feather-light, instant-response cursor lerp (0.35 spring lerp, zero lag)
-    if (isCursorVisible) {
+    if (isCursorVisible && !isModalOpen) {
       cursorRingX += (targetCursorX - cursorRingX) * 0.35;
       cursorRingY += (targetCursorY - cursorRingY) * 0.35;
       cursorDot.style.transform = `translate3d(${targetCursorX}px, ${targetCursorY}px, 0) translate(-50%, -50%)`;
@@ -2309,7 +2852,7 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
     targetCursorX = e.clientX;
     targetCursorY = e.clientY;
 
-    if (!isCursorVisible) {
+    if (!isCursorVisible && !isModalOpen) {
       isCursorVisible = true;
       cursorWrap.classList.add('is-visible');
       cursorRingX = targetCursorX;
@@ -2342,7 +2885,7 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
   });
 
   // Cursor Hover Effects on Interactive Controls
-  const interactiveEls = document.querySelectorAll('button, .em-nav-link, .em-dropdown-link, .em-logo, .em-btn-contact, .em-headline-btn, .em-filter-pill, .em-filter-item, .em-scrubber-tick, .em-orb-toggle');
+  const interactiveEls = document.querySelectorAll('button, .em-nav-link, .em-dropdown-link, .em-logo, .em-btn-contact, .em-headline-btn, .em-filter-pill, .em-filter-item, .em-scrubber-tick, .em-orb-toggle, .em-ai-bubble');
   interactiveEls.forEach((el) => {
     el.addEventListener('pointerenter', () => {
       cursorWrap.classList.add('is-hovering-btn');
@@ -2359,8 +2902,8 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
   // DRAG & POINTER INTERACTION (Controlled Threshold: Drag vs Click)
   // ==========================================================================
   stage.addEventListener('pointerdown', (e) => {
-    // Don't drag if clicking buttons, header or controls
-    if (e.target.closest('.em-header') || e.target.closest('.em-bottom-controls') || e.target.closest('.em-orb-toggle')) return;
+    if (isModalOpen) return;
+    if (e.target.closest('.em-header') || e.target.closest('.em-bottom-controls') || e.target.closest('.em-orb-toggle') || e.target.closest('.em-ai-bubble')) return;
 
     isPointerDown = true;
     isDragging = false;
@@ -2372,7 +2915,7 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
   });
 
   stage.addEventListener('pointermove', (e) => {
-    if (!isPointerDown) return;
+    if (!isPointerDown || isModalOpen) return;
 
     const dx = e.clientX - startX;
     const dy = e.clientY - startY;
@@ -2440,34 +2983,25 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
   // WHEEL SCROLL (Fluid, Effortless, Soft & Natural)
   // ==========================================================================
   window.addEventListener('wheel', (e) => {
-    if (e.target.closest('.em-filter-drawer')) return;
+    if (isModalOpen || e.target.closest('.em-filter-drawer')) return;
     
     if (!hasInteracted) {
       hasInteracted = true;
       dragHint.classList.add('is-hidden');
     }
 
-    // Prevent background page bouncing
     e.preventDefault();
 
-    // Pick dominant axis
     const rawDelta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
     
-    // Normalize delta across input devices
     let delta = rawDelta;
     if (e.deltaMode === 1) delta *= 20;
     else if (e.deltaMode === 2) delta *= 80;
 
-    // Soft, responsive clamping (allows fluid, effortless glide without runaway spin)
     const clamped = Math.max(-50, Math.min(50, delta));
-
-    // Reset previous drag velocity so wheel takes over cleanly
     velocity = 0;
-
-    // 0.09 factor: gentle swipe (~80-120 delta) moves comfortably to next card
     targetAngle -= clamped * 0.09;
 
-    // Debounce snap (240ms gives natural gesture completion)
     clearTimeout(window.__wheelSnapTimeout);
     window.__wheelSnapTimeout = setTimeout(snapToNearest, 240);
   }, { passive: false });
@@ -2476,6 +3010,10 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
   // KEYBOARD NAVIGATION
   // ==========================================================================
   window.addEventListener('keydown', (e) => {
+    if (isModalOpen) {
+      if (e.key === 'Escape') closeAiModal();
+      return;
+    }
     if (e.key === 'ArrowLeft') {
       targetAngle += angleStep;
       snapToNearest();
@@ -2494,12 +3032,11 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
     const targetUrl = `../../blogs/${slug}.html`;
 
     function handleCardOpen(e) {
-      if (justDragged) {
+      if (justDragged || isModalOpen) {
         e.preventDefault();
         e.stopPropagation();
         return;
       }
-      // Open blog article directly!
       window.location.href = targetUrl;
     }
 
@@ -2578,15 +3115,14 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
     });
   });
 
-  // Audio Toggle
-  function toggleAudio() {
+  // Header Audio Toggle
+  function toggleHeaderAudio() {
     isAudioActive = !isAudioActive;
     soundToggle.classList.toggle('is-playing', isAudioActive);
     playClickSound();
   }
 
-  soundToggle.addEventListener('click', toggleAudio);
-  orbToggle.addEventListener('click', toggleAudio);
+  soundToggle.addEventListener('click', toggleHeaderAudio);
 
   // Unlock AudioContext on first touch / click
   ['click', 'touchstart', 'pointerdown'].forEach(ev => {
@@ -2595,6 +3131,326 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
         audioCtx.resume();
       }
     }, { once: true });
+  });
+
+  // ==========================================================================
+  // FULL-SCREEN BUTTERCUP AI ASSISTANT (Connected to Google Gemini + Voice)
+  // ==========================================================================
+  const aiOverlay = document.getElementById('em-ai-overlay');
+  const aiCloseBtn = document.getElementById('em-ai-close');
+  const aiSoundToggle = document.getElementById('em-ai-sound-toggle');
+  const iconSoundOn = document.getElementById('em-icon-sound-on');
+  const iconSoundOff = document.getElementById('em-icon-sound-off');
+  const aiForm = document.getElementById('em-ai-form');
+  const aiInput = document.getElementById('em-ai-input');
+  const aiMessages = document.getElementById('em-ai-messages');
+  const aiChips = document.getElementById('em-ai-chips');
+  const micBtn = document.getElementById('em-ai-mic-btn');
+  const keyBtn = document.getElementById('em-ai-key-btn');
+  const statusText = document.getElementById('em-ai-status-text');
+
+  let isModalOpen = false;
+  let isAiSoundEnabled = true;
+  let isAiSpeaking = false;
+  let isAiListening = false;
+  let geminiApiKey = localStorage.getItem('buttercup_gemini_key') || '';
+
+  if (geminiApiKey) {
+    statusText.textContent = "Google Gemini: Active";
+  }
+
+  function updateModalUrl(open) {
+    const url = new URL(window.location);
+    if (open) {
+      url.searchParams.set('emi', 'open');
+    } else {
+      url.searchParams.delete('emi');
+      url.searchParams.delete('ai');
+    }
+    window.history.replaceState({}, '', url);
+  }
+
+  function openAiModal() {
+    isModalOpen = true;
+    aiOverlay.classList.add('is-open');
+    aiOverlay.setAttribute('aria-hidden', 'false');
+    document.documentElement.classList.add('em-modal-open');
+    cursorWrap.classList.remove('is-visible');
+    updateModalUrl(true);
+    setTimeout(() => aiInput.focus(), 300);
+
+    // Speak initial welcome if first opening
+    if (aiMessages.children.length === 1 && isAiSoundEnabled) {
+      speakVoice("Hey! I'm Buttercup AI. Ask me anything about our branding services, case studies, or tap a chip below.");
+    }
+  }
+
+  function closeAiModal() {
+    isModalOpen = false;
+    aiOverlay.classList.remove('is-open');
+    aiOverlay.setAttribute('aria-hidden', 'true');
+    document.documentElement.classList.remove('em-modal-open');
+    stopSpeech();
+    updateModalUrl(false);
+  }
+
+  // Trigger modal open from Orb or Floating Bubble
+  orbToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openAiModal();
+  });
+
+  aiBubble.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openAiModal();
+  });
+
+  aiCloseBtn.addEventListener('click', closeAiModal);
+
+  // Check URL on load (e.g. ?emi=open or ?ai=open)
+  if (urlParams.get('emi') === 'open' || urlParams.get('ai') === 'open') {
+    openAiModal();
+  }
+
+  // Sound Toggle inside AI Modal
+  aiSoundToggle.addEventListener('click', () => {
+    isAiSoundEnabled = !isAiSoundEnabled;
+    iconSoundOn.style.display = isAiSoundEnabled ? 'block' : 'none';
+    iconSoundOff.style.display = isAiSoundEnabled ? 'none' : 'block';
+    if (!isAiSoundEnabled) stopSpeech();
+  });
+
+  // API Key Setting
+  keyBtn.addEventListener('click', () => {
+    const current = geminiApiKey ? '********' : 'Not Set';
+    const entered = prompt("Enter your Google Gemini API Key (leaves live Google generative AI connected directly to Buttercup Studio):", geminiApiKey);
+    if (entered !== null) {
+      geminiApiKey = entered.trim();
+      localStorage.setItem('buttercup_gemini_key', geminiApiKey);
+      statusText.textContent = geminiApiKey ? "Google Gemini: Active" : "Google Gemini: Default Engine";
+      alert(geminiApiKey ? "Google Gemini Key Saved! Live Google AI connected." : "Using Buttercup Native Studio Knowledge Engine.");
+    }
+  });
+
+  // Voice Output (Speech Synthesis)
+  function stopSpeech() {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    isAiSpeaking = false;
+  }
+
+  function speakVoice(text) {
+    if (!isAiSoundEnabled || !('speechSynthesis' in window)) return;
+    stopSpeech();
+
+    const clean = text.replace(/[*_#`~>↗]/g, '').trim();
+    const utterance = new SpeechSynthesisUtterance(clean);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.05;
+
+    const voices = window.speechSynthesis.getVoices();
+    const naturalVoice = voices.find(v => v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Natural') || v.lang === 'en-US');
+    if (naturalVoice) utterance.voice = naturalVoice;
+
+    utterance.onstart = () => { isAiSpeaking = true; };
+    utterance.onend = () => { isAiSpeaking = false; };
+    utterance.onerror = () => { isAiSpeaking = false; };
+
+    window.speechSynthesis.speak(utterance);
+  }
+
+  // Voice Input (Microphone Speech Recognition)
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SpeechRecognition) {
+    const recognizer = new SpeechRecognition();
+    recognizer.continuous = false;
+    recognizer.interimResults = false;
+    recognizer.lang = 'en-US';
+
+    recognizer.onstart = () => {
+      isAiListening = true;
+      micBtn.classList.add('is-listening');
+      aiInput.placeholder = "Listening... Speak your question";
+    };
+
+    recognizer.onresult = (e) => {
+      const text = e.results[0][0].transcript;
+      aiInput.value = text;
+      handleUserSubmit(text);
+    };
+
+    recognizer.onend = recognizer.onerror = () => {
+      isAiListening = false;
+      micBtn.classList.remove('is-listening');
+      aiInput.placeholder = "Ask me anything...";
+    };
+
+    micBtn.addEventListener('click', () => {
+      if (isAiListening) {
+        recognizer.stop();
+      } else {
+        try { recognizer.start(); } catch(err) {}
+      }
+    });
+  } else {
+    micBtn.style.opacity = '0.5';
+    micBtn.title = "Voice dictation not supported in this browser";
+  }
+
+  // Buttercup Studio Knowledge Engine (Comprehensive fallback & offline intelligence)
+  const STUDIO_KNOWLEDGE = [
+    {
+      match: /who are you|what are you|what is this|emi|buttercup ai/i,
+      reply: "I'm Buttercup AI, the digital intelligence for Buttercup Advertising Studio. We are an award-winning creative brand consultancy specializing in Brand Strategy, Visual Identity, and high-impact Marketing Campaigns.",
+      chips: ["What services do you offer?", "Show me your projects", "Book a discovery call"]
+    },
+    {
+      match: /what do you do|service|capability|offer|help|provide/i,
+      reply: "We partner with visionary founders to build category-leading brands across three core pillars: 1) Brand Strategy (positioning, voice & storytelling), 2) Visual Identity (logos, guidelines & packaging), and 3) Marketing Campaigns (creative direction & high-converting ads).",
+      chips: ["Tell me about Brand Strategy", "Visual Identity & Packaging", "Marketing Campaigns"]
+    },
+    {
+      match: /project|work|portfolio|case stud|client/i,
+      reply: "We have delivered transformational rebrands and campaigns across 50+ product categories and 30+ service industries, including Abode, Vriksh, Swaad, and Aura. You can explore all our case studies right in the Case Studies tab!",
+      chips: ["View Case Studies", "Show Brand Strategy work", "Let's work together"]
+    },
+    {
+      match: /cost|price|pricing|charge|budget|rate|fee/i,
+      reply: "Every project is bespoke—from high-velocity brand sprints to full-scale enterprise identity systems. We tailor our scope to your growth milestones. Let's schedule a 20-minute discovery call to share a clear roadmap and quotation.",
+      chips: ["Contact team", "Book a call", "Explore our services"]
+    },
+    {
+      match: /contact|hire|talk|email|call|reach|location|office|where/i,
+      reply: "You can connect with our leadership team directly by clicking 'Let's talk' in the top right or visiting our Contact page. We are always excited to collaborate on bold, ambitious brand transformations.",
+      chips: ["Go to Contact Page", "What do you do?", "Show projects"]
+    },
+    {
+      match: /strategy|positioning|rebrand|voice/i,
+      reply: "Our Brand Strategy practice creates unassailable competitive moats. We analyze market whitespace, sculpt distinct brand voices, engineer narrative architectures, and help brands capture emotional heart-share instead of competing on price.",
+      chips: ["Visual Identity Design", "See our articles", "Let's talk"]
+    },
+    {
+      match: /packag|visual identity|logo|guideline|design/i,
+      reply: "Our Visual Identity systems are engineered for instant shelf and digital recognition—from proprietary typography and luxury packaging design to complete multi-channel brand guidelines in Figma.",
+      chips: ["Marketing Campaigns", "Show me your projects", "Contact team"]
+    },
+    {
+      match: /industry|industries|fmcg|tech|luxury|health/i,
+      reply: "We bring specialized expertise across 50+ Product-based industries (FMCG, luxury lifestyle, cosmetics, F&B, fashion) and 30+ Service-based industries (SaaS, healthcare, hospitality, real estate, and finance).",
+      chips: ["Product Base (50+)", "Service Base (30+)", "Let's talk"]
+    }
+  ];
+
+  async function queryGoogleGemini(userText) {
+    if (!geminiApiKey) return null;
+    try {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`;
+      const systemContext = "You are Buttercup AI, the ultra-smart, sophisticated, charismatic conversational intelligence for Buttercup Advertising Studio (an award-winning branding, design, and advertising studio specializing in Brand Strategy, Visual Identity, and Marketing Campaigns across 50+ product industries and 30+ service industries). Answer gracefully in 1 to 2 clear, elegant sentences. Tone: visionary, modern, warm, concise, and helpful. Always invite them to explore services or contact team.";
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: 'user',
+              parts: [{ text: `${systemContext}
+
+User Question: ${userText}` }]
+            }
+          ],
+          generationConfig: {
+            maxOutputTokens: 120,
+            temperature: 0.7
+          }
+        })
+      });
+
+      if (!res.ok) return null;
+      const data = await res.json();
+      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      return reply ? reply.trim() : null;
+    } catch(e) {
+      return null;
+    }
+  }
+
+  function appendMessage(sender, text) {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `em-ai-msg em-ai-msg-${sender}`;
+    const bubble = document.createElement('div');
+    bubble.className = 'em-ai-bubble-content';
+    bubble.textContent = text;
+    msgDiv.appendChild(bubble);
+    aiMessages.appendChild(msgDiv);
+    aiMessages.scrollTop = aiMessages.scrollHeight;
+  }
+
+  function updateChips(chipList) {
+    aiChips.innerHTML = '';
+    chipList.forEach(text => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'em-ai-chip';
+      btn.textContent = text;
+      btn.setAttribute('data-query', text.replace(/^↳\s*/, ''));
+      btn.addEventListener('click', () => {
+        handleUserSubmit(btn.getAttribute('data-query'));
+      });
+      aiChips.appendChild(btn);
+    });
+  }
+
+  async function handleUserSubmit(query) {
+    const q = query.trim();
+    if (!q) return;
+
+    // Display User message
+    appendMessage('user', q);
+    aiInput.value = '';
+
+    // Show temporary typing indicator
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'em-ai-msg em-ai-msg-assistant';
+    typingDiv.innerHTML = '<div class="em-ai-bubble-content" style="opacity:0.6;font-style:italic;">Thinking...</div>';
+    aiMessages.appendChild(typingDiv);
+    aiMessages.scrollTop = aiMessages.scrollHeight;
+
+    // Attempt Google Gemini query first
+    let answer = await queryGoogleGemini(q);
+    let nextChips = ["↳ What do you do?", "↳ Show me your work", "↳ How much does a project cost?"];
+
+    // Fallback to Studio Knowledge Engine
+    if (!answer) {
+      const match = STUDIO_KNOWLEDGE.find(k => k.match.test(q));
+      if (match) {
+        answer = match.reply;
+        nextChips = match.chips.map(c => `↳ ${c}`);
+      } else {
+        answer = "Welcome to Buttercup Advertising Studio! We engineer distinctive brand strategies, iconic visual identities, and category-defining campaigns. What would you like to explore next?";
+      }
+    }
+
+    // Remove typing indicator & append AI answer
+    aiMessages.removeChild(typingDiv);
+    appendMessage('assistant', answer);
+    updateChips(nextChips);
+
+    // Speak aloud with voice!
+    speakVoice(answer);
+  }
+
+  aiForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    handleUserSubmit(aiInput.value);
+  });
+
+  // Initial Suggestion Chips Clicks
+  aiChips.querySelectorAll('.em-ai-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      handleUserSubmit(btn.getAttribute('data-query'));
+    });
   });
 
   // ==========================================================================
@@ -2655,13 +3511,13 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
   requestAnimationFrame(drawCanvas);
 
   // ==========================================================================
-  // IRIDESCENT 3D ORB RENDERER
+  // MINI IRIDESCENT 3D ORB (BOTTOM RIGHT TRIGGER)
   // ==========================================================================
   const orbCanvas = document.getElementById('orb-canvas');
   const orbCtx = orbCanvas.getContext('2d');
   let orbAngle = 0;
 
-  function drawOrb() {
+  function drawMiniOrb() {
     const w = orbCanvas.width;
     const h = orbCanvas.height;
     orbCtx.clearRect(0, 0, w, h);
@@ -2696,10 +3552,84 @@ window.__BLOGS_DATA__ = [{"id": 1, "slug": "brand-positioning-strategy-guide", "
     orbCtx.arc(cx, cy, r, 0, Math.PI * 2);
     orbCtx.fill();
 
-    requestAnimationFrame(drawOrb);
+    requestAnimationFrame(drawMiniOrb);
   }
 
-  requestAnimationFrame(drawOrb);
+  requestAnimationFrame(drawMiniOrb);
+
+  // ==========================================================================
+  // GIANT 3D IRIDESCENT FLUID AI ORB (INSIDE MODAL - SCREENSHOTS 2 & 3)
+  // ==========================================================================
+  const largeOrbCanvas = document.getElementById('em-ai-large-orb');
+  const lctx = largeOrbCanvas.getContext('2d');
+  let largeOrbAngle = 0;
+
+  function drawLargeOrb() {
+    const w = largeOrbCanvas.width;
+    const h = largeOrbCanvas.height;
+    lctx.clearRect(0, 0, w, h);
+
+    // Speed up and amplify when AI is speaking or listening!
+    const speed = isAiSpeaking ? 0.045 : (isAiListening ? 0.035 : 0.018);
+    largeOrbAngle += speed;
+
+    const cx = w / 2;
+    const cy = h / 2;
+    const pulse = isAiSpeaking ? Math.sin(largeOrbAngle * 4) * 12 : Math.sin(largeOrbAngle * 2) * 4;
+    const r = (w * 0.44) + pulse;
+
+    // Moving fluid focal centers
+    const f1x = cx + Math.cos(largeOrbAngle) * (r * 0.4);
+    const f1y = cy + Math.sin(largeOrbAngle * 0.8) * (r * 0.35);
+
+    const f2x = cx + Math.sin(-largeOrbAngle * 0.7) * (r * 0.35);
+    const f2y = cy + Math.cos(largeOrbAngle * 1.1) * (r * 0.3);
+
+    // Deep luminous base
+    const baseGrad = lctx.createRadialGradient(f1x, f1y, 10, cx, cy, r);
+    baseGrad.addColorStop(0, '#ffffff');
+    baseGrad.addColorStop(0.2, '#fbcfe8');
+    baseGrad.addColorStop(0.45, '#e879f9');
+    baseGrad.addColorStop(0.7, '#a855f7');
+    baseGrad.addColorStop(0.9, '#6366f1');
+    baseGrad.addColorStop(1, '#3b82f6');
+
+    lctx.fillStyle = baseGrad;
+    lctx.beginPath();
+    lctx.arc(cx, cy, r, 0, Math.PI * 2);
+    lctx.fill();
+
+    // Secondary iridescent violet/cyan plasma overlay
+    lctx.globalCompositeOperation = 'screen';
+    const plasmaGrad = lctx.createRadialGradient(f2x, f2y, 5, cx, cy, r * 0.85);
+    plasmaGrad.addColorStop(0, 'rgba(255, 255, 255, 0.85)');
+    plasmaGrad.addColorStop(0.3, 'rgba(236, 72, 153, 0.55)');
+    plasmaGrad.addColorStop(0.65, 'rgba(168, 85, 247, 0.4)');
+    plasmaGrad.addColorStop(1, 'transparent');
+
+    lctx.fillStyle = plasmaGrad;
+    lctx.beginPath();
+    lctx.arc(cx, cy, r, 0, Math.PI * 2);
+    lctx.fill();
+
+    // Specular glass highlight ring
+    const specGrad = lctx.createRadialGradient(cx - r * 0.32, cy - r * 0.32, 2, cx, cy, r);
+    specGrad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+    specGrad.addColorStop(0.35, 'rgba(255, 255, 255, 0.25)');
+    specGrad.addColorStop(0.7, 'transparent');
+
+    lctx.fillStyle = specGrad;
+    lctx.beginPath();
+    lctx.arc(cx, cy, r, 0, Math.PI * 2);
+    lctx.fill();
+
+    // Reset composite operation
+    lctx.globalCompositeOperation = 'source-over';
+
+    requestAnimationFrame(drawLargeOrb);
+  }
+
+  requestAnimationFrame(drawLargeOrb);
 
 })();
 </script>
