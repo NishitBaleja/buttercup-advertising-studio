@@ -1384,6 +1384,17 @@ body.is-dragging .em-card-link,
   border-color: #9047ff;
 }}
 
+.em-ai-btn-icon.is-speaking {{
+  border-color: #9047ff;
+  box-shadow: 0 0 0 4px rgba(144, 71, 255, 0.22), 0 6px 20px rgba(144, 71, 255, 0.28);
+  animation: em-voice-pulse 1.3s infinite ease-in-out;
+}}
+
+@keyframes em-voice-pulse {{
+  0%, 100% {{ transform: scale(1); }}
+  50% {{ transform: scale(1.08); }}
+}}
+
 .em-ai-btn-close {{
   color: #e63946;
 }}
@@ -1465,6 +1476,62 @@ body.is-dragging .em-card-link,
   box-shadow: 0 6px 24px rgba(100, 50, 180, 0.06);
   border: 1px solid rgba(144, 71, 255, 0.1);
   max-width: 92%;
+}}
+
+/* Animated Searching Indicator (Emotion Agency style) */
+.em-ai-searching-box {{
+  background: #ffffff !important;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.95rem 1.4rem !important;
+  border-radius: 1.25rem !important;
+  border: 1px solid rgba(144, 71, 255, 0.18) !important;
+  box-shadow: 0 6px 24px rgba(144, 71, 255, 0.08) !important;
+  width: fit-content;
+}}
+
+.em-ai-searching-dots {{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}}
+
+.em-ai-dot {{
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #9047ff 0%, #ec4899 100%);
+  animation: em-dot-pulse 1.2s infinite ease-in-out both;
+}}
+
+.em-ai-dot:nth-child(1) {{ animation-delay: -0.32s; }}
+.em-ai-dot:nth-child(2) {{ animation-delay: -0.16s; }}
+.em-ai-dot:nth-child(3) {{ animation-delay: 0s; }}
+
+@keyframes em-dot-pulse {{
+  0%, 80%, 100% {{
+    transform: scale(0.6);
+    opacity: 0.35;
+  }}
+  40% {{
+    transform: scale(1.2);
+    opacity: 1;
+  }}
+}}
+
+.em-ai-searching-label {{
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #7b5ea7;
+  letter-spacing: 0.01em;
+  animation: em-label-fade 1.5s infinite ease-in-out alternate;
+}}
+
+@keyframes em-label-fade {{
+  from {{ opacity: 0.6; }}
+  to {{ opacity: 1; }}
 }}
 
 /* User Bubble (Purple Pill) */
@@ -2432,6 +2499,7 @@ window.__BLOGS_DATA__ = {blogs_json_str};
   let isAiSoundEnabled = true;
   let isAiSpeaking = false;
   let isAiListening = false;
+  let isAiThinking = false;
   let geminiApiKey = localStorage.getItem('buttercup_gemini_key') || '';
 
   if (geminiApiKey) {{
@@ -2460,7 +2528,9 @@ window.__BLOGS_DATA__ = {blogs_json_str};
 
     // Speak initial welcome if first opening
     if (aiMessages.children.length === 1 && isAiSoundEnabled) {{
-      speakVoice("Hey! I'm Buttercup AI. Ask me anything about our branding services, case studies, or tap a chip below.");
+      setTimeout(() => {{
+        speakVoice("Hey! I'm Buttercup AI. Ask me anything or tap a chip below.");
+      }}, 350);
     }}
   }}
 
@@ -2511,30 +2581,97 @@ window.__BLOGS_DATA__ = {blogs_json_str};
     }}
   }});
 
-  // Voice Output (Speech Synthesis)
+  // ==========================================================================
+  // NATURAL SMOOTH VOICE ENGINE (SpeechSynthesis with Best Voice Picker)
+  // ==========================================================================
+  let preferredVoice = null;
+
+  function loadBestVoice() {{
+    if (!('speechSynthesis' in window)) return;
+    const voices = window.speechSynthesis.getVoices();
+    if (!voices || voices.length === 0) return;
+
+    // Prioritized ranking for natural, human-quality voices
+    const searchPatterns = [
+      // Chrome Natural Voices
+      v => v.name === 'Google US English',
+      v => v.name.includes('Google') && v.lang.startsWith('en'),
+      // macOS / iOS Siri & Natural Voices
+      v => v.name.includes('Samantha') && (v.name.includes('Enhanced') || v.name.includes('Premium')),
+      v => v.name === 'Samantha',
+      v => v.name.includes('Ava') && (v.name.includes('Enhanced') || v.name.includes('Premium')),
+      v => v.name.includes('Serena'),
+      v => v.name.includes('Karen'),
+      v => v.name.includes('Victoria'),
+      v => v.name.includes('Moira'),
+      v => v.name.includes('Tessa'),
+      v => v.name.includes('Daniel'),
+      // Windows / Edge Natural Neural Voices
+      v => v.name.includes('Natural') && v.lang.startsWith('en'),
+      v => v.name.includes('Jenny') || v.name.includes('Aria') || v.name.includes('Guy'),
+      // High-quality English fallbacks
+      v => v.lang === 'en-US' && !v.name.includes('Bad') && !v.name.includes('Zarvox') && !v.name.includes('Trinoids'),
+      v => v.lang.startsWith('en')
+    ];
+
+    for (const testFn of searchPatterns) {{
+      const match = voices.find(testFn);
+      if (match) {{
+        preferredVoice = match;
+        break;
+      }}
+    }}
+  }}
+
+  if ('speechSynthesis' in window) {{
+    loadBestVoice();
+    window.speechSynthesis.onvoiceschanged = loadBestVoice;
+  }}
+
   function stopSpeech() {{
     if ('speechSynthesis' in window) {{
       window.speechSynthesis.cancel();
     }}
     isAiSpeaking = false;
+    aiSoundToggle.classList.remove('is-speaking');
   }}
 
   function speakVoice(text) {{
     if (!isAiSoundEnabled || !('speechSynthesis' in window)) return;
     stopSpeech();
 
-    const clean = text.replace(/[*_#`~>↗]/g, '').trim();
+    // Clean text: strip markdown characters, emojis, asterisks, brackets, bullets and symbols for smooth vocal delivery
+    const clean = text
+      .replace(/[*_#`~>↗↳•\-]/g, ' ')
+      .replace(/[\\u{{1F600}}-\\u{{1F64F}}\\u{{1F300}}-\\u{{1F5FF}}\\u{{1F680}}-\\u{{1F6FF}}\\u{{1F700}}-\\u{{1F77F}}\\u{{1F780}}-\\u{{1F7FF}}\\u{{1F800}}-\\u{{1F8FF}}\\u{{1F900}}-\\u{{1F9FF}}\\u{{1FA00}}-\\u{{1FA6F}}\\u{{2600}}-\\u{{26FF}}\\u{{2700}}-\\u{{27BF}}]/gu, '')
+      .replace(/\\s+/g, ' ')
+      .trim();
+
+    if (!clean) return;
+
     const utterance = new SpeechSynthesisUtterance(clean);
-    utterance.rate = 1.0;
-    utterance.pitch = 1.05;
+    // Smooth, warm, natural human pacing (0.97 prevents rushed robotic cadence)
+    utterance.rate = 0.97;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
 
-    const voices = window.speechSynthesis.getVoices();
-    const naturalVoice = voices.find(v => v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Natural') || v.lang === 'en-US');
-    if (naturalVoice) utterance.voice = naturalVoice;
+    if (!preferredVoice) loadBestVoice();
+    if (preferredVoice) utterance.voice = preferredVoice;
 
-    utterance.onstart = () => {{ isAiSpeaking = true; }};
-    utterance.onend = () => {{ isAiSpeaking = false; }};
-    utterance.onerror = () => {{ isAiSpeaking = false; }};
+    utterance.onstart = () => {{
+      isAiSpeaking = true;
+      aiSoundToggle.classList.add('is-speaking');
+    }};
+
+    utterance.onend = utterance.onerror = () => {{
+      isAiSpeaking = false;
+      aiSoundToggle.classList.remove('is-speaking');
+    }};
+
+    // Chrome speech freeze safeguard
+    if (window.speechSynthesis.paused) {{
+      window.speechSynthesis.resume();
+    }}
 
     window.speechSynthesis.speak(utterance);
   }}
@@ -2577,49 +2714,149 @@ window.__BLOGS_DATA__ = {blogs_json_str};
     micBtn.title = "Voice dictation not supported in this browser";
   }}
 
-  // Buttercup Studio Knowledge Engine (Comprehensive fallback & offline intelligence)
+  // ==========================================================================
+  // BUTTERCUP STUDIO KNOWLEDGE ENGINE (Comprehensive Intelligence)
+  // ==========================================================================
   const STUDIO_KNOWLEDGE = [
     {{
-      match: /who are you|what are you|what is this|emi|buttercup ai/i,
-      reply: "I'm Buttercup AI, the digital intelligence for Buttercup Advertising Studio. We are an award-winning creative brand consultancy specializing in Brand Strategy, Visual Identity, and high-impact Marketing Campaigns.",
+      match: /who are you|what are you|what is this|emi|buttercup ai|about buttercup|agency|about you|who is buttercup|founder|team/i,
+      reply: "I'm Buttercup AI, the conversational intelligence of Buttercup Advertising Studio. We are an award-winning creative brand consultancy partnering with visionary founders to build category-leading brands through Brand Strategy, Visual Identity, and high-impact Marketing Campaigns.",
       chips: ["What services do you offer?", "Show me your projects", "Book a discovery call"]
     }},
     {{
-      match: /what do you do|service|capability|offer|help|provide/i,
-      reply: "We partner with visionary founders to build category-leading brands across three core pillars: 1) Brand Strategy (positioning, voice & storytelling), 2) Visual Identity (logos, guidelines & packaging), and 3) Marketing Campaigns (creative direction & high-converting ads).",
-      chips: ["Tell me about Brand Strategy", "Visual Identity & Packaging", "Marketing Campaigns"]
+      match: /what do you do|service|capability|capabilities|offer|help|provide|solutions|kya karte ho|kya service|services kya hai|kaise help/i,
+      reply: "We partner with ambitious founders to build iconic brands across three pillars: 1) Brand Strategy (positioning, storytelling & market whitespace), 2) Visual Identity (logos, typography, Figma guidelines & packaging), and 3) Marketing Campaigns (creative direction & high-converting ads).",
+      chips: ["Brand Strategy details", "Visual Identity & Packaging", "Marketing Campaigns"]
     }},
     {{
-      match: /project|work|portfolio|case stud|client/i,
-      reply: "We have delivered transformational rebrands and campaigns across 50+ product categories and 30+ service industries, including Abode, Vriksh, Swaad, and Aura. You can explore all our case studies right in the Case Studies tab!",
-      chips: ["View Case Studies", "Show Brand Strategy work", "Let's work together"]
+      match: /brand strategy|strategy|positioning|rebrand|rebranding|voice|storytelling|narrative|whitespace|research/i,
+      reply: "Our Brand Strategy practice creates unassailable competitive moats. We uncover market whitespace, sculpt distinct narrative voices, define brand archetypes, and help businesses command premium pricing through emotional heart-share.",
+      chips: ["Visual Identity Design", "Explore Case Studies", "Let's talk"]
     }},
     {{
-      match: /cost|price|pricing|charge|budget|rate|fee/i,
-      reply: "Every project is bespoke—from high-velocity brand sprints to full-scale enterprise identity systems. We tailor our scope to your growth milestones. Let's schedule a 20-minute discovery call to share a clear roadmap and quotation.",
-      chips: ["Contact team", "Book a call", "Explore our services"]
+      match: /packag|packaging|visual identity|logo|guideline|guidelines|design|typography|graphic design|box design|label|shelf|mujhe logo/i,
+      reply: "Our Visual Identity systems are engineered for instant shelf and digital recognition—from proprietary typography and luxury packaging design to complete multi-channel brand design systems in Figma.",
+      chips: ["See Packaging Projects", "Brand Strategy", "Contact team"]
     }},
     {{
-      match: /contact|hire|talk|email|call|reach|location|office|where/i,
-      reply: "You can connect with our leadership team directly by clicking 'Let's talk' in the top right or visiting our Contact page. We are always excited to collaborate on bold, ambitious brand transformations.",
+      match: /marketing|campaign|campaigns|ad\\b|ads\\b|advertising|social media|creative direction|performance|growth|prachar/i,
+      reply: "We direct high-impact omnichannel creative campaigns—from cinematic brand films and scroll-stopping social ad creatives to full-scale launch blitzes that drive measurable revenue and category dominance.",
+      chips: ["Show me your projects", "How much does it cost?", "Let's work together"]
+    }},
+    {{
+      match: /project|projects|work|portfolio|case stud|case study|client|clients|showcase|past work|samples|kaam dikhao|portfolio dikhao/i,
+      reply: "We've delivered transformational rebrands and campaigns across 50+ product categories and 30+ service industries, including Abode, Vriksh, Swaad, and Aura. You can explore all our case studies right in the Case Studies tab!",
+      chips: ["View Abode Case Study", "View All Case Studies", "Contact team"]
+    }},
+    {{
+      match: /abode/i,
+      reply: "Abode is our flagship luxury sustainable living case study. We crafted an elegant, earthy visual identity and narrative packaging system that positioned them as a benchmark for eco-conscious architectural living.",
+      chips: ["View Case Studies", "Show Brand Strategy", "Contact team"]
+    }},
+    {{
+      match: /vriksh/i,
+      reply: "Vriksh is an organic Ayurvedic wellness brand. We engineered their botanical brand narrative, holistic packaging system, and conscious retail presence across pan-India markets.",
+      chips: ["View Case Studies", "Packaging Design", "Let's talk"]
+    }},
+    {{
+      match: /swaad/i,
+      reply: "Swaad is an artisan gourmet food brand. We designed appetite-inducing packaging, custom vernacular typography, and vibrant brand storytelling that achieved instant shelf breakout.",
+      chips: ["View Case Studies", "Packaging Design", "Contact team"]
+    }},
+    {{
+      match: /aura/i,
+      reply: "Aura is a modern lifestyle technology brand. We built their futuristic visual language, sleek interface guidelines, and premium unboxing experience for next-gen consumer devices.",
+      chips: ["View Case Studies", "Visual Identity", "Let's work together"]
+    }},
+    {{
+      match: /industry|industries|fmcg|food|beverage|cosmetic|cosmetics|beauty|skincare|fashion|luxury|real estate|health|hospital|tech|saas|fintech|hospitality|restaurant|cafe|jewelry|apparel/i,
+      reply: "We bring specialized domain expertise across 50+ Product-based industries (FMCG, gourmet food, cosmetics, luxury fashion, jewelry) and 30+ Service-based industries (real estate, healthcare, SaaS & tech, boutique hospitality, and finance).",
+      chips: ["Product Base (50+)", "Service Base (30+)", "Let's talk"]
+    }},
+    {{
+      match: /cost|price|pricing|charge|budget|rate|fee|fees|kitna kharcha|kitna lagega|quotation|quote|estimate/i,
+      reply: "Every project is bespoke—from high-velocity brand sprints for growing startups to full enterprise identity systems. We tailor our scope to your growth milestones. Let's schedule a 20-minute discovery call to share a clear roadmap and quotation.",
+      chips: ["Contact team", "Book a discovery call", "Explore our services"]
+    }},
+    {{
+      match: /process|methodology|how do you work|timeline|how long|steps|stages|kitna time|kaise kaam/i,
+      reply: "Our 4-stage process guarantees clarity and velocity: 1) Deep Discovery & Whitespace Research, 2) Strategic Positioning & Narrative Architecture, 3) Visual Identity & Creative Crafting, and 4) Multi-channel Rollout & Production Guidelines.",
+      chips: ["Book a discovery call", "Visual Identity", "Case Studies"]
+    }},
+    {{
+      match: /contact|hire|talk|email|call|reach|location|office|where|address|phone|whatsapp|kaha ho|kaise mile|appointment|meeting|book a call/i,
+      reply: "You can connect directly with our leadership team by clicking 'Let's talk' in the top right or visiting our Contact page. We are available for virtual discovery sessions or in-person coffee meetings.",
       chips: ["Go to Contact Page", "What do you do?", "Show projects"]
     }},
     {{
-      match: /strategy|positioning|rebrand|voice/i,
-      reply: "Our Brand Strategy practice creates unassailable competitive moats. We analyze market whitespace, sculpt distinct brand voices, engineer narrative architectures, and help brands capture emotional heart-share instead of competing on price.",
-      chips: ["Visual Identity Design", "See our articles", "Let's talk"]
+      match: /job|jobs|career|careers|hiring|intern|internship|vacancy|join/i,
+      reply: "We are always scouting for visionary brand strategists, art directors, and visual designers who push creative boundaries. Check out our Careers section or drop your portfolio to our team via the Contact page.",
+      chips: ["Contact team", "Explore Case Studies", "About Buttercup"]
     }},
     {{
-      match: /packag|visual identity|logo|guideline|design/i,
-      reply: "Our Visual Identity systems are engineered for instant shelf and digital recognition—from proprietary typography and luxury packaging design to complete multi-channel brand guidelines in Figma.",
-      chips: ["Marketing Campaigns", "Show me your projects", "Contact team"]
+      match: /why branding|why is branding important|benefit|value of brand|brand kyu|faayda|growth/i,
+      reply: "A powerful brand transforms your business from an interchangeable commodity into an emotional preference. It commands premium pricing, builds fierce customer loyalty, and lowers long-term customer acquisition costs by up to 40%.",
+      chips: ["Tell me about Brand Strategy", "Visual Identity", "Let's talk"]
     }},
     {{
-      match: /industry|industries|fmcg|tech|luxury|health/i,
-      reply: "We bring specialized expertise across 50+ Product-based industries (FMCG, luxury lifestyle, cosmetics, F&B, fashion) and 30+ Service-based industries (SaaS, healthcare, hospitality, real estate, and finance).",
-      chips: ["Product Base (50+)", "Service Base (30+)", "Let's talk"]
+      match: /thank|thanks|dhanyawad|shukriya|nice|awesome|great|cool|mast|super|good|love it/i,
+      reply: "You're most welcome! We love talking about brand craft. If you have an exciting venture in mind, let's bring it to life together.",
+      chips: ["Book a discovery call", "Show Case Studies", "Explore Services"]
+    }},
+    {{
+      match: /^(hi|hello|hey|hola|namaste|namaskar|pranam|sup|yo|kaisa|kaise|good morning|good evening|good afternoon)\\b/i,
+      reply: "Namaste! Welcome to Buttercup Advertising Studio. I'm Buttercup AI. How can I help elevate your brand today? Feel free to ask about our services, case studies, or pricing!",
+      chips: ["What do you do?", "Show me your projects", "How much does a project cost?"]
     }}
   ];
+
+  // ==========================================================================
+  // SMART CONTEXTUAL FALLBACK SYNTHESIZER (Answers ANY question or topic)
+  // ==========================================================================
+  function generateSmartFallback(rawQuery) {{
+    const q = rawQuery.trim();
+    const lower = q.toLowerCase();
+
+    // Check if query is largely Hindi / Hinglish
+    const isHindi = /\\b(kya|kaise|kaha|mujhe|hum|aap|batao|dikhao|karo|karna|chahiye|hai|hain|hota|baare|mein|se|ko)\\b/i.test(lower);
+
+    // Extract core subject keywords (remove common question stop words)
+    const stopWords = new Set([
+      'what', 'is', 'are', 'the', 'a', 'an', 'in', 'on', 'at', 'for', 'to', 'of', 'and', 'or', 'do',
+      'does', 'did', 'can', 'could', 'would', 'should', 'how', 'why', 'who', 'where', 'when', 'which',
+      'i', 'me', 'my', 'you', 'your', 'we', 'our', 'it', 'its', 'tell', 'about', 'explain', 'give',
+      'show', 'kya', 'hai', 'hain', 'kaise', 'kaha', 'mujhe', 'aap', 'karo', 'batao', 'dikhao'
+    ]);
+
+    const words = lower.replace(/[^a-zA-Z0-9\\s]/g, ' ').split(/\\s+/).filter(w => w.length > 2 && !stopWords.has(w));
+    const topic = words.slice(0, 3).join(' ');
+
+    if (isHindi) {{
+      if (topic) {{
+        return {{
+          text: `Aapke sawaal (${{topic}}) ke baare mein, Buttercup Advertising Studio customized brand strategy, iconic visual design, aur performance marketing provide karta hai. Hum aapke business ke hisaab se best approach design kar sakte hain. Kya aap humare case studies dekhna chahenge ya direct discovery call schedule karein?`,
+          chips: ["↳ Case studies dikhao", "↳ Discovery call book karein", "↳ Services kya hai?"]
+        }};
+      }} else {{
+        return {{
+          text: "Buttercup Advertising Studio mein aapka swaagat hai! Hum brand strategy, logos, packaging aur high-impact campaigns banate hain. Aap kis service ke baare mein jaanna chahte hain?",
+          chips: ["↳ Services kya hai?", "↳ Portfolio dikhao", "↳ Contact karein"]
+        }};
+      }}
+    }}
+
+    if (topic) {{
+      return {{
+        text: `Regarding "${{topic}}", Buttercup Advertising Studio specializes in crafting distinctive positioning, iconic visuals, and high-conversion creative campaigns tailored precisely to lead that space. We'd love to review your specific requirements and share relevant ideas on a 20-minute discovery call.`,
+        chips: ["↳ Book a discovery call", "↳ Explore our services", "↳ View Case Studies"]
+      }};
+    }}
+
+    return {{
+      text: "Welcome to Buttercup Advertising Studio! We engineer distinctive brand strategies, iconic visual identities, and category-defining campaigns. What would you like to explore next?",
+      chips: ["↳ What do you do?", "↳ Show me your work", "↳ How much does a project cost?"]
+    }};
+  }}
 
   async function queryGoogleGemini(userText) {{
     if (!geminiApiKey) return null;
@@ -2634,7 +2871,7 @@ window.__BLOGS_DATA__ = {blogs_json_str};
           contents: [
             {{
               role: 'user',
-              parts: [{{ text: `${{systemContext}}\n\nUser Question: ${{userText}}` }}]
+              parts: [{{ text: `${{systemContext}}\\n\\nUser Question: ${{userText}}` }}]
             }}
           ],
           generationConfig: {{
@@ -2671,7 +2908,7 @@ window.__BLOGS_DATA__ = {blogs_json_str};
       btn.type = 'button';
       btn.className = 'em-ai-chip';
       btn.textContent = text;
-      btn.setAttribute('data-query', text.replace(/^↳\s*/, ''));
+      btn.setAttribute('data-query', text.replace(/^↳\\s*/, ''));
       btn.addEventListener('click', () => {{
         handleUserSubmit(btn.getAttribute('data-query'));
       }});
@@ -2679,43 +2916,77 @@ window.__BLOGS_DATA__ = {blogs_json_str};
     }});
   }}
 
+  // ==========================================================================
+  // MESSAGE SUBMISSION WITH 1-2 SEC ANIMATED SEARCHING INDICATOR
+  // ==========================================================================
   async function handleUserSubmit(query) {{
     const q = query.trim();
-    if (!q) return;
+    if (!q || isAiThinking) return;
 
-    // Display User message
+    // Display user question bubble immediately
     appendMessage('user', q);
     aiInput.value = '';
+    aiInput.blur();
 
-    // Show temporary typing indicator
-    const typingDiv = document.createElement('div');
-    typingDiv.className = 'em-ai-msg em-ai-msg-assistant';
-    typingDiv.innerHTML = '<div class="em-ai-bubble-content" style="opacity:0.6;font-style:italic;">Thinking...</div>';
-    aiMessages.appendChild(typingDiv);
+    // 1-2 sec searching indicator: show animated searching bubble on left
+    isAiThinking = true;
+    const searchingDiv = document.createElement('div');
+    searchingDiv.className = 'em-ai-msg em-ai-msg-assistant';
+    searchingDiv.id = 'em-ai-searching-indicator';
+    searchingDiv.innerHTML = `
+      <div class="em-ai-bubble-content em-ai-searching-box">
+        <div class="em-ai-searching-dots">
+          <span class="em-ai-dot"></span>
+          <span class="em-ai-dot"></span>
+          <span class="em-ai-dot"></span>
+        </div>
+        <span class="em-ai-searching-label">Searching studio intelligence...</span>
+      </div>
+    `;
+    aiMessages.appendChild(searchingDiv);
     aiMessages.scrollTop = aiMessages.scrollHeight;
 
-    // Attempt Google Gemini query first
-    let answer = await queryGoogleGemini(q);
-    let nextChips = ["↳ What do you do?", "↳ Show me your work", "↳ How much does a project cost?"];
+    // Guaranteed 1.4-1.5s searching delay as requested ("1-2 sec searching ka dikhata hai then answer aai")
+    const searchDelay = new Promise(resolve => setTimeout(resolve, 1400));
 
-    // Fallback to Studio Knowledge Engine
-    if (!answer) {{
+    // Resolve AI answer simultaneously
+    const answerFetch = (async () => {{
+      // 1. Try Google Gemini if key is available
+      let ans = await queryGoogleGemini(q);
+      let chips = ["↳ What do you do?", "↳ Show me your work", "↳ How much does a project cost?"];
+
+      if (ans) {{
+        return {{ text: ans, chips }};
+      }}
+
+      // 2. Match comprehensive Studio Knowledge
       const match = STUDIO_KNOWLEDGE.find(k => k.match.test(q));
       if (match) {{
-        answer = match.reply;
-        nextChips = match.chips.map(c => `↳ ${{c}}`);
-      }} else {{
-        answer = "Welcome to Buttercup Advertising Studio! We engineer distinctive brand strategies, iconic visual identities, and category-defining campaigns. What would you like to explore next?";
+        return {{ text: match.reply, chips: match.chips.map(c => `↳ ${{c}}`) }};
       }}
+
+      // 3. Smart Contextual Generative Fallback for ANY word or question
+      const fallback = generateSmartFallback(q);
+      return fallback;
+    }})();
+
+    const [_, result] = await Promise.all([searchDelay, answerFetch]);
+
+    // Remove searching indicator
+    if (searchingDiv.parentNode) {{
+      searchingDiv.parentNode.removeChild(searchingDiv);
     }}
+    isAiThinking = false;
 
-    // Remove typing indicator & append AI answer
-    aiMessages.removeChild(typingDiv);
-    appendMessage('assistant', answer);
-    updateChips(nextChips);
+    // Display assistant answer bubble
+    appendMessage('assistant', result.text);
+    updateChips(result.chips);
 
-    // Speak aloud with voice!
-    speakVoice(answer);
+    // Speak answer with silky smooth voice
+    speakVoice(result.text);
+
+    // Refocus input
+    setTimeout(() => aiInput.focus(), 250);
   }}
 
   aiForm.addEventListener('submit', (e) => {{
@@ -2846,13 +3117,15 @@ window.__BLOGS_DATA__ = {blogs_json_str};
     const h = largeOrbCanvas.height;
     lctx.clearRect(0, 0, w, h);
 
-    // Speed up and amplify when AI is speaking or listening!
-    const speed = isAiSpeaking ? 0.045 : (isAiListening ? 0.035 : 0.018);
+    // Speed up and amplify when AI is speaking, listening, or thinking!
+    const speed = isAiSpeaking ? 0.045 : (isAiThinking ? 0.038 : (isAiListening ? 0.035 : 0.018));
     largeOrbAngle += speed;
 
     const cx = w / 2;
     const cy = h / 2;
-    const pulse = isAiSpeaking ? Math.sin(largeOrbAngle * 4) * 12 : Math.sin(largeOrbAngle * 2) * 4;
+    const pulse = isAiSpeaking 
+      ? Math.sin(largeOrbAngle * 4) * 12 
+      : (isAiThinking ? Math.sin(largeOrbAngle * 6) * 9 : Math.sin(largeOrbAngle * 2) * 4);
     const r = (w * 0.44) + pulse;
 
     // Moving fluid focal centers
