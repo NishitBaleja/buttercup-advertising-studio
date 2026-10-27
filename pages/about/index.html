@@ -49,12 +49,23 @@
     }
 }
 
-/* ==================== 3D CLIENT PROBLEMS WHEEL (CASE STUDY STYLE) ==================== */
+/* ==================== 3D CLIENT PROBLEMS WHEEL (CASE STUDY STYLE - SCROLL DRIVEN) ==================== */
 .problems-3d-section {
   position: relative;
+  width: 100%;
+  padding: 0 !important;
+}
+
+.problems-pin-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(2rem, 4vh, 3.5rem) 0;
+  box-sizing: border-box;
   overflow: hidden;
-  padding-top: clamp(3rem, 5vw, 5.5rem) !important;
-  padding-bottom: clamp(3.5rem, 6vw, 6.5rem) !important;
 }
 
 .problems-header-wrp {
@@ -63,7 +74,7 @@
 
 .problems-heading {
   font-family: var(--_typography---font-family--secondary-font), "Instrument Serif", Georgia, serif !important;
-  font-size: clamp(2.5rem, 4.2vw, 4rem) !important;
+  font-size: clamp(2.2rem, 3.8vw, 3.6rem) !important;
   line-height: 1.15 !important;
   font-weight: 400 !important;
   letter-spacing: -0.02em !important;
@@ -74,24 +85,18 @@
 .pw-root {
   position: relative;
   width: 100%;
-  height: clamp(540px, 62vh, 660px);
-  min-height: 520px;
-  margin: 2.5rem auto 0;
-  touch-action: pan-x;
-  cursor: grab;
+  height: clamp(480px, 56vh, 580px);
+  min-height: 460px;
+  margin: 1.5rem auto 0;
   user-select: none;
   -webkit-user-select: none;
-}
-
-.pw-root:active {
-  cursor: grabbing;
 }
 
 .pw-stage {
   position: relative;
   width: 100%;
-  max-width: 1040px;
-  height: calc(100% - 76px);
+  max-width: 1000px;
+  height: calc(100% - 68px);
   margin: 0 auto;
   perspective: 1200px;
 }
@@ -109,8 +114,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
-  max-width: 960px;
-  min-height: 310px;
+  max-width: 940px;
+  min-height: 280px;
   background: #ffffff;
   border-radius: 24px;
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -118,13 +123,13 @@
   will-change: transform, opacity;
   transform-style: flat;
   backface-visibility: hidden;
-  transition: box-shadow 0.35s ease, border-color 0.35s ease, opacity 0.35s ease, filter 0.35s ease;
+  transition: box-shadow 0.35s ease, border-color 0.35s ease;
   overflow: hidden;
   cursor: pointer;
 }
 
 .pw-card:hover {
-  border-color: rgba(0, 0, 0, 0.16);
+  border-color: rgba(0, 0, 0, 0.18);
 }
 
 .pw-card.is-active {
@@ -138,7 +143,7 @@
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  padding: clamp(1.85rem, 3.2vw, 2.85rem);
+  padding: clamp(1.6rem, 2.8vw, 2.5rem);
   box-sizing: border-box;
 }
 
@@ -147,7 +152,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding-bottom: clamp(1.2rem, 1.8vw, 1.5rem);
+  padding-bottom: clamp(1rem, 1.5vw, 1.3rem);
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
@@ -159,7 +164,7 @@
 
 .pw-num {
   font-family: var(--_typography---font-family--secondary-font), "Instrument Serif", Georgia, serif !important;
-  font-size: clamp(2.4rem, 3.6vw, 3.2rem) !important;
+  font-size: clamp(2.2rem, 3.2vw, 2.8rem) !important;
   line-height: 1 !important;
   font-weight: 400 !important;
   color: #111111 !important;
@@ -176,7 +181,7 @@
   text-transform: uppercase !important;
   color: #555555 !important;
   background: rgba(0, 0, 0, 0.05) !important;
-  padding: 0.4rem 0.85rem !important;
+  padding: 0.38rem 0.85rem !important;
   border-radius: 9999px !important;
   line-height: 1 !important;
   transition: all 0.25s ease !important;
@@ -203,16 +208,16 @@
 .pw-card-body {
   display: grid;
   grid-template-columns: 1fr 1px 1.15fr;
-  gap: clamp(1.5rem, 3vw, 3rem);
+  gap: clamp(1.5rem, 2.8vw, 2.8rem);
   align-items: center;
-  padding: clamp(1.5rem, 2.5vw, 2.2rem) 0;
+  padding: clamp(1.3rem, 2.2vw, 1.8rem) 0;
   flex: 1;
 }
 
 .pw-divider {
   width: 1px;
   height: 100%;
-  min-height: 90px;
+  min-height: 80px;
   background: rgba(0, 0, 0, 0.08);
 }
 
@@ -225,7 +230,7 @@
 
 .pw-title {
   font-family: var(--_typography---font-family--primary-font), "TASA Orbiter", sans-serif !important;
-  font-size: clamp(1.15rem, 1.6vw, 1.4rem) !important;
+  font-size: clamp(1.1rem, 1.45vw, 1.32rem) !important;
   font-weight: 600 !important;
   line-height: 1.42 !important;
   color: #111111 !important;
@@ -235,8 +240,8 @@
 
 .pw-text {
   font-family: var(--_typography---font-family--primary-font), "TASA Orbiter", sans-serif !important;
-  font-size: clamp(0.95rem, 1.15vw, 1.08rem) !important;
-  line-height: 1.75 !important;
+  font-size: clamp(0.92rem, 1.08vw, 1.02rem) !important;
+  line-height: 1.72 !important;
   color: #444444 !important;
   margin: 0 !important;
   letter-spacing: -0.01em !important;
@@ -246,10 +251,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: clamp(1rem, 1.6vw, 1.3rem);
+  padding-top: clamp(0.9rem, 1.4vw, 1.15rem);
   border-top: 1px solid rgba(0, 0, 0, 0.06);
   font-family: var(--_typography---font-family--primary-font), "TASA Orbiter", sans-serif;
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   color: #888888;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -270,8 +275,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  max-width: 960px;
-  margin: 1.25rem auto 0;
+  max-width: 940px;
+  margin: 1rem auto 0;
   padding: 0 0.5rem;
   position: relative;
   z-index: 60;
@@ -285,7 +290,7 @@
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(0, 0, 0, 0.08);
-  padding: 0.6rem 1.15rem;
+  padding: 0.55rem 1.1rem;
   border-radius: 9999px;
   font-family: var(--_typography---font-family--primary-font), "TASA Orbiter", sans-serif;
   font-size: 0.78rem;
@@ -317,7 +322,7 @@
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(0, 0, 0, 0.08);
-  padding: 0.6rem 0.9rem;
+  padding: 0.55rem 0.85rem;
   border-radius: 9999px;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
 }
@@ -349,8 +354,8 @@
 }
 
 .pw-icon-btn {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(16px);
@@ -380,8 +385,8 @@
 @media screen and (max-width: 991px) {
   .pw-card-body {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
-    padding: 1.25rem 0;
+    gap: 1rem;
+    padding: 1rem 0;
   }
   .pw-divider {
     display: none;
@@ -393,7 +398,7 @@
     max-width: 100%;
   }
   .pw-root {
-    height: clamp(550px, 70vh, 640px);
+    height: clamp(520px, 64vh, 600px);
   }
 }
 
@@ -413,7 +418,7 @@
     order: 3;
   }
   .pw-card-inner {
-    padding: 1.4rem;
+    padding: 1.3rem;
   }
   .pw-card-header {
     flex-wrap: wrap;
@@ -957,142 +962,144 @@ html.custom-cursor-active, html.custom-cursor-active body, html.custom-cursor-ac
 </svg></div></a><div class="nav-social-links"><div class="text-2x_base is-medium">Social:</div><div class="spacer-tiny"></div><a href="https://www.instagram.com/buttercupadvertisingstudio/" target="_blank" rel="noopener noreferrer" class="footer-nav-links">instagram</a><a href="https://www.linkedin.com/company/buttercup-advertising-studio/?originalSubdomain=in" target="_blank" rel="noopener noreferrer" class="footer-nav-links">linkedIn</a></div></div></nav><div class="nav-link-group hide-tablet"><a href="../contact/index.html" class="nav-links w-inline-block"><div>let&#x27;s talk</div><div class="underline-overflow"><div class="underline is-footer w-embed"><svg width="100%" height="100%" viewBox="0 0 59 6" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M0.210938 3.10356C0.210938 3.10356 2.1078 2.21728 5.96094 3.10356C8.81533 3.76012 12.8267 4.61351 15.7109 4.10356C17.7549 3.74218 17.6566 0.307055 19.7109 0.603563C21.4927 0.860725 21.046 3.41894 22.7109 4.10356C25.2263 5.13786 26.8819 0.199262 29.2109 1.60356C29.9204 2.03132 30.7109 3.10356 30.7109 3.10356C32.7807 4.23608 34.0018 -0.224864 36.2109 0.603563C37.5037 1.08836 37.4796 2.47896 38.7109 3.10356C41.2042 4.36828 43.0069 0.89336 45.7109 1.60356C47.4926 2.07151 47.8752 3.95102 49.7109 4.10356C51.1276 4.22128 51.7896 3.08143 53.2109 3.10356C55.1338 3.1335 57.7109 5.10356 57.7109 5.10356" stroke="black"/>
 </svg></div></div><div class="button-arrow_wrapper"><div class="button-arrow w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" viewBox="0 0 256 256"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"></path></svg></div><div class="button-arrow _2nd w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" viewBox="0 0 256 256"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"></path></svg></div></div></a></div><div class="menu-button w-nav-button"><div class="nav-open"><div class="nav-open-elem"></div><div class="nav-open-elem is-vertical"></div></div></div></div></div></div><section class="section"><div class="w-layout-blockcontainer container is-full w-container"><div class="about-content"><div class="about-hero-header_wrapper"><h1 class="heading-2x_large"><span class="is-font-inter">a Creative <br/>‍</span><em>design studio</em></h1></div><div class="about-hero-slider_wrapper"><div class="max-width-small"><div class="text-3x_base">Based in Ahmedabad, India</div></div><div data-delay="1000" data-animation="fade" class="about-hero-img-wrp w-slider" data-autoplay="true" data-easing="ease" data-hide-arrows="false" data-disable-swipe="false" data-autoplay-limit="0" data-nav-spacing="3" data-duration="300" data-infinite="true"><div class="w-slider-mask"><div class="w-slide"><img src="../../images/6970f64f5dd1f79686367e87_unsplash_XtUd5SiX464.avif?v=85" alt="A image of a girl drinking coffee" class="about-hero-img"/></div><div class="w-slide"><img src="../../images/696ecbc4ab1b1ca5e5b87283_Professional-Portrait-6-1-.avif?v=85" alt="A Picture of a man in suite." class="about-hero-img"/></div><div class="w-slide"><img src="../../images/695d1b64c3a280105e6f7828_Contemplative-Window-View-1-5.avif?v=85" alt="A picture of a woman holding a cup." class="about-hero-img"/></div></div><div class="display-none w-slider-arrow-left"><div class="w-icon-slider-left"></div></div><div class="display-none w-slider-arrow-right"><div class="w-icon-slider-right"></div></div><div class="display-none w-slider-nav w-round w-num"></div></div><div class="max-width-small"><div class="text-3x_base is-right">(©2016 — 2026)</div></div></div></div></div></section></div><section class="section"><div class="w-layout-blockcontainer container is-full w-container"><div class="w-layout-grid grid-col-2"><div class="text-3x_base is-medium">( About us )</div><div class="achivements-content"><h2 class="heading-2x_medium is-font-inter">We are a Full-Service Brand Consulting Company focussing equally on Brand Creation and Brand Promotion.<br/><br/>We create your Signature Brand Stories and integrate them with Strategy, Design, Marketing Communication, and Digital Marketing.<br/><br/>We believe our primary job is to show you a new path towards building a more profitable brand and also walk with you on that path to achieve that desired goal.</h2><div class="spacer-small"></div><div class="text-3x_base is-medium">( our work )</div><div class="w-layout-grid grid-4-col" id="stats-grid"><div class="stats-item"><div class="text-2x_large is-font-inter stats-number" data-count="400" data-suffix="+" style="font-size:3rem;font-weight:700;line-height:1;">0+</div><div class="text-3x_base">Projects Completed</div></div><div class="stats-item"><div class="text-2x_large is-font-inter stats-number" data-count="30" data-suffix="+" style="font-size:3rem;font-weight:700;line-height:1;">0+</div><div class="text-3x_base">Services Industries</div></div><div class="stats-item"><div class="text-2x_large is-font-inter stats-number" data-count="50" data-suffix="+" style="font-size:3rem;font-weight:700;line-height:1;">0+</div><div class="text-3x_base">Products Categories</div></div><div class="stats-item"><div class="text-2x_large is-font-inter stats-number" data-count="150" data-suffix="+" style="font-size:3rem;font-weight:700;line-height:1;">0+</div><div class="text-3x_base">Happy Clients</div></div></div></div></div></div></section><section data-wf-target="[[[&quot;695fa40e9733b940f02d4d7d&quot;,&quot;bcd72413-1888-9595-6492-dbd74ba6201e&quot;],[]]]" class="section"><div class="w-layout-blockcontainer container is-full w-container"><div class="w-layout-grid grid-col-2"><div class="why-sticky-elem"><div class="text-3x_base is-medium">( Why are We Fit for your business? )</div><div class="spacer-3x_medium"></div><div class="points-number-group"><div class="points-number is-active">01</div><div class="points-number">02</div><div class="points-number">03</div><div class="points-number">04</div></div></div><div class="why-content"><div class="why-point"><div class="points-number-mobile">01</div><div class="text-large">Why are We Fit for your business?</div><div class="text-3x_base is-oddly">Whether you are in the B2B, B2C or D2C segment, or you are a price, masstige, premium, or a luxury brand, we start with the strategy focused on your target audience.<br/><br/>Being different is not enough; we create your brand identity which is different and better than your immediate competitors.</div></div><div class="why-point"><div class="points-number-mobile">02</div><div class="text-large">Why Hire us?</div><div class="text-3x_base is-oddly">We don't always put ourselves in your shoes! Rather, we strategize taking into consideration the preferences of your customers.<br/><br/>We don't think "out of the box" because there is no box for us. You will have the advantage of choosing from diverse perspectives and choosing the most optimized strategy.<br/><br/>We have qualified, skilled stalwarts as well as young professionals in-house who bring fresh ideas and the latest trends to the table.<br/><br/>We provide Complete Creative Branding Services Solutions in one place.</div></div><div class="why-point"><div class="points-number-mobile">03</div><div class="text-large">How many Projects have we worked on?</div><div class="text-3x_base is-oddly">Having worked for multiple product/service categories across diverse industries in the last 6 years we have developed the competencies to guide our clients towards the right branding direction.<br/><br/>We have successfully completed more than 400 projects for our clients.<br/><br/>We have delivered to our valued clients in India as well as in Afghanistan, Canada, Dubai, France, Italy and Switzerland.</div></div><div class="why-point" id="industries-point"><div class="points-number-mobile">04</div><div class="text-large">Which Industries have we worked for?</div><div class="text-3x_base is-oddly">We have done both B2B and B2C Branding successfully.<br/><br/>Just to name a few, we have delighted our clients in the Service Sector: Management Consulting, Information Technology, Industrial Manufacturing, Automation, Finance and Insurance, Retail, Agriculture, Real Estate, Lifestyle Club, Hospitality, Restaurant, Social Organization, Education, Hospital, Tourism, Wellness &amp; Beauty, Infrastructure Development, Green Energy.<br/><br/>In the Products Category, we have delivered projects of all sizes and still counting: Food and Beverages, Apparels, Cosmetics, Lifestyle &amp; Wellness Products, Textiles, Jewellery, Industrial Lubricants, Pharmaceuticals, Medical Devices, Electrical Appliances.</div></div></div></div></div></section><section class="section"><div class="w-layout-blockcontainer container is-full w-container"><div class="w-layout-grid grid-col-2"><div><div class="text-3x_base is-medium">( Message from the Creative Director &amp; Founder )</div><div class="spacer-small"></div><div style="max-width:320px;"><img src="../../images/sneha-vakta.jpg" alt="Sneha Vakta - Creative Director &amp; Founder" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;display:block;"/><div class="spacer-tiny"></div><div class="text-3x_base is-medium" style="margin-top:0.75rem;">Sneha Vakta</div><div class="text-x_base is-team" style="opacity:0.7;">Creative Director &amp; Founder</div></div></div><div class="achivements-content"><h2 class="heading-x_large is-font-inter founder-heading">Creative Director &amp; Founder</h2><div class="spacer-small"></div><div class="text-3x_base is-oddly"><p>I heartily welcome you to Buttercup Advertising Studio. We are proud to be based in the state of Gujarat, India which has gifted some iconic brands to the world.</p><br/><p>All over the business world, Corporates, SMEs, and start-ups are trying to gain market share by creating powerful brands.</p><br/><p>Often they are time-starved to understand the process of brand creation. Sometimes they confuse branding with design or advertising.</p><br/><p>I hear a lot of experiences from my clients that they have paid huge amounts of money to different agencies providing specialist services and still they were not happy with the deliverables.</p></div></div></div></div></section><section class="section problems-3d-section" id="problems-section">
-  <div class="w-layout-blockcontainer container is-full w-container">
-    <div class="max-width-small problems-header-wrp">
-      <div class="text-3x_base is-medium">( 3 problems we solve )</div>
-      <div class="spacer-base"></div>
-      <h3 class="heading-x_large problems-heading">This inspires me to solve<br/> the 3 problems of clients:</h3>
-    </div>
-
-    <!-- 3D FERRIS WHEEL (CASE STUDY STYLE) -->
-    <div class="pw-root" id="pw-root" aria-label="3 Core Problems 3D Wheel">
-      
-      <!-- Stage containing the cards -->
-      <div class="pw-stage ready" id="pw-stage">
-        <div class="pw-track" id="pw-track">
-
-          <!-- Card 01 -->
-          <article class="pw-card is-active" data-index="0" tabindex="0" role="region" aria-label="Problem 01">
-            <div class="pw-card-inner">
-              <div class="pw-card-header">
-                <div class="pw-card-header-left">
-                  <span class="pw-num">01</span>
-                  <span class="pw-badge">The Challenge</span>
-                </div>
-                <div class="pw-card-header-right">
-                  <span class="pw-badge pw-badge-solution">Our Solution</span>
-                </div>
-              </div>
-              <div class="pw-card-body">
-                <div class="pw-col-challenge">
-                  <h4 class="pw-title">Providing a one-stop destination for all branding requirements namely strategy, design, marketing communication and digital marketing</h4>
-                </div>
-                <div class="pw-divider"></div>
-                <div class="pw-col-solution">
-                  <p class="pw-text">Our clients save their time and money in searching and coordinating with different agencies; instead, we deliver all branding and marketing services in one place under a unified, disciplined strategy.</p>
-                </div>
-              </div>
-              <div class="pw-card-footer">
-                <span class="pw-footer-label">01 / 03 • Brand Integration</span>
-                <span class="pw-footer-action">Drag or click to navigate</span>
-              </div>
-            </div>
-          </article>
-
-          <!-- Card 02 -->
-          <article class="pw-card" data-index="1" tabindex="0" role="region" aria-label="Problem 02">
-            <div class="pw-card-inner">
-              <div class="pw-card-header">
-                <div class="pw-card-header-left">
-                  <span class="pw-num">02</span>
-                  <span class="pw-badge">The Challenge</span>
-                </div>
-                <div class="pw-card-header-right">
-                  <span class="pw-badge pw-badge-solution">Our Solution</span>
-                </div>
-              </div>
-              <div class="pw-card-body">
-                <div class="pw-col-challenge">
-                  <h4 class="pw-title">Getting the brand positioning right and helping clients avoid costly mistakes</h4>
-                </div>
-                <div class="pw-divider"></div>
-                <div class="pw-col-solution">
-                  <p class="pw-text">A lot of business owners and their teams do not have clarity about positioning aspects and techniques of differentiation in crowded markets. They often jump directly into advertising without desired results. We help our clients follow a disciplined, logical approach where advertising comes only after the brand identity is properly created.</p>
-                </div>
-              </div>
-              <div class="pw-card-footer">
-                <span class="pw-footer-label">02 / 03 • Strategic Differentiation</span>
-                <span class="pw-footer-action">Drag or click to navigate</span>
-              </div>
-            </div>
-          </article>
-
-          <!-- Card 03 -->
-          <article class="pw-card" data-index="2" tabindex="0" role="region" aria-label="Problem 03">
-            <div class="pw-card-inner">
-              <div class="pw-card-header">
-                <div class="pw-card-header-left">
-                  <span class="pw-num">03</span>
-                  <span class="pw-badge">The Challenge</span>
-                </div>
-                <div class="pw-card-header-right">
-                  <span class="pw-badge pw-badge-solution">Our Solution</span>
-                </div>
-              </div>
-              <div class="pw-card-body">
-                <div class="pw-col-challenge">
-                  <h4 class="pw-title">Conceptualizing, designing and running marketing campaigns for maximum return on investment (ROI) with transparency</h4>
-                </div>
-                <div class="pw-divider"></div>
-                <div class="pw-col-solution">
-                  <p class="pw-text">Often, business heads have a hard time deciding the best platforms for advertising and allocating their marketing budget. We help our clients understand the nuances of marketing communication including digital marketing and social media management. We run all types of online, offline, and integrated marketing campaigns with clear business objectives.</p>
-                </div>
-              </div>
-              <div class="pw-card-footer">
-                <span class="pw-footer-label">03 / 03 • ROI &amp; Execution</span>
-                <span class="pw-footer-action">Drag or click to navigate</span>
-              </div>
-            </div>
-          </article>
-
-        </div>
+  <div class="problems-pin-container" id="problems-pin-container">
+    <div class="w-layout-blockcontainer container is-full w-container">
+      <div class="max-width-small problems-header-wrp">
+        <div class="text-3x_base is-medium">( 3 problems we solve )</div>
+        <div class="spacer-tiny"></div>
+        <h3 class="heading-x_large problems-heading">This inspires me to solve<br/> the 3 problems of clients:</h3>
       </div>
 
-      <!-- Bottom Controls Bar (Case Study Style) -->
-      <div class="pw-controls-bar">
-        <div class="pw-left-badge">
-          <span class="pw-live-dot"></span>
-          <span id="pw-counter">1 / 3 CORE PROBLEMS</span>
+      <!-- 3D FERRIS WHEEL (CASE STUDY STYLE) -->
+      <div class="pw-root" id="pw-root" aria-label="3 Core Problems 3D Wheel">
+        
+        <!-- Stage containing the cards -->
+        <div class="pw-stage ready" id="pw-stage">
+          <div class="pw-track" id="pw-track">
+
+            <!-- Card 01 -->
+            <article class="pw-card is-active" data-index="0" tabindex="0" role="region" aria-label="Problem 01">
+              <div class="pw-card-inner">
+                <div class="pw-card-header">
+                  <div class="pw-card-header-left">
+                    <span class="pw-num">01</span>
+                    <span class="pw-badge">The Challenge</span>
+                  </div>
+                  <div class="pw-card-header-right">
+                    <span class="pw-badge pw-badge-solution">Our Solution</span>
+                  </div>
+                </div>
+                <div class="pw-card-body">
+                  <div class="pw-col-challenge">
+                    <h4 class="pw-title">Providing a one-stop destination for all branding requirements namely strategy, design, marketing communication and digital marketing</h4>
+                  </div>
+                  <div class="pw-divider"></div>
+                  <div class="pw-col-solution">
+                    <p class="pw-text">Our clients save their time and money in searching and coordinating with different agencies; instead, we deliver all branding and marketing services in one place under a unified, disciplined strategy.</p>
+                  </div>
+                </div>
+                <div class="pw-card-footer">
+                  <span class="pw-footer-label">01 / 03 • Brand Integration</span>
+                  <span class="pw-footer-action">Scroll down to advance</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 02 -->
+            <article class="pw-card" data-index="1" tabindex="0" role="region" aria-label="Problem 02">
+              <div class="pw-card-inner">
+                <div class="pw-card-header">
+                  <div class="pw-card-header-left">
+                    <span class="pw-num">02</span>
+                    <span class="pw-badge">The Challenge</span>
+                  </div>
+                  <div class="pw-card-header-right">
+                    <span class="pw-badge pw-badge-solution">Our Solution</span>
+                  </div>
+                </div>
+                <div class="pw-card-body">
+                  <div class="pw-col-challenge">
+                    <h4 class="pw-title">Getting the brand positioning right and helping clients avoid costly mistakes</h4>
+                  </div>
+                  <div class="pw-divider"></div>
+                  <div class="pw-col-solution">
+                    <p class="pw-text">A lot of business owners and their teams do not have clarity about positioning aspects and techniques of differentiation in crowded markets. They often jump directly into advertising without desired results. We help our clients follow a disciplined, logical approach where advertising comes only after the brand identity is properly created.</p>
+                  </div>
+                </div>
+                <div class="pw-card-footer">
+                  <span class="pw-footer-label">02 / 03 • Strategic Differentiation</span>
+                  <span class="pw-footer-action">Scroll down to advance</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 03 -->
+            <article class="pw-card" data-index="2" tabindex="0" role="region" aria-label="Problem 03">
+              <div class="pw-card-inner">
+                <div class="pw-card-header">
+                  <div class="pw-card-header-left">
+                    <span class="pw-num">03</span>
+                    <span class="pw-badge">The Challenge</span>
+                  </div>
+                  <div class="pw-card-header-right">
+                    <span class="pw-badge pw-badge-solution">Our Solution</span>
+                  </div>
+                </div>
+                <div class="pw-card-body">
+                  <div class="pw-col-challenge">
+                    <h4 class="pw-title">Conceptualizing, designing and running marketing campaigns for maximum return on investment (ROI) with transparency</h4>
+                  </div>
+                  <div class="pw-divider"></div>
+                  <div class="pw-col-solution">
+                    <p class="pw-text">Often, business heads have a hard time deciding the best platforms for advertising and allocating their marketing budget. We help our clients understand the nuances of marketing communication including digital marketing and social media management. We run all types of online, offline, and integrated marketing campaigns with clear business objectives.</p>
+                  </div>
+                </div>
+                <div class="pw-card-footer">
+                  <span class="pw-footer-label">03 / 03 • ROI &amp; Execution</span>
+                  <span class="pw-footer-action">Scroll down to advance</span>
+                </div>
+              </div>
+            </article>
+
+          </div>
         </div>
 
-        <div class="pw-dots-wrapper" id="pw-dots">
-          <button class="pw-dot-btn is-active" data-index="0" aria-label="Go to Problem 01"></button>
-          <button class="pw-dot-btn" data-index="1" aria-label="Go to Problem 02"></button>
-          <button class="pw-dot-btn" data-index="2" aria-label="Go to Problem 03"></button>
+        <!-- Bottom Controls Bar (Case Study Style) -->
+        <div class="pw-controls-bar">
+          <div class="pw-left-badge">
+            <span class="pw-live-dot"></span>
+            <span id="pw-counter">1 / 3 CORE PROBLEMS</span>
+          </div>
+
+          <div class="pw-dots-wrapper" id="pw-dots">
+            <button class="pw-dot-btn is-active" data-index="0" aria-label="Go to Problem 01"></button>
+            <button class="pw-dot-btn" data-index="1" aria-label="Go to Problem 02"></button>
+            <button class="pw-dot-btn" data-index="2" aria-label="Go to Problem 03"></button>
+          </div>
+
+          <div class="pw-right-controls">
+            <button class="pw-icon-btn" id="pw-sound-btn" aria-label="Toggle Sound" title="Toggle audio feedback">
+              <svg class="pw-sound-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77zm-2.5 0L6.5 7.5H3c-.55 0-1 .45-1 1v7c0 .55.45 1 1 1h3.5l5 4.27c.67.57 1.5.09 1.5-.77V4c0-.86-.83-1.34-1.5-.77z"/>
+              </svg>
+            </button>
+            <button class="pw-icon-btn" id="pw-prev-btn" aria-label="Previous Problem" title="Previous problem">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button class="pw-icon-btn" id="pw-next-btn" aria-label="Next Problem" title="Next problem">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <div class="pw-right-controls">
-          <button class="pw-icon-btn" id="pw-sound-btn" aria-label="Toggle Sound" title="Toggle audio feedback">
-            <svg class="pw-sound-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-              <path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77zm-2.5 0L6.5 7.5H3c-.55 0-1 .45-1 1v7c0 .55.45 1 1 1h3.5l5 4.27c.67.57 1.5.09 1.5-.77V4c0-.86-.83-1.34-1.5-.77z"/>
-            </svg>
-          </button>
-          <button class="pw-icon-btn" id="pw-prev-btn" aria-label="Previous Problem" title="Previous problem">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </button>
-          <button class="pw-icon-btn" id="pw-next-btn" aria-label="Next Problem" title="Next problem">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
-        </div>
       </div>
+      <!-- END 3D FERRIS WHEEL -->
 
     </div>
-    <!-- END 3D FERRIS WHEEL -->
-
   </div>
 </section><section class="section"><div class="w-layout-blockcontainer container is-full w-container"><div class="max-width-small"><div class="text-3x_base is-medium">( our team )</div><div class="spacer-base"></div><h3 class="heading-x_large">The Faces Behind<br/> Buttercup Advertising Studio</h3></div><div class="spacer-base"></div><div class="w-layout-grid grid-4-col"><div class="team-card"><img src="../../images/695fd5cabb9640663ecbd346_unsplash_XtUd5SiX464-3.avif?v=85" alt="A picture of a man." class="team-img"/><div class="team-socials"><a target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/buttercupadvertisingstudio/" class="team-socialmedia-link w-inline-block"><div class="social-svg w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true" role="img">
 <path d="M16 10C14.8133 10 13.6533 10.3519 12.6666 11.0112C11.6799 11.6705 10.9108 12.6075 10.4567 13.7039C10.0026 14.8003 9.88378 16.0067 10.1153 17.1705C10.3468 18.3344 10.9182 19.4035 11.7574 20.2426C12.5965 21.0818 13.6656 21.6532 14.8295 21.8847C15.9933 22.1162 17.1997 21.9974 18.2961 21.5433C19.3925 21.0892 20.3295 20.3201 20.9888 19.3334C21.6481 18.3467 22 17.1867 22 16C21.9983 14.4092 21.3657 12.884 20.2408 11.7592C19.116 10.6343 17.5908 10.0017 16 10ZM16 20C15.2089 20 14.4355 19.7654 13.7777 19.3259C13.1199 18.8864 12.6072 18.2616 12.3045 17.5307C12.0017 16.7998 11.9225 15.9956 12.0769 15.2196C12.2312 14.4437 12.6122 13.731 13.1716 13.1716C13.731 12.6122 14.4437 12.2312 15.2196 12.0769C15.9956 11.9225 16.7998 12.0017 17.5307 12.3045C18.2616 12.6072 18.8864 13.1199 19.3259 13.7777C19.7654 14.4355 20 15.2089 20 16C20 17.0609 19.5786 18.0783 18.8284 18.8284C18.0783 19.5786 17.0609 20 16 20ZM22 3H10C8.14409 3.00199 6.36477 3.74012 5.05245 5.05245C3.74012 6.36477 3.00199 8.14409 3 10V22C3.00199 23.8559 3.74012 25.6352 5.05245 26.9476C6.36477 28.2599 8.14409 28.998 10 29H22C23.8559 28.998 25.6352 28.2599 26.9476 26.9476C28.2599 25.6352 28.998 23.8559 29 22V10C28.998 8.14409 28.2599 6.36477 26.9476 5.05245C25.6352 3.74012 23.8559 3.00199 22 3ZM27 22C27 23.3261 26.4732 24.5979 25.5355 25.5355C24.5979 26.4732 23.3261 27 22 27H10C8.67392 27 7.40215 26.4732 6.46447 25.5355C5.52678 24.5979 5 23.3261 5 22V10C5 8.67392 5.52678 7.40215 6.46447 6.46447C7.40215 5.52678 8.67392 5 10 5H22C23.3261 5 24.5979 5.52678 25.5355 6.46447C26.4732 7.40215 27 8.67392 27 10V22ZM24 9.5C24 9.79667 23.912 10.0867 23.7472 10.3334C23.5824 10.58 23.3481 10.7723 23.074 10.8858C22.7999 10.9994 22.4983 11.0291 22.2074 10.9712C21.9164 10.9133 21.6491 10.7704 21.4393 10.5607C21.2296 10.3509 21.0867 10.0836 21.0288 9.79264C20.9709 9.50166 21.0007 9.20006 21.1142 8.92597C21.2277 8.65189 21.42 8.41762 21.6666 8.2528C21.9133 8.08797 22.2033 8 22.5 8C22.8978 8 23.2794 8.15804 23.5607 8.43934C23.842 8.72064 24 9.10218 24 9.5Z" fill="currentColor"/>
@@ -1273,8 +1280,10 @@ html.custom-cursor-active, html.custom-cursor-active body, html.custom-cursor-ac
 })();
 </script>
 <script>
-// ==================== 3D CLIENT PROBLEMS WHEEL (CASE STUDY SYSTEM) ====================
+// ==================== 3D CLIENT PROBLEMS WHEEL (SCROLL-DRIVEN GSAP PIN SYSTEM) ====================
 (function() {
+  const sectionEl = document.getElementById('problems-section');
+  const pinContainer = document.getElementById('problems-pin-container');
   const rootEl = document.getElementById('pw-root');
   const stageEl = document.getElementById('pw-stage');
   const cards = Array.from(document.querySelectorAll('.pw-card'));
@@ -1284,10 +1293,14 @@ html.custom-cursor-active, html.custom-cursor-active body, html.custom-cursor-ac
   const nextBtn = document.getElementById('pw-next-btn');
   const soundBtn = document.getElementById('pw-sound-btn');
 
-  if (!rootEl || !cards.length) return;
+  if (!sectionEl || !rootEl || !cards.length) return;
 
   const total = cards.length; // 3
-  const n = 2; // depth steps for 3 cards
+  let activeIndex = 0;
+  let curPos = 0;
+  let targetPos = 0;
+  let maxStackHeight = 0;
+  let stInstance = null;
 
   // Audio synthesizer tone matching case-studies
   const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -1332,66 +1345,30 @@ html.custom-cursor-active, html.custom-cursor-active body, html.custom-cursor-ac
     });
   }
 
-  // Exact curves tailored for 3 cards depth
-  const curveDesktop = {
-    scale: [1, 0.78, 0.65],
-    y: [0, 0.62, 1]
-  };
-  const curveMobile = {
-    scale: [1, 0.82, 0.7],
-    y: [0, 0.58, 1]
-  };
-
-  let scales = [...curveDesktop.scale];
-  let yOffsets = [...curveDesktop.y];
-
-  let curPos = 0;
-  let targetPos = 0;
-  let isDragging = false;
-  let startY = 0;
-  let lastY = 0;
-  let dragDist = 0;
-  let velY = 0;
-  let lastMoveTime = 0;
-  let maxStackHeight = 0;
-  let activeIndex = 0;
-
   function lerp(start, end, amt) {
     return start + (end - start) * amt;
   }
 
-  function getInterpolatedY(d) {
-    const clamped = Math.min(d, n);
-    const base = Math.floor(clamped);
-    const frac = clamped - base;
-    const v1 = yOffsets[base];
-    const v2 = yOffsets[Math.min(base + 1, n)];
-    return lerp(v1, v2, frac);
+  function getInterpolatedScale(absD) {
+    if (absD <= 1) {
+      return lerp(1.0, 0.82, absD);
+    } else {
+      return lerp(0.82, 0.68, Math.min(2, absD) - 1);
+    }
   }
 
-  function getInterpolatedScale(d) {
-    const clamped = Math.min(d, n);
-    const base = Math.floor(clamped);
-    const frac = clamped - base;
-    const v1 = scales[base];
-    const v2 = scales[Math.min(base + 1, n)];
-    return lerp(v1, v2, frac);
-  }
-
-  function wrapIndex(e) {
-    let val = (e % total + total) % total;
-    if (val > total / 2) val -= total;
-    return val;
+  function getInterpolatedY(absD) {
+    if (absD <= 1) {
+      return lerp(0, 0.68, absD);
+    } else {
+      return lerp(0.68, 1.25, Math.min(2, absD) - 1);
+    }
   }
 
   function updateResponsive() {
-    const isMobile = window.innerWidth < 768;
-    scales = isMobile ? [...curveMobile.scale] : [...curveDesktop.scale];
-    yOffsets = isMobile ? [...curveMobile.y] : [...curveDesktop.y];
-
-    const stageH = stageEl ? stageEl.clientHeight : 480;
-    const cardH = (cards[0] ? cards[0].offsetHeight : 320) || 320;
-    const scaledCardH = cardH * scales[1];
+    const stageH = stageEl ? stageEl.clientHeight : 440;
+    const cardH = (cards[0] ? cards[0].offsetHeight : 300) || 300;
+    const scaledCardH = cardH * 0.82;
     maxStackHeight = Math.max(0, (stageH - scaledCardH) / 2) * 1.05;
   }
 
@@ -1403,27 +1380,25 @@ html.custom-cursor-active, html.custom-cursor-active body, html.custom-cursor-ac
   }
 
   function render(p) {
-    const normActive = (Math.round(p) % total + total) % total;
+    const normActive = Math.max(0, Math.min(total - 1, Math.round(p)));
     if (normActive !== activeIndex) {
       activeIndex = normActive;
       updateActiveUI(activeIndex);
       playTone();
     }
 
-    const activeWrap = (p % total + total) % total;
-
     for (let i = 0; i < total; i++) {
-      const d = wrapIndex(i - activeWrap);
+      const d = i - p;
       const absD = Math.abs(d);
 
       const yFactor = getInterpolatedY(absD);
       const yPos = (Math.sign(d) || 1) * yFactor * maxStackHeight;
       const cardScale = getInterpolatedScale(absD);
 
-      const normFraction = Math.max(0, Math.min(1, absD / n));
+      const normFraction = Math.min(1, absD / 2);
       const zIdx = Math.round((1 - normFraction) * 100);
-      const opacityVal = absD < 0.35 ? 1 : Math.max(0.35, 1 - normFraction * 0.6);
-      const filterVal = absD < 0.35 ? 'blur(0px)' : `blur(${absD * 1.2}px)`;
+      const opacityVal = absD < 0.35 ? 1 : Math.max(0.18, 1 - normFraction * 0.72);
+      const filterVal = absD < 0.35 ? 'blur(0px)' : `blur(${Math.min(3, absD * 1.5)}px)`;
 
       cards[i].style.zIndex = zIdx;
       cards[i].style.transform = `translate(-50%, calc(-50% + ${yPos}px)) scale(${cardScale})`;
@@ -1439,78 +1414,43 @@ html.custom-cursor-active, html.custom-cursor-active body, html.custom-cursor-ac
   }
 
   function animate() {
-    if (!isDragging) {
-      curPos = lerp(curPos, targetPos, 0.12);
-      if (Math.abs(targetPos - curPos) < 0.0005) {
-        curPos = targetPos;
-      }
+    curPos = lerp(curPos, targetPos, 0.15);
+    if (Math.abs(targetPos - curPos) < 0.0005) {
+      curPos = targetPos;
     }
     render(curPos);
     requestAnimationFrame(animate);
   }
 
-  // Pointer / Touch Drag
-  rootEl.addEventListener('pointerdown', (e) => {
-    // Don't drag if clicking buttons
-    if (e.target.closest('.pw-controls-bar')) return;
+  // Smooth scroll to card
+  function scrollToCard(idx) {
+    idx = Math.max(0, Math.min(total - 1, idx));
     initAudio();
-    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    if (stInstance) {
+      const targetProgress = idx / (total - 1);
+      const targetScroll = stInstance.start + targetProgress * (stInstance.end - stInstance.start);
+      if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+        window.lenis.scrollTo(targetScroll, { duration: 0.9 });
+      } else {
+        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+      }
+    } else {
+      targetPos = idx;
+    }
+  }
 
-    isDragging = true;
-    startY = e.clientY;
-    lastY = e.clientY;
-    dragDist = 0;
-    velY = 0;
-    lastMoveTime = performance.now();
-  });
-
-  window.addEventListener('pointermove', (e) => {
-    if (!isDragging) return;
-    const delta = e.clientY - lastY;
-    const now = performance.now();
-    const dt = Math.max(1, now - lastMoveTime);
-    velY = delta / dt;
-    lastMoveTime = now;
-    lastY = e.clientY;
-    dragDist += Math.abs(delta);
-
-    const sensitivity = 0.0035;
-    curPos -= delta * sensitivity;
-    targetPos = curPos;
-  });
-
-  window.addEventListener('pointerup', () => {
-    if (!isDragging) return;
-    isDragging = false;
-    targetPos = Math.round(curPos - velY * 25);
-  });
-
-  // Clicking a background card directly focuses it
-  cards.forEach((card, idx) => {
-    card.addEventListener('click', () => {
-      if (dragDist > 8) return; // Ignore if user was dragging
-      if (card.classList.contains('is-active')) return;
-      initAudio();
-      const currentActive = (Math.round(curPos) % total + total) % total;
-      const d = wrapIndex(idx - currentActive);
-      targetPos = Math.round(curPos) + d;
-    });
-  });
-
-  // Button Controls
+  // Prev / Next button listeners
   if (prevBtn) {
     prevBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      initAudio();
-      targetPos = Math.round(targetPos) - 1;
+      scrollToCard(activeIndex - 1);
     });
   }
 
   if (nextBtn) {
     nextBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      initAudio();
-      targetPos = Math.round(targetPos) + 1;
+      scrollToCard(activeIndex + 1);
     });
   }
 
@@ -1518,42 +1458,61 @@ html.custom-cursor-active, html.custom-cursor-active body, html.custom-cursor-ac
   dots.forEach((dot) => {
     dot.addEventListener('click', (e) => {
       e.stopPropagation();
-      initAudio();
       const targetIdx = parseInt(dot.getAttribute('data-index'), 10);
-      const currentActive = (Math.round(curPos) % total + total) % total;
-      const d = wrapIndex(targetIdx - currentActive);
-      targetPos = Math.round(curPos) + d;
+      scrollToCard(targetIdx);
     });
   });
 
-  // Keyboard Navigation when hovered
-  let isHovered = false;
-  rootEl.addEventListener('mouseenter', () => { isHovered = true; });
-  rootEl.addEventListener('mouseleave', () => { isHovered = false; });
-
-  window.addEventListener('keydown', (e) => {
-    if (!isHovered) return;
-    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-      e.preventDefault();
-      initAudio();
-      targetPos = Math.round(targetPos) - 1;
-    } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-      e.preventDefault();
-      initAudio();
-      targetPos = Math.round(targetPos) + 1;
-    }
+  // Clicking any card navigates to it
+  cards.forEach((card, idx) => {
+    card.addEventListener('click', () => {
+      if (card.classList.contains('is-active')) return;
+      scrollToCard(idx);
+    });
   });
+
+  // ScrollTrigger Setup
+  function initScroll() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initScroll, 100);
+      return;
+    }
+
+    if (stInstance) stInstance.kill();
+
+    stInstance = ScrollTrigger.create({
+      trigger: '#problems-section',
+      pin: '#problems-pin-container',
+      start: 'top top',
+      end: '+=1800',
+      scrub: 0.5,
+      anticipatePin: 1,
+      onUpdate: (self) => {
+        // self.progress goes from 0.0 to 1.0 -> targetPos is 0.0 to 2.0
+        targetPos = self.progress * (total - 1);
+      }
+    });
+
+    ScrollTrigger.refresh();
+  }
 
   window.addEventListener('resize', () => {
     updateResponsive();
-    render(curPos);
+    if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
   });
 
-  // Init
+  // Start
   updateResponsive();
   render(0);
   updateActiveUI(0);
   animate();
+
+  if (document.readyState === 'complete') {
+    initScroll();
+  } else {
+    window.addEventListener('load', initScroll);
+    setTimeout(initScroll, 300);
+  }
 })();
 </script>
 </body>
