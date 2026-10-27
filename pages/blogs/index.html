@@ -224,14 +224,64 @@ html, body {
 .em-nav-menu {
   display: flex;
   align-items: center;
-  gap: 2.2rem;
+  gap: 1.8rem;
   list-style: none;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 991px) {
   .em-nav-menu {
     display: none;
   }
+}
+
+.em-nav-item {
+  position: relative;
+}
+
+.em-nav-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: rgba(14, 10, 24, 0.96);
+  border: 1px solid rgba(175, 105, 255, 0.35);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(144, 71, 255, 0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 14px;
+  padding: 0.5rem;
+  min-width: 210px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.em-nav-item:hover .em-nav-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.em-dropdown-link {
+  display: block;
+  padding: 0.55rem 0.95rem;
+  color: rgba(255, 255, 255, 0.78);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: 9px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.em-dropdown-link:hover {
+  background: rgba(144, 71, 255, 0.28);
+  color: #ffffff;
 }
 
 .em-nav-link {
@@ -958,11 +1008,25 @@ html, body {
 
     <nav>
       <ul class="em-nav-menu">
-        <li><a href="../../index.html" class="em-nav-link">Home</a></li>
-        <li><a href="../case-studies/index.html" class="em-nav-link">Case Studies</a></li>
-        <li><a href="index.html" class="em-nav-link is-active">Blogs</a></li>
-        <li><a href="../about/index.html" class="em-nav-link">About</a></li>
-        <li><a href="../services/brand-strategy/index.html" class="em-nav-link">Services</a></li>
+        <li class="em-nav-item"><a href="../../index.html" class="em-nav-link">Home</a></li>
+        <li class="em-nav-item"><a href="../case-studies/index.html" class="em-nav-link">Case Studies</a></li>
+        <li class="em-nav-item"><a href="index.html" class="em-nav-link is-active">Blogs</a></li>
+        <li class="em-nav-item"><a href="../about/index.html" class="em-nav-link">About</a></li>
+        <li class="em-nav-item">
+          <a href="../services/brand-strategy/index.html" class="em-nav-link">Services</a>
+          <div class="em-nav-dropdown">
+            <a href="../services/brand-strategy/index.html" class="em-dropdown-link">Brand Strategy</a>
+            <a href="../services/visual-identity/index.html" class="em-dropdown-link">Visual Identity</a>
+            <a href="../services/marketing-communication/index.html" class="em-dropdown-link">Marketing Campaigns</a>
+          </div>
+        </li>
+        <li class="em-nav-item">
+          <a href="../industries/product-base/index.html" class="em-nav-link">Industry</a>
+          <div class="em-nav-dropdown">
+            <a href="../industries/product-base/index.html" class="em-dropdown-link">Product Base (50+)</a>
+            <a href="../industries/service-base/index.html" class="em-dropdown-link">Service Base (30+)</a>
+          </div>
+        </li>
       </ul>
     </nav>
 
