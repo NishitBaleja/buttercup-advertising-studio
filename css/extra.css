@@ -1565,21 +1565,21 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     white-space: nowrap !important;
     pointer-events: auto !important;
     cursor: pointer !important;
+    color: #9333ea !important;
     background: linear-gradient(
         105deg,
-        rgba(20, 20, 20, 0.16) 0%,
-        rgba(20, 20, 20, 0.26) 20%,
-        #9333ea 42%,
-        #09090b 50%,
-        #ec4899 58%,
-        rgba(20, 20, 20, 0.26) 80%,
-        rgba(20, 20, 20, 0.16) 100%
+        #7e22ce 0%,
+        #9333ea 20%,
+        #c084fc 42%,
+        #f0abfc 50%,
+        #c084fc 58%,
+        #9333ea 80%,
+        #7e22ce 100%
     ) !important;
     background-size: 300% 100% !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
-    color: transparent !important;
     animation: orionixBrandShimmer 4.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite,
                btrFooterBrandFloat 4s ease-in-out infinite alternate !important;
     transition: filter 0.4s ease, transform 0.3s ease !important;
@@ -1593,7 +1593,7 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
 }
 
 .footer-bottom-brand-text:hover {
-    filter: drop-shadow(0 20px 40px rgba(168, 85, 247, 0.35)) !important;
+    filter: drop-shadow(0 20px 45px rgba(147, 51, 234, 0.55)) !important;
 }
 
 @keyframes btrFooterBrandFloat {
@@ -1603,21 +1603,21 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
 
 .btr-footer-char {
     display: inline-block !important;
+    color: #9333ea !important;
     background: linear-gradient(
         105deg,
-        rgba(20, 20, 20, 0.16) 0%,
-        rgba(20, 20, 20, 0.26) 20%,
-        #9333ea 42%,
-        #09090b 50%,
-        #ec4899 58%,
-        rgba(20, 20, 20, 0.26) 80%,
-        rgba(20, 20, 20, 0.16) 100%
+        #7e22ce 0%,
+        #9333ea 20%,
+        #c084fc 42%,
+        #f0abfc 50%,
+        #c084fc 58%,
+        #9333ea 80%,
+        #7e22ce 100%
     ) !important;
     background-size: 300% 100% !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
-    color: transparent !important;
     animation: orionixBrandShimmer 4.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite,
                btrFooterLetterWave 3.6s ease-in-out infinite !important;
     animation-delay: calc(var(--i, 0) * 0.14s), calc(var(--i, 0) * 0.14s) !important;
