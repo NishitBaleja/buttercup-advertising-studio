@@ -1551,6 +1551,7 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     box-sizing: border-box !important;
 }
 
+
 .footer-bottom-brand-text {
     font-family: 'Fraunces', Georgia, serif !important;
     font-weight: 500 !important;
@@ -1559,31 +1560,76 @@ html body .navbar .nav-dropdown-wrapper:hover .underline svg path {
     letter-spacing: -0.04em !important;
     text-transform: lowercase !important;
     margin: 0 !important;
-    padding: 0 0 0.16em 0 !important;
+    padding: 0.14em 0 0.18em 0 !important;
     display: inline-block !important;
     white-space: nowrap !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    color: rgba(20, 20, 20, 0.2) !important;
+    transition: filter 0.4s ease !important;
+}
+
+.footer-bottom-brand-text:hover {
+    filter: drop-shadow(0 20px 35px rgba(168, 85, 247, 0.28)) !important;
+}
+
+.btr-footer-char {
+    display: inline-block !important;
+    color: rgba(20, 20, 20, 0.2) !important;
     background: linear-gradient(
-        90deg,
-        rgba(20, 20, 20, 0.12) 0%,
-        rgba(20, 20, 20, 0.12) 36%,
-        rgba(20, 20, 20, 0.98) 50%,
-        rgba(20, 20, 20, 0.12) 64%,
-        rgba(20, 20, 20, 0.12) 100%
+        105deg,
+        rgba(20, 20, 20, 0.15) 0%,
+        rgba(20, 20, 20, 0.22) 20%,
+        rgba(147, 51, 234, 0.88) 42%,
+        rgba(20, 20, 20, 0.95) 50%,
+        rgba(236, 72, 153, 0.85) 58%,
+        rgba(20, 20, 20, 0.22) 80%,
+        rgba(20, 20, 20, 0.15) 100%
     ) !important;
-    background-size: 250% 100% !important;
+    background-size: 300% 100% !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
-    animation: orionixBrandShimmer 5.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite !important;
-    pointer-events: none !important;
+    animation: orionixBrandShimmer 6.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite,
+               btrFooterLetterWave 4.4s ease-in-out infinite !important;
+    animation-delay: calc(var(--i, 0) * 0.16s), calc(var(--i, 0) * 0.16s) !important;
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                filter 0.22s ease !important;
+    will-change: transform !important;
+}
+
+@keyframes btrFooterLetterWave {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    30% {
+        transform: translateY(-16px) rotate(-0.75deg);
+    }
+    60% {
+        transform: translateY(3px) rotate(0.4deg);
+    }
+}
+
+.btr-footer-char.is-active-hover {
+    animation-play-state: paused !important;
+}
+
+.btr-footer-char.is-clicked {
+    animation: btrCharPopBounce 0.48s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+@keyframes btrCharPopBounce {
+    0% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.16); }
+    100% { transform: translateY(0) scale(1); }
 }
 
 @keyframes orionixBrandShimmer {
     0% {
-        background-position: 130% 0;
+        background-position: 200% 0;
     }
     100% {
-        background-position: -30% 0;
+        background-position: -100% 0;
     }
 }
 

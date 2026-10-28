@@ -169,8 +169,73 @@
     initAiSystem();
   }
 
+  function initFooterBrandAnimation() {
+    const brandEls = document.querySelectorAll('.footer-bottom-brand-text');
+    brandEls.forEach(el => {
+      if (el.dataset.animated) return;
+      el.dataset.animated = 'true';
+
+      const text = el.textContent.trim();
+      if (text.toLowerCase() === 'buttercup') {
+        el.innerHTML = '';
+        text.split('').forEach((char, i) => {
+          const span = document.createElement('span');
+          span.className = 'btr-footer-char';
+          span.style.setProperty('--i', i);
+          span.textContent = char;
+          el.appendChild(span);
+        });
+      }
+
+      // Smooth interactive magnetic lift on mouse move
+      el.addEventListener('mousemove', (e) => {
+        const chars = el.querySelectorAll('.btr-footer-char');
+        const rect = el.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+
+        chars.forEach((c) => {
+          const cRect = c.getBoundingClientRect();
+          const charCenter = (cRect.left + cRect.right) / 2 - rect.left;
+          const dist = Math.abs(mouseX - charCenter);
+          const maxDist = 140; // Proximity field in px
+
+          if (dist < maxDist) {
+            const power = 1 - (dist / maxDist);
+            const lift = Math.round(power * 28);
+            const scale = 1 + (power * 0.12);
+            c.style.transform = `translateY(-${lift}px) scale(${scale})`;
+            c.classList.add('is-active-hover');
+          } else {
+            c.style.transform = '';
+            c.classList.remove('is-active-hover');
+          }
+        });
+      });
+
+      el.addEventListener('mouseleave', () => {
+        const chars = el.querySelectorAll('.btr-footer-char');
+        chars.forEach((c) => {
+          c.style.transform = '';
+          c.classList.remove('is-active-hover');
+        });
+      });
+
+      // Joyful ripple wave on click
+      el.addEventListener('click', () => {
+        const chars = el.querySelectorAll('.btr-footer-char');
+        chars.forEach((c, i) => {
+          setTimeout(() => {
+            c.classList.add('is-clicked');
+            setTimeout(() => c.classList.remove('is-clicked'), 500);
+          }, i * 45);
+        });
+      });
+    });
+  }
+
   function initAiSystem() {
     ensureAiElements();
+    initFooterBrandAnimation();
 
     // ==========================================================================
     // 2. ELEMENT REFERENCES & STATE
