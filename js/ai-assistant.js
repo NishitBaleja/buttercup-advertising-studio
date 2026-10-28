@@ -170,6 +170,7 @@
   }
   window.addEventListener('load', () => {
     initFooterBrandAnimation();
+    initWidgetFooterCollision();
   });
 
   function initFooterBrandAnimation() {
@@ -237,9 +238,69 @@
     });
   }
 
+  function initWidgetFooterCollision() {
+    const widget = document.getElementById('btr-ai-orb-widget');
+    if (!widget) return;
+
+    let ticking = false;
+
+    function updateCollision() {
+      const footers = document.querySelectorAll('.section.is-footer, .footer-section, footer');
+      if (!footers || footers.length === 0) {
+        widget.style.transform = '';
+        return;
+      }
+      const footer = footers[footers.length - 1];
+      const footerRect = footer.getBoundingClientRect();
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+      const overlap = windowHeight - footerRect.top;
+
+      if (overlap > 0) {
+        // Footer section has entered viewport: push widget up in 1:1 sync with scroll
+        widget.style.transform = `translate3d(0, -${Math.round(overlap)}px, 0)`;
+      } else {
+        widget.style.transform = '';
+      }
+    }
+
+    function onScrollOrResize() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateCollision();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    // Native scroll & resize listeners
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+    window.addEventListener('resize', onScrollOrResize, { passive: true });
+
+    // Sync with Lenis smooth scroll if active
+    if (window.lenis && typeof window.lenis.on === 'function') {
+      window.lenis.on('scroll', onScrollOrResize);
+    } else {
+      let tries = 0;
+      const lenisInterval = setInterval(() => {
+        tries++;
+        if (window.lenis && typeof window.lenis.on === 'function') {
+          window.lenis.on('scroll', onScrollOrResize);
+          clearInterval(lenisInterval);
+        } else if (tries > 30) {
+          clearInterval(lenisInterval);
+        }
+      }, 200);
+    }
+
+    // Run initial alignment
+    updateCollision();
+  }
+
   function initAiSystem() {
     ensureAiElements();
     initFooterBrandAnimation();
+    initWidgetFooterCollision();
 
     // ==========================================================================
     // 2. ELEMENT REFERENCES & STATE

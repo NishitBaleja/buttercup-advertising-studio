@@ -15,6 +15,7 @@
   justify-content: center;
   pointer-events: none; /* Only the inner button and bubble receive clicks */
   user-select: none;
+  will-change: transform;
 }
 
 /* Ambient Siri Resonance & Diamond Stardust Canvas (Centered symmetrically) */
