@@ -192,30 +192,41 @@
         });
       }
 
-      // Smooth interactive magnetic lift on mouse move
-      el.addEventListener('mousemove', (e) => {
+      // Smooth interactive magnetic lift on mouse move with cached metrics
+      let charCenters = [];
+      let elRect = null;
+
+      function cacheMetrics() {
+        elRect = el.getBoundingClientRect();
         const chars = el.querySelectorAll('.btr-footer-char');
-        const rect = el.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-
-        chars.forEach((c) => {
+        charCenters = Array.from(chars).map(c => {
           const cRect = c.getBoundingClientRect();
-          const charCenter = (cRect.left + cRect.right) / 2 - rect.left;
-          const dist = Math.abs(mouseX - charCenter);
-          const maxDist = 140; // Proximity field in px
+          return (cRect.left + cRect.right) / 2 - elRect.left;
+        });
+      }
 
+      el.addEventListener('mouseenter', cacheMetrics, { passive: true });
+
+      el.addEventListener('mousemove', (e) => {
+        if (!elRect || charCenters.length === 0) cacheMetrics();
+        const chars = el.querySelectorAll('.btr-footer-char');
+        const mouseX = e.clientX - elRect.left;
+        const maxDist = 140; // Proximity field in px
+
+        for (let i = 0; i < chars.length; i++) {
+          const dist = Math.abs(mouseX - (charCenters[i] || 0));
           if (dist < maxDist) {
             const power = 1 - (dist / maxDist);
             const lift = Math.round(power * 28);
             const scale = 1 + (power * 0.12);
-            c.style.transform = `translateY(-${lift}px) scale(${scale})`;
-            c.classList.add('is-active-hover');
+            chars[i].style.transform = `translateY(-${lift}px) scale(${scale})`;
+            chars[i].classList.add('is-active-hover');
           } else {
-            c.style.transform = '';
-            c.classList.remove('is-active-hover');
+            chars[i].style.transform = '';
+            chars[i].classList.remove('is-active-hover');
           }
-        });
-      });
+        }
+      }, { passive: true });
 
       el.addEventListener('mouseleave', () => {
         const chars = el.querySelectorAll('.btr-footer-char');
@@ -496,36 +507,50 @@
         }
       }
 
+      let isAuraActive = false;
+
       function triggerAuraBurst() {
         harmonicRings.push(new HarmonicRing(true));
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 6; i++) {
           diamondStars.push(new DiamondStar(true));
+        }
+        startAura();
+      }
+
+      function startAura() {
+        if (!isAuraActive) {
+          isAuraActive = true;
+          requestAnimationFrame(animateAura);
         }
       }
 
       function animateAura() {
         if (document.hidden) {
-          requestAnimationFrame(animateAura);
+          isAuraActive = false;
           return;
         }
+
+        // Auto-sleep when idle: saves huge GPU and CPU cycles
+        if (!isHoveringOrb && harmonicRings.length === 0 && diamondStars.length === 0 && stardust.length === 0) {
+          sctx.clearRect(0, 0, sparksCanvas.width, sparksCanvas.height);
+          isAuraActive = false;
+          return;
+        }
+
         auraFrame++;
         sctx.clearRect(0, 0, sparksCanvas.width, sparksCanvas.height);
 
-        // 1. Periodic Siri Harmonic Rings
-        const ringInterval = isHoveringOrb ? 45 : 75;
-        if (auraFrame % ringInterval === 0) {
-          harmonicRings.push(new HarmonicRing(false));
-        }
-
-        // 2. Periodic Diamond Star Twinkles
-        const twinkleChance = isHoveringOrb ? 0.35 : 0.16;
-        if (Math.random() < twinkleChance) {
-          diamondStars.push(new DiamondStar(false));
-        }
-
-        // 3. Periodic Ambient Stardust
-        if (stardust.length < 18 && Math.random() < 0.25) {
-          stardust.push(new AmbientDust());
+        if (isHoveringOrb) {
+          const ringInterval = 45;
+          if (auraFrame % ringInterval === 0) {
+            harmonicRings.push(new HarmonicRing(false));
+          }
+          if (Math.random() < 0.25) {
+            diamondStars.push(new DiamondStar(false));
+          }
+          if (stardust.length < 8 && Math.random() < 0.2) {
+            stardust.push(new AmbientDust());
+          }
         }
 
         // Update and draw rings
@@ -558,17 +583,18 @@
         requestAnimationFrame(animateAura);
       }
 
-      requestAnimationFrame(animateAura);
+      // Initial friendly burst on page load, then sleeps cleanly
+      setTimeout(triggerAuraBurst, 1500);
 
       // Interactive hover hooks
       if (orbToggle) {
         orbToggle.addEventListener('mouseenter', () => {
           isHoveringOrb = true;
           triggerAuraBurst();
-        });
+        }, { passive: true });
         orbToggle.addEventListener('mouseleave', () => {
           isHoveringOrb = false;
-        });
+        }, { passive: true });
         orbToggle.addEventListener('click', () => {
           triggerAuraBurst();
         });
@@ -693,6 +719,7 @@
       const cx = w / 2;
       const cy = h / 2;
       const scale = (w / 560);
+      const isMini = scale < 0.5;
 
       // Smooth hover bobbing and natural banking tilt
       const bobY = Math.sin(t * 1.6) * (10 * scale);
@@ -748,8 +775,10 @@
           const alpha = (Math.sin(t * 3 + p.phase) * 0.35 + 0.65) * p.alpha;
           ctx.save();
           ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-          ctx.shadowColor = '#e879f9';
-          ctx.shadowBlur = 8;
+          if (!isMini) {
+            ctx.shadowColor = '#e879f9';
+            ctx.shadowBlur = 8;
+          }
           ctx.beginPath();
           ctx.arc((p.x - cx) / scale, (p.y - bodyY) / scale, p.size, 0, Math.PI * 2);
           ctx.fill();
@@ -791,8 +820,10 @@
         hGrad.addColorStop(1, 'rgba(56, 189, 248, 0.8)');
 
         ctx.fillStyle = hGrad;
-        ctx.shadowColor = 'rgba(168, 85, 247, 0.55)';
-        ctx.shadowBlur = 16;
+        if (!isMini) {
+          ctx.shadowColor = 'rgba(168, 85, 247, 0.55)';
+          ctx.shadowBlur = 16;
+        }
         ctx.fill();
 
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.92)';
@@ -815,8 +846,10 @@
         ctx.beginPath();
         ctx.arc(105, 85, 9, 0, Math.PI * 2);
         ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = '#38bdf8';
-        ctx.shadowBlur = 12;
+        if (!isMini) {
+          ctx.shadowColor = '#38bdf8';
+          ctx.shadowBlur = 12;
+        }
         ctx.fill();
         ctx.beginPath();
         ctx.arc(105, 85, 4.5, 0, Math.PI * 2);
@@ -842,8 +875,10 @@
         fGrad.addColorStop(1, 'rgba(255, 255, 255, 0.95)');
 
         ctx.fillStyle = fGrad;
-        ctx.shadowColor = 'rgba(236, 72, 153, 0.65)';
-        ctx.shadowBlur = 22;
+        if (!isMini) {
+          ctx.shadowColor = 'rgba(236, 72, 153, 0.65)';
+          ctx.shadowBlur = 22;
+        }
         ctx.fill();
 
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
@@ -877,8 +912,10 @@
           { x: 185, y: -25, r: 3.5 }
         ].forEach(sp => {
           ctx.fillStyle = '#ffffff';
-          ctx.shadowColor = '#38bdf8';
-          ctx.shadowBlur = 12;
+          if (!isMini) {
+            ctx.shadowColor = '#38bdf8';
+            ctx.shadowBlur = 12;
+          }
           ctx.beginPath();
           ctx.arc(sp.x, sp.y, sp.r, 0, Math.PI * 2);
           ctx.fill();
@@ -910,8 +947,10 @@
       bodyGrad.addColorStop(1, '#3b82f6');
 
       ctx.fillStyle = bodyGrad;
-      ctx.shadowColor = 'rgba(168, 85, 247, 0.8)';
-      ctx.shadowBlur = 14;
+      if (!isMini) {
+        ctx.shadowColor = 'rgba(168, 85, 247, 0.8)';
+        ctx.shadowBlur = 14;
+      }
       ctx.beginPath();
       ctx.ellipse(0, -10, 7, 24, 0, 0, Math.PI * 2);
       ctx.fill();
@@ -926,8 +965,10 @@
 
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 1.8;
-      ctx.shadowColor = '#e879f9';
-      ctx.shadowBlur = 10;
+      if (!isMini) {
+        ctx.shadowColor = '#e879f9';
+        ctx.shadowBlur = 10;
+      }
       // Left Antenna
       ctx.beginPath();
       ctx.moveTo(-3, -42);
@@ -955,7 +996,7 @@
     const orbCanvas = document.getElementById('orb-canvas');
     if (orbCanvas) {
       const orbCtx = orbCanvas.getContext('2d');
-      const miniParticles = createButterflyParticles(12, 80, 80);
+      const miniParticles = createButterflyParticles(5, 80, 80);
       let miniTime = 0;
 
       function drawMiniOrb() {

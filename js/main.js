@@ -771,6 +771,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let ringX = -100;
     let ringY = -100;
     let isVisible = false;
+    let isHovering = false;
+    let rafId = null;
 
     window.addEventListener("mousemove", (e) => {
       mouseX = e.clientX;
@@ -778,59 +780,62 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!isVisible) {
         isVisible = true;
-        cursorDot.classList.add("is-active");
-        cursorRing.classList.add("is-active");
         ringX = mouseX;
         ringY = mouseY;
+        cursorDot.classList.add("is-active");
+        cursorRing.classList.add("is-active");
       }
-
-      cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-    });
+    }, { passive: true });
 
     window.addEventListener("mousedown", () => {
       cursorRing.classList.add("is-clicking");
-    });
+    }, { passive: true });
 
     window.addEventListener("mouseup", () => {
       cursorRing.classList.remove("is-clicking");
-    });
+    }, { passive: true });
 
     document.addEventListener("mouseleave", () => {
       isVisible = false;
       cursorDot.classList.remove("is-active");
       cursorRing.classList.remove("is-active");
-    });
+    }, { passive: true });
 
     document.addEventListener("mouseenter", () => {
       isVisible = true;
       cursorDot.classList.add("is-active");
       cursorRing.classList.add("is-active");
-    });
+    }, { passive: true });
 
-    function renderRing() {
+    // Single unified 120fps hardware-accelerated RAF render loop
+    function renderCursor() {
       if (isVisible) {
-        ringX += (mouseX - ringX) * 0.16;
-        ringY += (mouseY - ringY) * 0.16;
+        // Dot follows 1:1 instantaneously with zero lag
+        cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+
+        // Ring follows with responsive luxury spring lerp (0.35 = buttery smooth, no dragging)
+        ringX += (mouseX - ringX) * 0.35;
+        ringY += (mouseY - ringY) * 0.35;
         cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
       }
-      requestAnimationFrame(renderRing);
+      rafId = requestAnimationFrame(renderCursor);
     }
-    requestAnimationFrame(renderRing);
+    rafId = requestAnimationFrame(renderCursor);
 
-    const interactiveSel = "a, button, input, textarea, select, [role='button'], .nav-links, .cards, .submit-btn, .menu-button, .custom-lightbox-close, .cs-close-btn, .cs-btn";
+    // High-performance cached hover detection
+    const interactiveSel = "a, button, input, textarea, select, [role='button'], .nav-links, .cards, .submit-btn, .menu-button, .custom-lightbox-close, .cs-close-btn, .cs-btn, .btr-ai-orb-button, .em-ai-chip";
+    let lastTarget = null;
+
     document.addEventListener("mouseover", (e) => {
-      if (e.target.closest(interactiveSel)) {
-        cursorRing.classList.add("is-hovering");
-        cursorDot.classList.add("is-hovering");
+      if (e.target === lastTarget) return;
+      lastTarget = e.target;
+      const targetIsInteractive = !!(e.target && e.target.closest && e.target.closest(interactiveSel));
+      if (targetIsInteractive !== isHovering) {
+        isHovering = targetIsInteractive;
+        cursorRing.classList.toggle("is-hovering", isHovering);
+        cursorDot.classList.toggle("is-hovering", isHovering);
       }
-    });
-
-    document.addEventListener("mouseout", (e) => {
-      if (e.target.closest(interactiveSel)) {
-        cursorRing.classList.remove("is-hovering");
-        cursorDot.classList.remove("is-hovering");
-      }
-    });
+    }, { passive: true });
   }
 
   initGlobalCustomCursor();

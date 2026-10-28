@@ -239,13 +239,13 @@
     z-index: 2147483647 !important;
     opacity: 0;
     will-change: transform;
-    mix-blend-mode: difference;
     transform: translate(-50%, -50%);
-    transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-                width 0.25s cubic-bezier(0.25, 1, 0.5, 1),
-                height 0.25s cubic-bezier(0.25, 1, 0.5, 1),
-                background-color 0.25s ease,
-                border-color 0.25s ease;
+    transition: opacity 0.25s ease,
+                width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                height 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.2s ease,
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
 }
 
 .custom-cursor-dot.is-active,
@@ -255,25 +255,28 @@
 
 /* Center precise dot */
 .custom-cursor-dot {
-    width: 6px;
-    height: 6px;
-    background-color: #ffffff;
+    width: 7px;
+    height: 7px;
+    background-color: #9333ea;
+    box-shadow: 0 0 0 1.5px #ffffff, 0 2px 8px rgba(147, 51, 234, 0.45);
 }
 
 /* Outer smooth trailing circle ("gol gol") */
 .custom-cursor-ring {
-    width: 36px;
-    height: 36px;
-    border: 1.5px solid #ffffff;
-    background-color: transparent;
+    width: 38px;
+    height: 38px;
+    border: 1.5px solid rgba(147, 51, 234, 0.65);
+    background-color: rgba(168, 85, 247, 0.05);
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.2);
 }
 
 /* Hover state on interactive elements: links, buttons, inputs, tabs */
 .custom-cursor-ring.is-hovering {
-    width: 58px;
-    height: 58px;
-    border: 1.5px solid #ffffff;
-    background-color: rgba(255, 255, 255, 0.12);
+    width: 56px;
+    height: 56px;
+    border: 1.5px solid #9333ea;
+    background-color: rgba(147, 51, 234, 0.12);
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.35);
 }
 
 .custom-cursor-dot.is-hovering {
@@ -283,9 +286,9 @@
 
 /* Click state (mouse down) */
 .custom-cursor-ring.is-clicking {
-    width: 28px;
-    height: 28px;
-    background-color: rgba(255, 255, 255, 0.3);
+    width: 26px;
+    height: 26px;
+    background-color: rgba(147, 51, 234, 0.28);
 }
 
 /* Hide custom cursor on mobile touch screens */
