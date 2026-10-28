@@ -327,6 +327,7 @@
     let isAiThinking = false;
     let isHoveringOrb = false;
     let geminiApiKey = localStorage.getItem('buttercup_gemini_key') || '';
+    let drawLargeOrb = null;
 
     if (geminiApiKey && statusText) {
       statusText.textContent = "Google Gemini: Active";
@@ -877,7 +878,7 @@
       const lctx = largeOrbCanvas.getContext('2d');
       let largeOrbAngle = 0;
 
-      function drawLargeOrb() {
+      drawLargeOrb = function() {
         if (!isModalOpen || document.hidden) {
           return;
         }
@@ -886,30 +887,89 @@
         lctx.clearRect(0, 0, w, h);
 
         // Speed up and amplify when AI is speaking, listening, or thinking
-        const speed = isAiSpeaking ? 0.045 : (isAiThinking ? 0.038 : (isAiListening ? 0.035 : 0.018));
+        const speed = isAiSpeaking ? 0.045 : (isAiThinking ? 0.038 : (isAiListening ? 0.035 : 0.016));
         largeOrbAngle += speed;
 
         const cx = w / 2;
         const cy = h / 2;
         const pulse = isAiSpeaking 
-          ? Math.sin(largeOrbAngle * 4) * 14 
-          : (isAiThinking ? Math.sin(largeOrbAngle * 6) * 10 : Math.sin(largeOrbAngle * 2) * 5);
-        const r = (w * 0.44) + pulse;
+          ? Math.sin(largeOrbAngle * 4) * 16 
+          : (isAiThinking ? Math.sin(largeOrbAngle * 6) * 12 : Math.sin(largeOrbAngle * 2) * 6);
+        const r = (w * 0.32) + pulse;
 
-        // Moving fluid focal centers
+        // 1. Ambient Apple Intelligence Cosmic Glow
+        const glowGrad = lctx.createRadialGradient(cx, cy, r * 0.6, cx, cy, r * 1.55);
+        glowGrad.addColorStop(0, 'rgba(168, 85, 247, 0.45)');
+        glowGrad.addColorStop(0.4, 'rgba(236, 72, 153, 0.28)');
+        glowGrad.addColorStop(0.7, 'rgba(56, 189, 248, 0.18)');
+        glowGrad.addColorStop(1, 'transparent');
+        lctx.fillStyle = glowGrad;
+        lctx.beginPath();
+        lctx.arc(cx, cy, r * 1.55, 0, Math.PI * 2);
+        lctx.fill();
+
+        // 3D Orbital Projection Math for Rings & Satellites (tilt 24deg)
+        const tiltAngle = 24 * Math.PI / 180;
+        const cosT = Math.cos(tiltAngle);
+        const sinT = Math.sin(tiltAngle);
+        const rx = r * 1.48;
+        const ry = r * 0.48;
+
+        function getOrbitalPoint(ang) {
+          const ox = Math.cos(ang) * rx;
+          const oz = Math.sin(ang) * rx;
+          const oy = Math.sin(ang) * ry;
+          const rotY = oy * cosT - oz * sinT;
+          const rotZ = oy * sinT + oz * cosT;
+          return { x: cx + ox, y: cy + rotY, z: rotZ };
+        }
+
+        // 2. Draw Back Portion of Quantum Rings (z < 0)
+        lctx.save();
+        lctx.beginPath();
+        for (let a = 0; a <= Math.PI * 2; a += 0.04) {
+          const pt = getOrbitalPoint(a);
+          if (pt.z < 0) {
+            lctx.lineTo(pt.x, pt.y);
+          } else {
+            lctx.moveTo(pt.x, pt.y);
+          }
+        }
+        lctx.strokeStyle = 'rgba(192, 132, 252, 0.45)';
+        lctx.lineWidth = 3.5;
+        lctx.shadowColor = 'rgba(168, 85, 247, 0.6)';
+        lctx.shadowBlur = 14;
+        lctx.stroke();
+        lctx.restore();
+
+        // 3. Draw Back Satellites (z < 0)
+        [largeOrbAngle, largeOrbAngle + 2.1, largeOrbAngle + 4.2].forEach(ang => {
+          const pt = getOrbitalPoint(ang);
+          if (pt.z < 0) {
+            lctx.save();
+            lctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            lctx.shadowColor = '#a855f7';
+            lctx.shadowBlur = 10;
+            lctx.beginPath();
+            lctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
+            lctx.fill();
+            lctx.restore();
+          }
+        });
+
+        // 4. Draw Core 3D Iridescent Sphere
         const f1x = cx + Math.cos(largeOrbAngle) * (r * 0.4);
         const f1y = cy + Math.sin(largeOrbAngle * 0.8) * (r * 0.35);
 
         const f2x = cx + Math.sin(-largeOrbAngle * 0.7) * (r * 0.35);
         const f2y = cy + Math.cos(largeOrbAngle * 1.1) * (r * 0.3);
 
-        // Deep luminous base
         const baseGrad = lctx.createRadialGradient(f1x, f1y, 10, cx, cy, r);
         baseGrad.addColorStop(0, '#ffffff');
-        baseGrad.addColorStop(0.2, '#fbcfe8');
-        baseGrad.addColorStop(0.45, '#e879f9');
-        baseGrad.addColorStop(0.7, '#a855f7');
-        baseGrad.addColorStop(0.9, '#6366f1');
+        baseGrad.addColorStop(0.18, '#fbcfe8');
+        baseGrad.addColorStop(0.42, '#e879f9');
+        baseGrad.addColorStop(0.68, '#a855f7');
+        baseGrad.addColorStop(0.88, '#6366f1');
         baseGrad.addColorStop(1, '#3b82f6');
 
         lctx.fillStyle = baseGrad;
@@ -917,12 +977,11 @@
         lctx.arc(cx, cy, r, 0, Math.PI * 2);
         lctx.fill();
 
-        // Secondary iridescent violet/cyan plasma overlay
         lctx.globalCompositeOperation = 'screen';
-        const plasmaGrad = lctx.createRadialGradient(f2x, f2y, 5, cx, cy, r * 0.85);
+        const plasmaGrad = lctx.createRadialGradient(f2x, f2y, 8, cx, cy, r * 0.9);
         plasmaGrad.addColorStop(0, 'rgba(255, 255, 255, 0.85)');
-        plasmaGrad.addColorStop(0.3, 'rgba(236, 72, 153, 0.55)');
-        plasmaGrad.addColorStop(0.65, 'rgba(168, 85, 247, 0.4)');
+        plasmaGrad.addColorStop(0.3, 'rgba(236, 72, 153, 0.6)');
+        plasmaGrad.addColorStop(0.65, 'rgba(168, 85, 247, 0.45)');
         plasmaGrad.addColorStop(1, 'transparent');
 
         lctx.fillStyle = plasmaGrad;
@@ -930,11 +989,10 @@
         lctx.arc(cx, cy, r, 0, Math.PI * 2);
         lctx.fill();
 
-        // Specular glass highlight ring
         const specGrad = lctx.createRadialGradient(cx - r * 0.32, cy - r * 0.32, 2, cx, cy, r);
-        specGrad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
-        specGrad.addColorStop(0.35, 'rgba(255, 255, 255, 0.25)');
-        specGrad.addColorStop(0.7, 'transparent');
+        specGrad.addColorStop(0, 'rgba(255, 255, 255, 0.92)');
+        specGrad.addColorStop(0.32, 'rgba(255, 255, 255, 0.28)');
+        specGrad.addColorStop(0.68, 'transparent');
 
         lctx.fillStyle = specGrad;
         lctx.beginPath();
@@ -943,13 +1001,65 @@
 
         lctx.globalCompositeOperation = 'source-over';
 
+        // 5. Draw Front Portion of Quantum Rings (z >= 0)
+        lctx.save();
+        lctx.beginPath();
+        for (let a = 0; a <= Math.PI * 2; a += 0.04) {
+          const pt = getOrbitalPoint(a);
+          if (pt.z >= 0) {
+            lctx.lineTo(pt.x, pt.y);
+          } else {
+            lctx.moveTo(pt.x, pt.y);
+          }
+        }
+        const rg = lctx.createLinearGradient(cx - rx, cy, cx + rx, cy);
+        rg.addColorStop(0, 'rgba(56, 189, 248, 0.95)');
+        rg.addColorStop(0.5, 'rgba(255, 255, 255, 0.98)');
+        rg.addColorStop(1, 'rgba(244, 63, 94, 0.95)');
+        lctx.strokeStyle = rg;
+        lctx.lineWidth = 4.2;
+        lctx.shadowColor = '#ffffff';
+        lctx.shadowBlur = 18;
+        lctx.stroke();
+        lctx.restore();
+
+        // 6. Draw Front Satellites with Diamond Star Flares (z >= 0)
+        [largeOrbAngle, largeOrbAngle + 2.1, largeOrbAngle + 4.2].forEach(ang => {
+          const pt = getOrbitalPoint(ang);
+          if (pt.z >= 0) {
+            lctx.save();
+            lctx.fillStyle = '#ffffff';
+            lctx.shadowColor = '#f43f5e';
+            lctx.shadowBlur = 18;
+            lctx.beginPath();
+            lctx.arc(pt.x, pt.y, 6.5, 0, Math.PI * 2);
+            lctx.fill();
+
+            const s = 10;
+            lctx.beginPath();
+            lctx.moveTo(pt.x, pt.y - s);
+            lctx.lineTo(pt.x + s * 0.25, pt.y - s * 0.25);
+            lctx.lineTo(pt.x + s, pt.y);
+            lctx.lineTo(pt.x + s * 0.25, pt.y + s * 0.25);
+            lctx.lineTo(pt.x, pt.y + s);
+            lctx.lineTo(pt.x - s * 0.25, pt.y + s * 0.25);
+            lctx.lineTo(pt.x - s, pt.y);
+            lctx.lineTo(pt.x - s * 0.25, pt.y - s * 0.25);
+            lctx.closePath();
+            lctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+            lctx.fill();
+
+            lctx.restore();
+          }
+        });
+
         if (isModalOpen && !document.hidden) {
           requestAnimationFrame(drawLargeOrb);
         }
-      }
+      };
 
       document.addEventListener('visibilitychange', () => {
-        if (!document.hidden && isModalOpen && largeOrbCanvas) {
+        if (!document.hidden && isModalOpen && typeof drawLargeOrb === 'function') {
           requestAnimationFrame(drawLargeOrb);
         }
       });
@@ -979,7 +1089,7 @@
       aiOverlay.setAttribute('aria-hidden', 'false');
       document.documentElement.classList.add('em-modal-open');
       updateModalUrl(true);
-      if (largeOrbCanvas) {
+      if (typeof drawLargeOrb === 'function') {
         requestAnimationFrame(drawLargeOrb);
       }
       setTimeout(() => {
