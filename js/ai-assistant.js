@@ -31,7 +31,7 @@
         widget.id = 'btr-ai-orb-widget';
         widget.className = 'btr-ai-orb-widget';
         widget.innerHTML = `
-          <canvas class="btr-ai-sparks-canvas" id="btr-ai-sparks-canvas" width="360" height="560"></canvas>
+          <canvas class="btr-ai-sparks-canvas" id="btr-ai-sparks-canvas" width="440" height="440"></canvas>
           <div class="btr-ai-orb-halo"></div>
           <button class="btr-ai-orb-button em-orb-toggle" id="orb-toggle" title="Chat with Buttercup AI" aria-label="Open Buttercup AI Assistant">
             <canvas id="orb-canvas" class="em-orb-canvas" width="160" height="160"></canvas>
@@ -46,8 +46,8 @@
       const sparksCv = document.createElement('canvas');
       sparksCv.id = 'btr-ai-sparks-canvas';
       sparksCv.className = 'btr-ai-sparks-canvas';
-      sparksCv.width = 360;
-      sparksCv.height = 560;
+      sparksCv.width = 440;
+      sparksCv.height = 440;
       widget.insertBefore(sparksCv, widget.firstChild);
     }
 
@@ -65,8 +65,10 @@
       bubble.id = 'em-ai-bubble';
       bubble.className = 'btr-ai-bubble em-ai-bubble';
       bubble.setAttribute('role', 'tooltip');
-      bubble.innerHTML = `<span>I'M BUTTERCUP AI. CLICK TO INTERACT.</span>`;
-      document.body.appendChild(bubble);
+      bubble.innerHTML = `<span>Ask Buttercup AI</span><span style="color:#d8b4fe; font-size:0.85rem; line-height:1;">✦</span>`;
+      widget.appendChild(bubble);
+    } else if (bubble.parentElement !== widget) {
+      widget.appendChild(bubble);
     }
 
     // 1.3 Full-Screen AI Assistant Modal Overlay
@@ -193,189 +195,105 @@
     }
 
     // ==========================================================================
-    // 3. ASCENDING SPARKS & RADIANT ENERGY PARTICLE SYSTEM
-    //    "iske upar aur chhut rahe ho aisa kuchh intresting karo"
+    // 3. APPLE INTELLIGENCE / SIRI RESONANCE & DIAMOND STARDUST ENGINE
+    //    Ethereal concentric harmonic rings & luxury diamond micro-stars (✦)
     // ==========================================================================
     const sparksCanvas = document.getElementById('btr-ai-sparks-canvas');
     if (sparksCanvas) {
       const sctx = sparksCanvas.getContext('2d');
-      const particles = [];
-      const shockwaves = [];
-      const twinkles = [];
-      let frameCount = 0;
+      const harmonicRings = [];
+      const diamondStars = [];
+      const stardust = [];
+      let auraFrame = 0;
 
-      // Color palettes for radiant violet & celestial stardust
-      const SPARK_COLORS = [
-        { r: 255, g: 255, b: 255, hex: '#ffffff' }, // bright white spark core
-        { r: 240, g: 171, b: 252, hex: '#f0abfc' }, // vibrant pink-lavender
-        { r: 216, g: 136, b: 255, hex: '#d888ff' }, // radiant purple
-        { r: 168, g: 85,  b: 247, hex: '#a855f7' }, // royal violet
-        { r: 129, g: 140, b: 248, hex: '#818cf8' }, // electric indigo
-        { r: 56,  g: 189, b: 248, hex: '#38bdf8' }  // electric cyan
-      ];
-
-      class SparkParticle {
+      // Concentric Harmonic Resonance Waves (Siri Aura Ripples)
+      class HarmonicRing {
         constructor(isBurst = false) {
-          this.reset(isBurst);
-        }
-
-        reset(isBurst = false) {
-          // Center base of the orb inside canvas (width=360, height=560)
-          // The orb sits at cx=180, cy=465 (radius ~ 48)
-          const cx = 180;
-          const cy = 465;
-
-          // Spawn angle: biased towards the upper hemisphere
-          const angle = isBurst
-            ? (Math.random() * Math.PI * 1.6 + Math.PI * 0.7)
-            : (-Math.PI / 2 + (Math.random() - 0.5) * 1.5);
-
-          const spawnRadius = 36 + Math.random() * 14;
-          this.x = cx + Math.cos(angle) * spawnRadius;
-          this.y = cy + Math.sin(angle) * spawnRadius;
-
-          // Velocity: buoyant upward trajectory
-          const speed = isBurst ? (2.8 + Math.random() * 4.2) : (1.4 + Math.random() * 2.4);
-          this.vx = Math.cos(angle) * speed * (isBurst ? 1.4 : 0.85);
-          this.vy = Math.sin(angle) * speed - (isBurst ? 1.5 : 2.2);
-
-          // Type: 0 = soft floating ember/spore, 1 = sharp crackling spark with tail
-          this.type = Math.random() < 0.28 ? 1 : 0;
-          this.size = this.type === 1 ? (1.5 + Math.random() * 1.5) : (2.2 + Math.random() * 3.8);
-          this.baseSize = this.size;
-
-          this.color = SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)];
+          this.cx = 220;
+          this.cy = 220;
+          this.radius = 66; // Just outside the 64px button
+          this.maxRadius = (isBurst ? 210 : 185) + Math.random() * 20;
           this.life = 0;
-          this.maxLife = isBurst ? (45 + Math.random() * 40) : (65 + Math.random() * 60);
-          this.wobbleSpeed = 0.04 + Math.random() * 0.05;
-          this.wobbleAmp = 0.35 + Math.random() * 0.45;
-          this.seed = Math.random() * 100;
-          this.trail = [];
+          this.maxLife = isBurst ? 70 : 85;
+          this.speed = isBurst ? (2.2 + Math.random() * 0.8) : (1.35 + Math.random() * 0.4);
+          this.angle = Math.random() * Math.PI * 2;
         }
 
         update() {
           this.life++;
-
-          // Keep short motion trail for electric sparks
-          if (this.type === 1) {
-            this.trail.push({ x: this.x, y: this.y });
-            if (this.trail.length > 5) this.trail.shift();
-          }
-
-          // Physics: upward buoyancy, gentle air drag & sine wave wobble
-          this.vx += Math.sin(this.life * this.wobbleSpeed + this.seed) * this.wobbleAmp * 0.25;
-          this.vx *= 0.98;
-          this.vy *= 0.982;
-          this.vy -= 0.025; // Gentle constant anti-gravity pull
-
-          this.x += this.vx;
-          this.y += this.vy;
-
-          return this.life < this.maxLife && this.y > 0 && this.x > 10 && this.x < 350;
-        }
-
-        draw(ctx) {
-          const progress = this.life / this.maxLife;
-          // Smooth bell curve opacity fade
-          const alpha = Math.sin(progress * Math.PI) * (this.type === 1 ? 0.95 : 0.85);
-          if (alpha <= 0.01) return;
-
-          ctx.save();
-          ctx.globalCompositeOperation = 'screen';
-
-          if (this.type === 1 && this.trail.length > 1) {
-            // Draw electric streak trail
-            ctx.beginPath();
-            ctx.moveTo(this.trail[0].x, this.trail[0].y);
-            for (let i = 1; i < this.trail.length; i++) {
-              ctx.lineTo(this.trail[i].x, this.trail[i].y);
-            }
-            ctx.strokeStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha * 0.85})`;
-            ctx.lineWidth = this.size;
-            ctx.lineCap = 'round';
-            ctx.stroke();
-          }
-
-          // Radiant glowing spore body
-          const r = this.size * (1 - progress * 0.35);
-          const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, r * 2.2);
-          grad.addColorStop(0, `rgba(255, 255, 255, ${alpha})`);
-          grad.addColorStop(0.35, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha * 0.9})`);
-          grad.addColorStop(1, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, 0)`);
-
-          ctx.fillStyle = grad;
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, r * 2.2, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.restore();
-        }
-      }
-
-      class EnergyRing {
-        constructor() {
-          this.cx = 180;
-          this.cy = 465;
-          this.radius = 42;
-          this.maxRadius = 110 + Math.random() * 20;
-          this.life = 0;
-          this.maxLife = 70;
-        }
-
-        update() {
-          this.life++;
-          this.radius += 1.15;
+          this.radius += this.speed;
           return this.life < this.maxLife;
         }
 
         draw(ctx) {
           const p = this.life / this.maxLife;
-          const alpha = Math.sin(p * Math.PI) * 0.38;
+          const alpha = Math.sin(p * Math.PI) * 0.42;
+          if (alpha <= 0.01) return;
+
           ctx.save();
           ctx.globalCompositeOperation = 'screen';
           ctx.beginPath();
           ctx.arc(this.cx, this.cy, this.radius, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(192, 132, 252, ${alpha})`;
-          ctx.lineWidth = 1.6 * (1 - p * 0.5);
-          ctx.shadowColor = '#d888ff';
-          ctx.shadowBlur = 8;
+
+          // Siri Chromatic Gradient Stroke (Cyan -> Violet -> Magenta)
+          const gx1 = this.cx + Math.cos(this.angle) * this.radius;
+          const gy1 = this.cy + Math.sin(this.angle) * this.radius;
+          const gx2 = this.cx - Math.cos(this.angle) * this.radius;
+          const gy2 = this.cy - Math.sin(this.angle) * this.radius;
+
+          const grad = ctx.createLinearGradient(gx1, gy1, gx2, gy2);
+          grad.addColorStop(0, `rgba(56, 189, 248, ${alpha * 0.95})`);  // Electric Cyan
+          grad.addColorStop(0.5, `rgba(168, 85, 247, ${alpha})`);       // Radiant Violet
+          grad.addColorStop(1, `rgba(244, 63, 94, ${alpha * 0.85})`);   // Neon Rose
+
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 1.6 * (1 - p * 0.45);
+          ctx.shadowColor = 'rgba(168, 85, 247, 0.7)';
+          ctx.shadowBlur = 10;
           ctx.stroke();
           ctx.restore();
         }
       }
 
-      class TwinkleStar {
-        constructor() {
-          const angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.8;
-          const dist = 48 + Math.random() * 45;
-          this.x = 180 + Math.cos(angle) * dist;
-          this.y = 465 + Math.sin(angle) * dist;
+      // Luxury 4-Pointed Diamond Stars (✦)
+      class DiamondStar {
+        constructor(isBurst = false) {
+          const angle = Math.random() * Math.PI * 2;
+          const dist = (isBurst ? 55 : 68) + Math.random() * (isBurst ? 120 : 90);
+          this.x = 220 + Math.cos(angle) * dist;
+          this.y = 220 + Math.sin(angle) * dist;
           this.life = 0;
-          this.maxLife = 35 + Math.random() * 20;
-          this.size = 3.5 + Math.random() * 4;
+          this.maxLife = isBurst ? (35 + Math.random() * 25) : (45 + Math.random() * 30);
+          this.size = 2.4 + Math.random() * 3.6;
           this.rot = Math.random() * Math.PI;
+
+          const PALETTE = [
+            { r: 255, g: 255, b: 255 }, // Pure White
+            { r: 240, g: 171, b: 252 }, // Soft Pink-Lavender
+            { r: 56,  g: 189, b: 248 }, // Electric Cyan
+            { r: 253, g: 224, b: 71  }  // Sunlight Gold
+          ];
+          this.color = PALETTE[Math.floor(Math.random() * PALETTE.length)];
         }
 
         update() {
           this.life++;
-          this.rot += 0.05;
+          this.rot += 0.015;
           return this.life < this.maxLife;
         }
 
         draw(ctx) {
           const p = this.life / this.maxLife;
-          const alpha = Math.sin(p * Math.PI) * 0.95;
-          const s = this.size * Math.sin(p * Math.PI);
+          const alpha = Math.sin(p * Math.PI);
+          if (alpha <= 0.01) return;
+          const s = this.size * alpha;
 
           ctx.save();
           ctx.translate(this.x, this.y);
           ctx.rotate(this.rot);
           ctx.globalCompositeOperation = 'screen';
-          ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-          ctx.shadowColor = '#f0abfc';
-          ctx.shadowBlur = 10;
 
-          // 4-point diamond star
+          // 4-Point Diamond Star Path
           ctx.beginPath();
           ctx.moveTo(0, -s * 2.2);
           ctx.lineTo(s * 0.45, -s * 0.45);
@@ -386,90 +304,139 @@
           ctx.lineTo(-s * 2.2, 0);
           ctx.lineTo(-s * 0.45, -s * 0.45);
           ctx.closePath();
+
+          ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha * 0.95})`;
+          ctx.shadowColor = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, 0.8)`;
+          ctx.shadowBlur = 10;
+          ctx.fill();
+
+          // Brilliant White Specular Glint
+          ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(0, 0, s * 0.35, 0, Math.PI * 2);
           ctx.fill();
 
           ctx.restore();
         }
       }
 
-      function spawnBurst(count = 20) {
-        for (let i = 0; i < count; i++) {
-          particles.push(new SparkParticle(true));
+      // Micro Ambient Stardust (Soft drifting points of light, no trails)
+      class AmbientDust {
+        constructor() {
+          const angle = Math.random() * Math.PI * 2;
+          const dist = 65 + Math.random() * 85;
+          this.x = 220 + Math.cos(angle) * dist;
+          this.y = 220 + Math.sin(angle) * dist;
+          this.vx = (Math.random() - 0.5) * 0.4;
+          this.vy = (Math.random() - 0.5) * 0.4;
+          this.r = 0.8 + Math.random() * 1.4;
+          this.life = 0;
+          this.maxLife = 50 + Math.random() * 40;
+          this.color = Math.random() < 0.5 ? '240, 171, 252' : '56, 189, 248';
+        }
+
+        update() {
+          this.life++;
+          this.x += this.vx;
+          this.y += this.vy;
+          return this.life < this.maxLife;
+        }
+
+        draw(ctx) {
+          const p = this.life / this.maxLife;
+          const alpha = Math.sin(p * Math.PI) * 0.65;
+          if (alpha <= 0.01) return;
+
+          ctx.save();
+          ctx.globalCompositeOperation = 'screen';
+          ctx.fillStyle = `rgba(${this.color}, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
         }
       }
 
-      function animateSparks() {
-        frameCount++;
+      function triggerAuraBurst() {
+        harmonicRings.push(new HarmonicRing(true));
+        for (let i = 0; i < 8; i++) {
+          diamondStars.push(new DiamondStar(true));
+        }
+      }
+
+      function animateAura() {
+        auraFrame++;
         sctx.clearRect(0, 0, sparksCanvas.width, sparksCanvas.height);
 
-        // Continuous emission rate (boosted on hover or speaking)
-        const spawnChance = isHoveringOrb ? 0.85 : 0.38;
-        if (Math.random() < spawnChance) {
-          particles.push(new SparkParticle(false));
-          if (isHoveringOrb && Math.random() < 0.6) {
-            particles.push(new SparkParticle(false));
-          }
+        // 1. Periodic Siri Harmonic Rings
+        const ringInterval = isHoveringOrb ? 45 : 75;
+        if (auraFrame % ringInterval === 0) {
+          harmonicRings.push(new HarmonicRing(false));
         }
 
-        // Periodic shockwave ring (every ~90 frames)
-        if (frameCount % 90 === 0) {
-          shockwaves.push(new EnergyRing());
+        // 2. Periodic Diamond Star Twinkles
+        const twinkleChance = isHoveringOrb ? 0.35 : 0.16;
+        if (Math.random() < twinkleChance) {
+          diamondStars.push(new DiamondStar(false));
         }
 
-        // Periodic twinkle stars
-        if (frameCount % 45 === 0 && Math.random() < 0.75) {
-          twinkles.push(new TwinkleStar());
+        // 3. Periodic Ambient Stardust
+        if (stardust.length < 18 && Math.random() < 0.25) {
+          stardust.push(new AmbientDust());
         }
 
-        // Update and draw shockwaves
-        for (let i = shockwaves.length - 1; i >= 0; i--) {
-          if (!shockwaves[i].update()) {
-            shockwaves.splice(i, 1);
+        // Update and draw rings
+        for (let i = harmonicRings.length - 1; i >= 0; i--) {
+          if (!harmonicRings[i].update()) {
+            harmonicRings.splice(i, 1);
           } else {
-            shockwaves[i].draw(sctx);
+            harmonicRings[i].draw(sctx);
           }
         }
 
-        // Update and draw twinkles
-        for (let i = twinkles.length - 1; i >= 0; i--) {
-          if (!twinkles[i].update()) {
-            twinkles.splice(i, 1);
+        // Update and draw stardust
+        for (let i = stardust.length - 1; i >= 0; i--) {
+          if (!stardust[i].update()) {
+            stardust.splice(i, 1);
           } else {
-            twinkles[i].draw(sctx);
+            stardust[i].draw(sctx);
           }
         }
 
-        // Update and draw particles
-        for (let i = particles.length - 1; i >= 0; i--) {
-          if (!particles[i].update()) {
-            particles.splice(i, 1);
+        // Update and draw diamond stars
+        for (let i = diamondStars.length - 1; i >= 0; i--) {
+          if (!diamondStars[i].update()) {
+            diamondStars.splice(i, 1);
           } else {
-            particles[i].draw(sctx);
+            diamondStars[i].draw(sctx);
           }
         }
 
-        requestAnimationFrame(animateSparks);
+        requestAnimationFrame(animateAura);
       }
 
-      requestAnimationFrame(animateSparks);
+      requestAnimationFrame(animateAura);
 
-      // Mouse interactive hooks for sparks
+      // Interactive hover hooks
       if (orbToggle) {
         orbToggle.addEventListener('mouseenter', () => {
           isHoveringOrb = true;
-          spawnBurst(14);
+          triggerAuraBurst();
+          if (bubble) bubble.classList.add('is-active');
         });
         orbToggle.addEventListener('mouseleave', () => {
           isHoveringOrb = false;
+          if (bubble) bubble.classList.remove('is-active');
         });
         orbToggle.addEventListener('click', () => {
-          spawnBurst(24);
+          triggerAuraBurst();
+          if (bubble) bubble.classList.remove('is-active');
         });
       }
     }
 
     // ==========================================================================
-    // 4. MINI 3D FLUID IRIDESCENT ORB RENDERER (Bottom Right Button)
+    // 4. APPLE INTELLIGENCE / SIRI MULTI-VORTEX FLUID LIQUID ORB (Bottom Right)
     // ==========================================================================
     const orbCanvas = document.getElementById('orb-canvas');
     if (orbCanvas) {
@@ -481,60 +448,99 @@
         const h = orbCanvas.height;
         orbCtx.clearRect(0, 0, w, h);
 
-        orbAngle += isHoveringOrb ? 0.045 : 0.022;
+        orbAngle += isHoveringOrb ? 0.038 : 0.02;
         const cx = w / 2;
         const cy = h / 2;
-        const r = w * 0.44;
+        const r = w * 0.44; // ~70px on 160x160 canvas
 
-        // Dynamic light source rotating around the sphere
-        const gx = cx + Math.cos(orbAngle) * (r * 0.36);
-        const gy = cy + Math.sin(orbAngle) * (r * 0.36);
-
-        // Rich chromatic spherical gradient
-        const grad = orbCtx.createRadialGradient(gx, gy, 2, cx, cy, r);
-        grad.addColorStop(0, '#ffffff');
-        grad.addColorStop(0.22, '#f0abfc');
-        grad.addColorStop(0.52, '#9047ff');
-        grad.addColorStop(0.82, '#2e1065');
-        grad.addColorStop(1, '#0f051d');
-
-        orbCtx.fillStyle = grad;
+        // Clip to crisp circle with smooth antialiasing
+        orbCtx.save();
         orbCtx.beginPath();
         orbCtx.arc(cx, cy, r, 0, Math.PI * 2);
-        orbCtx.fill();
+        orbCtx.clip();
 
-        // Iridescent violet/cyan counter-refraction
+        // 1. Base vibrant ethereal gradient (White -> Rose -> Violet -> Cyan -> Azure)
+        const lx = cx + Math.cos(orbAngle) * (r * 0.35);
+        const ly = cy + Math.sin(orbAngle * 0.8) * (r * 0.35);
+
+        const baseGrad = orbCtx.createRadialGradient(lx, ly, 4, cx, cy, r);
+        baseGrad.addColorStop(0, '#ffffff');        // Pure white core highlight
+        baseGrad.addColorStop(0.18, '#fed7aa');     // Warm solar amber
+        baseGrad.addColorStop(0.38, '#f43f5e');     // Neon rose / magenta
+        baseGrad.addColorStop(0.68, '#8b5cf6');     // Vibrant royal violet
+        baseGrad.addColorStop(0.88, '#06b6d4');     // Electric cyan
+        baseGrad.addColorStop(1.0, '#3b82f6');      // Vivid azure (Zero black!)
+
+        orbCtx.fillStyle = baseGrad;
+        orbCtx.fillRect(0, 0, w, h);
+
+        // 2. Swirling Fluid Light Vortices (Apple Intelligence Siri mesh)
         orbCtx.globalCompositeOperation = 'screen';
-        const refractionGrad = orbCtx.createRadialGradient(
-          cx - Math.cos(orbAngle * 0.8) * (r * 0.3),
-          cy - Math.sin(orbAngle * 0.8) * (r * 0.3),
-          1,
-          cx,
-          cy,
-          r * 0.85
-        );
-        refractionGrad.addColorStop(0, 'rgba(255, 255, 255, 0.7)');
-        refractionGrad.addColorStop(0.35, 'rgba(236, 72, 153, 0.45)');
-        refractionGrad.addColorStop(0.7, 'rgba(56, 189, 248, 0.35)');
-        refractionGrad.addColorStop(1, 'transparent');
 
-        orbCtx.fillStyle = refractionGrad;
-        orbCtx.beginPath();
-        orbCtx.arc(cx, cy, r, 0, Math.PI * 2);
-        orbCtx.fill();
+        // Vortex 1: Electric Cyan & Sky Blue
+        const v1x = cx + Math.cos(orbAngle * 1.35) * (r * 0.42);
+        const v1y = cy + Math.sin(orbAngle * 1.1) * (r * 0.42);
+        const gradV1 = orbCtx.createRadialGradient(v1x, v1y, 2, v1x, v1y, r * 0.7);
+        gradV1.addColorStop(0, 'rgba(56, 189, 248, 0.9)');
+        gradV1.addColorStop(0.45, 'rgba(6, 182, 212, 0.5)');
+        gradV1.addColorStop(1, 'transparent');
+        orbCtx.fillStyle = gradV1;
+        orbCtx.fillRect(0, 0, w, h);
 
-        // Crisp specular highlight reflection
-        const hl = orbCtx.createRadialGradient(cx - r * 0.32, cy - r * 0.32, 1, cx, cy, r * 0.75);
-        hl.addColorStop(0, 'rgba(255, 255, 255, 0.85)');
-        hl.addColorStop(0.35, 'rgba(255, 255, 255, 0.2)');
-        hl.addColorStop(1, 'transparent');
+        // Vortex 2: Neon Magenta / Hot Pink
+        const v2x = cx + Math.sin(-orbAngle * 0.95) * (r * 0.38);
+        const v2y = cy + Math.cos(orbAngle * 1.25) * (r * 0.38);
+        const gradV2 = orbCtx.createRadialGradient(v2x, v2y, 2, v2x, v2y, r * 0.65);
+        gradV2.addColorStop(0, 'rgba(244, 63, 94, 0.85)');
+        gradV2.addColorStop(0.4, 'rgba(236, 72, 153, 0.45)');
+        gradV2.addColorStop(1, 'transparent');
+        orbCtx.fillStyle = gradV2;
+        orbCtx.fillRect(0, 0, w, h);
 
-        orbCtx.fillStyle = hl;
-        orbCtx.beginPath();
-        orbCtx.arc(cx, cy, r, 0, Math.PI * 2);
-        orbCtx.fill();
+        // Vortex 3: Luminous Golden Light Swirl
+        const v3x = cx + Math.cos(orbAngle * 0.75 + 2) * (r * 0.3);
+        const v3y = cy + Math.sin(orbAngle * 0.9 + 1.5) * (r * 0.3);
+        const gradV3 = orbCtx.createRadialGradient(v3x, v3y, 1, v3x, v3y, r * 0.5);
+        gradV3.addColorStop(0, 'rgba(254, 240, 138, 0.75)');
+        gradV3.addColorStop(0.5, 'rgba(251, 146, 60, 0.3)');
+        gradV3.addColorStop(1, 'transparent');
+        orbCtx.fillStyle = gradV3;
+        orbCtx.fillRect(0, 0, w, h);
 
+        // 3. Apple Glass Specular Arc Reflection (Curved high-gloss glint on top)
         orbCtx.globalCompositeOperation = 'source-over';
+        const glintGrad = orbCtx.createLinearGradient(cx - r * 0.5, cy - r * 0.8, cx + r * 0.3, cy);
+        glintGrad.addColorStop(0, 'rgba(255, 255, 255, 0.75)');
+        glintGrad.addColorStop(0.4, 'rgba(255, 255, 255, 0.15)');
+        glintGrad.addColorStop(1, 'transparent');
+
+        orbCtx.fillStyle = glintGrad;
+        orbCtx.beginPath();
+        orbCtx.ellipse(cx, cy - r * 0.35, r * 0.75, r * 0.38, -Math.PI / 12, 0, Math.PI * 2);
+        orbCtx.fill();
+
+        // 4. Subtle Inner Caustic Rim Reflection (Fresnel lens effect)
+        orbCtx.globalCompositeOperation = 'screen';
+        const rimGrad = orbCtx.createRadialGradient(cx, cy, r * 0.78, cx, cy, r);
+        rimGrad.addColorStop(0, 'transparent');
+        rimGrad.addColorStop(0.85, 'rgba(255, 255, 255, 0.35)');
+        rimGrad.addColorStop(1, 'rgba(255, 255, 255, 0.8)');
+
+        orbCtx.fillStyle = rimGrad;
+        orbCtx.beginPath();
+        orbCtx.arc(cx, cy, r, 0, Math.PI * 2);
+        orbCtx.fill();
+
+        orbCtx.restore();
+
+        // 5. Crisp Micro-Border (Luminous glass edge)
+        orbCtx.save();
+        orbCtx.beginPath();
+        orbCtx.arc(cx, cy, r - 0.5, 0, Math.PI * 2);
+        orbCtx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
+        orbCtx.lineWidth = 1.2;
+        orbCtx.stroke();
+        orbCtx.restore();
 
         requestAnimationFrame(drawMiniOrb);
       }
