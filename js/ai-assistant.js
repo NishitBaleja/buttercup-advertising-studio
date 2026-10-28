@@ -441,7 +441,7 @@
     }
 
     // ==========================================================================
-    // 3.1 AUTOMATIC 3-SECOND CONVERSATIONAL POP BUBBLE ENGINE
+    // 3.1 EPHEMERAL POP ENGINE: Pops in every 4s for ~1.2s, then disappears
     // ==========================================================================
     const POP_MESSAGES = [
       "Click to talk with Buttercup AI ✦",
@@ -453,35 +453,85 @@
 
     let popIndex = 0;
     let isBubbleHovered = false;
+    let popTimer = null;
+    let hideTimer = null;
 
-    if (aiBubble) {
-      aiBubble.addEventListener('mouseenter', () => { isBubbleHovered = true; });
-      aiBubble.addEventListener('mouseleave', () => { isBubbleHovered = false; });
+    function isModalCurrentlyOpen() {
+      const overlay = document.getElementById('em-ai-overlay');
+      return overlay && overlay.classList.contains('is-open');
     }
 
-    // Cyclical 3.2s auto-pop rotation with spring animation
-    setInterval(() => {
-      // Don't cycle if user is interacting with widget or if modal is open
-      if (isHoveringOrb || isBubbleHovered) return;
-      const overlay = document.getElementById('em-ai-overlay');
-      if (overlay && overlay.classList.contains('is-open')) {
-        if (aiBubble) aiBubble.classList.add('is-hidden');
-        return;
-      }
-      if (aiBubble) aiBubble.classList.remove('is-hidden');
-
-      popIndex = (popIndex + 1) % POP_MESSAGES.length;
+    function triggerPopIn() {
+      if (!aiBubble || isModalCurrentlyOpen() || isHoveringOrb || isBubbleHovered) return;
       const textEl = document.getElementById('btr-bubble-text');
-      
-      if (aiBubble && textEl) {
-        // Trigger spring pop animation
-        aiBubble.classList.add('is-popping');
-        setTimeout(() => {
-          textEl.textContent = POP_MESSAGES[popIndex];
-          aiBubble.classList.remove('is-popping');
-        }, 180);
+      if (textEl) {
+        textEl.textContent = POP_MESSAGES[popIndex];
+        popIndex = (popIndex + 1) % POP_MESSAGES.length;
       }
-    }, 3200);
+      aiBubble.classList.add('is-visible');
+      aiBubble.classList.add('is-popping');
+      setTimeout(() => {
+        if (aiBubble) aiBubble.classList.remove('is-popping');
+      }, 350);
+
+      // Stay visible for 1.2 seconds, then smoothly pop out
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => {
+        if (!isBubbleHovered && !isHoveringOrb) {
+          triggerPopOut();
+          scheduleNextPop(4000); // 4 seconds hidden pause
+        }
+      }, 1200);
+    }
+
+    function triggerPopOut() {
+      if (!aiBubble) return;
+      aiBubble.classList.remove('is-visible');
+    }
+
+    function scheduleNextPop(delayMs = 4000) {
+      clearTimeout(popTimer);
+      popTimer = setTimeout(() => {
+        if (!isModalCurrentlyOpen()) {
+          triggerPopIn();
+        } else {
+          scheduleNextPop(4000);
+        }
+      }, delayMs);
+    }
+
+    if (aiBubble) {
+      aiBubble.addEventListener('mouseenter', () => {
+        isBubbleHovered = true;
+        clearTimeout(hideTimer);
+        clearTimeout(popTimer);
+        aiBubble.classList.add('is-visible');
+      });
+      aiBubble.addEventListener('mouseleave', () => {
+        isBubbleHovered = false;
+        triggerPopOut();
+        scheduleNextPop(4000);
+      });
+    }
+
+    if (orbToggle) {
+      orbToggle.addEventListener('mouseenter', () => {
+        clearTimeout(hideTimer);
+        clearTimeout(popTimer);
+        if (aiBubble && !isModalCurrentlyOpen()) {
+          aiBubble.classList.add('is-visible');
+        }
+      });
+      orbToggle.addEventListener('mouseleave', () => {
+        if (!isBubbleHovered) {
+          triggerPopOut();
+          scheduleNextPop(4000);
+        }
+      });
+    }
+
+    // Start initial pop cycle 2 seconds after page load
+    scheduleNextPop(2000);
 
     // ==========================================================================
     // 4. 3D QUANTUM ORBITAL SATURN LIQUID ORB (Bottom Right Widget)
@@ -777,6 +827,7 @@
     function openAiModal() {
       if (!aiOverlay) return;
       isModalOpen = true;
+      if (aiBubble) aiBubble.classList.remove('is-visible');
       aiOverlay.classList.add('is-open');
       aiOverlay.setAttribute('aria-hidden', 'false');
       document.documentElement.classList.add('em-modal-open');
@@ -801,6 +852,7 @@
       document.documentElement.classList.remove('em-modal-open');
       stopSpeech();
       updateModalUrl(false);
+      scheduleNextPop(3000);
     }
 
     // Bind open/close triggers
