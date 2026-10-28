@@ -474,14 +474,14 @@
         if (aiBubble) aiBubble.classList.remove('is-popping');
       }, 350);
 
-      // Stay visible for 1.2 seconds, then smoothly pop out
+      // Stay visible for 2 seconds, then smoothly pop out
       clearTimeout(hideTimer);
       hideTimer = setTimeout(() => {
         if (!isBubbleHovered && !isHoveringOrb) {
           triggerPopOut();
-          scheduleNextPop(4000); // 4 seconds hidden pause
+          scheduleNextPop(6000); // 6 seconds hidden pause
         }
-      }, 1200);
+      }, 2000);
     }
 
     function triggerPopOut() {
@@ -489,13 +489,13 @@
       aiBubble.classList.remove('is-visible');
     }
 
-    function scheduleNextPop(delayMs = 4000) {
+    function scheduleNextPop(delayMs = 6000) {
       clearTimeout(popTimer);
       popTimer = setTimeout(() => {
         if (!isModalCurrentlyOpen()) {
           triggerPopIn();
         } else {
-          scheduleNextPop(4000);
+          scheduleNextPop(6000);
         }
       }, delayMs);
     }
@@ -510,7 +510,7 @@
       aiBubble.addEventListener('mouseleave', () => {
         isBubbleHovered = false;
         triggerPopOut();
-        scheduleNextPop(4000);
+        scheduleNextPop(6000);
       });
     }
 
@@ -525,13 +525,13 @@
       orbToggle.addEventListener('mouseleave', () => {
         if (!isBubbleHovered) {
           triggerPopOut();
-          scheduleNextPop(4000);
+          scheduleNextPop(6000);
         }
       });
     }
 
-    // Start initial pop cycle 2 seconds after page load
-    scheduleNextPop(2000);
+    // Start initial pop cycle 2.5 seconds after page load
+    scheduleNextPop(2500);
 
     // ==========================================================================
     // 4. 3D QUANTUM ORBITAL SATURN LIQUID ORB (Bottom Right Widget)
