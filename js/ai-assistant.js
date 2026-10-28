@@ -58,17 +58,25 @@
       widget.insertBefore(halo, widget.querySelector('.em-orb-toggle, .btr-ai-orb-button'));
     }
 
-    // 1.2 Tooltip Hover Bubble
+    // 1.2 Conversational Dynamic Pop Bubble
     let bubble = document.getElementById('em-ai-bubble');
+    const bubbleMarkup = `
+      <span class="btr-bubble-pulse" title="AI Online"></span>
+      <span class="btr-bubble-text" id="btr-bubble-text">Click to talk with Buttercup AI</span>
+      <span class="btr-bubble-spark">✦</span>
+    `;
     if (!bubble) {
       bubble = document.createElement('div');
       bubble.id = 'em-ai-bubble';
       bubble.className = 'btr-ai-bubble em-ai-bubble';
       bubble.setAttribute('role', 'tooltip');
-      bubble.innerHTML = `<span>Ask Buttercup AI</span><span style="color:#d8b4fe; font-size:0.85rem; line-height:1;">✦</span>`;
+      bubble.innerHTML = bubbleMarkup;
       widget.appendChild(bubble);
-    } else if (bubble.parentElement !== widget) {
-      widget.appendChild(bubble);
+    } else {
+      bubble.innerHTML = bubbleMarkup;
+      if (bubble.parentElement !== widget) {
+        widget.appendChild(bubble);
+      }
     }
 
     // 1.3 Full-Screen AI Assistant Modal Overlay
@@ -422,21 +430,61 @@
         orbToggle.addEventListener('mouseenter', () => {
           isHoveringOrb = true;
           triggerAuraBurst();
-          if (bubble) bubble.classList.add('is-active');
         });
         orbToggle.addEventListener('mouseleave', () => {
           isHoveringOrb = false;
-          if (bubble) bubble.classList.remove('is-active');
         });
         orbToggle.addEventListener('click', () => {
           triggerAuraBurst();
-          if (bubble) bubble.classList.remove('is-active');
         });
       }
     }
 
     // ==========================================================================
-    // 4. APPLE INTELLIGENCE / SIRI MULTI-VORTEX FLUID LIQUID ORB (Bottom Right)
+    // 3.1 AUTOMATIC 3-SECOND CONVERSATIONAL POP BUBBLE ENGINE
+    // ==========================================================================
+    const POP_MESSAGES = [
+      "Click to talk with Buttercup AI ✦",
+      "Need branding or packaging? Ask me ↗",
+      "Explore 50+ landmark case studies ✦",
+      "Calculate your project cost & timeline ↗",
+      "Looking to elevate your brand? Let's chat ✦"
+    ];
+
+    let popIndex = 0;
+    let isBubbleHovered = false;
+
+    if (aiBubble) {
+      aiBubble.addEventListener('mouseenter', () => { isBubbleHovered = true; });
+      aiBubble.addEventListener('mouseleave', () => { isBubbleHovered = false; });
+    }
+
+    // Cyclical 3.2s auto-pop rotation with spring animation
+    setInterval(() => {
+      // Don't cycle if user is interacting with widget or if modal is open
+      if (isHoveringOrb || isBubbleHovered) return;
+      const overlay = document.getElementById('em-ai-overlay');
+      if (overlay && overlay.classList.contains('is-open')) {
+        if (aiBubble) aiBubble.classList.add('is-hidden');
+        return;
+      }
+      if (aiBubble) aiBubble.classList.remove('is-hidden');
+
+      popIndex = (popIndex + 1) % POP_MESSAGES.length;
+      const textEl = document.getElementById('btr-bubble-text');
+      
+      if (aiBubble && textEl) {
+        // Trigger spring pop animation
+        aiBubble.classList.add('is-popping');
+        setTimeout(() => {
+          textEl.textContent = POP_MESSAGES[popIndex];
+          aiBubble.classList.remove('is-popping');
+        }, 180);
+      }
+    }, 3200);
+
+    // ==========================================================================
+    // 4. 3D QUANTUM ORBITAL SATURN LIQUID ORB (Bottom Right Widget)
     // ==========================================================================
     const orbCanvas = document.getElementById('orb-canvas');
     if (orbCanvas) {
@@ -448,80 +496,113 @@
         const h = orbCanvas.height;
         orbCtx.clearRect(0, 0, w, h);
 
-        orbAngle += isHoveringOrb ? 0.038 : 0.02;
+        orbAngle += isHoveringOrb ? 0.038 : 0.022;
         const cx = w / 2;
         const cy = h / 2;
-        const r = w * 0.44; // ~70px on 160x160 canvas
+        const r = 46; // Sphere radius
+        const rx = 70; // Orbital ring horizontal radius
+        const ry = 22; // Orbital ring vertical radius
+        const tilt = -Math.PI / 7; // -25 deg tilt
 
-        // Clip to crisp circle with smooth antialiasing
+        // Helper for 3D tilted orbital ring coordinates
+        function getOrbitalPoint(ang) {
+          const cosA = Math.cos(ang), sinA = Math.sin(ang);
+          const x0 = cosA * rx;
+          const y0 = sinA * ry;
+          const x = x0 * Math.cos(tilt) - y0 * Math.sin(tilt);
+          const y = x0 * Math.sin(tilt) + y0 * Math.cos(tilt);
+          return { x: cx + x, y: cy + y, z: sinA };
+        }
+
+        // 1. Draw BACK HALF of Orbital Ring (z < 0)
+        orbCtx.save();
+        orbCtx.beginPath();
+        for (let a = Math.PI; a <= Math.PI * 2; a += 0.05) {
+          const pt = getOrbitalPoint(a);
+          if (a === Math.PI) orbCtx.moveTo(pt.x, pt.y);
+          else orbCtx.lineTo(pt.x, pt.y);
+        }
+        orbCtx.strokeStyle = 'rgba(168, 85, 247, 0.45)';
+        orbCtx.lineWidth = 2.2;
+        orbCtx.shadowColor = '#a855f7';
+        orbCtx.shadowBlur = 10;
+        orbCtx.stroke();
+        orbCtx.restore();
+
+        // 2. Draw Satellites BEHIND Sphere (z < 0)
+        [orbAngle, orbAngle + 2.1, orbAngle + 4.2].forEach(ang => {
+          const pt = getOrbitalPoint(ang);
+          if (pt.z < 0) {
+            orbCtx.save();
+            orbCtx.fillStyle = '#ffffff';
+            orbCtx.shadowColor = '#38bdf8';
+            orbCtx.shadowBlur = 8;
+            orbCtx.beginPath();
+            orbCtx.arc(pt.x, pt.y, 2.5, 0, Math.PI * 2);
+            orbCtx.fill();
+            orbCtx.restore();
+          }
+        });
+
+        // 3. Draw MAIN LIQUID SPHERE BODY
         orbCtx.save();
         orbCtx.beginPath();
         orbCtx.arc(cx, cy, r, 0, Math.PI * 2);
         orbCtx.clip();
 
-        // 1. Base vibrant ethereal gradient (White -> Rose -> Violet -> Cyan -> Azure)
+        // Base multi-color radiant gradient
         const lx = cx + Math.cos(orbAngle) * (r * 0.35);
         const ly = cy + Math.sin(orbAngle * 0.8) * (r * 0.35);
 
-        const baseGrad = orbCtx.createRadialGradient(lx, ly, 4, cx, cy, r);
-        baseGrad.addColorStop(0, '#ffffff');        // Pure white core highlight
+        const baseGrad = orbCtx.createRadialGradient(lx, ly, 3, cx, cy, r);
+        baseGrad.addColorStop(0, '#ffffff');        // Pure white highlight
         baseGrad.addColorStop(0.18, '#fed7aa');     // Warm solar amber
         baseGrad.addColorStop(0.38, '#f43f5e');     // Neon rose / magenta
         baseGrad.addColorStop(0.68, '#8b5cf6');     // Vibrant royal violet
         baseGrad.addColorStop(0.88, '#06b6d4');     // Electric cyan
-        baseGrad.addColorStop(1.0, '#3b82f6');      // Vivid azure (Zero black!)
+        baseGrad.addColorStop(1.0, '#3b82f6');      // Vivid azure
 
         orbCtx.fillStyle = baseGrad;
         orbCtx.fillRect(0, 0, w, h);
 
-        // 2. Swirling Fluid Light Vortices (Apple Intelligence Siri mesh)
+        // Swirling fluid light vortices
         orbCtx.globalCompositeOperation = 'screen';
 
-        // Vortex 1: Electric Cyan & Sky Blue
+        // Vortex 1: Electric Cyan
         const v1x = cx + Math.cos(orbAngle * 1.35) * (r * 0.42);
         const v1y = cy + Math.sin(orbAngle * 1.1) * (r * 0.42);
         const gradV1 = orbCtx.createRadialGradient(v1x, v1y, 2, v1x, v1y, r * 0.7);
-        gradV1.addColorStop(0, 'rgba(56, 189, 248, 0.9)');
+        gradV1.addColorStop(0, 'rgba(56, 189, 248, 0.95)');
         gradV1.addColorStop(0.45, 'rgba(6, 182, 212, 0.5)');
         gradV1.addColorStop(1, 'transparent');
         orbCtx.fillStyle = gradV1;
         orbCtx.fillRect(0, 0, w, h);
 
-        // Vortex 2: Neon Magenta / Hot Pink
+        // Vortex 2: Neon Magenta
         const v2x = cx + Math.sin(-orbAngle * 0.95) * (r * 0.38);
         const v2y = cy + Math.cos(orbAngle * 1.25) * (r * 0.38);
         const gradV2 = orbCtx.createRadialGradient(v2x, v2y, 2, v2x, v2y, r * 0.65);
-        gradV2.addColorStop(0, 'rgba(244, 63, 94, 0.85)');
+        gradV2.addColorStop(0, 'rgba(244, 63, 94, 0.9)');
         gradV2.addColorStop(0.4, 'rgba(236, 72, 153, 0.45)');
         gradV2.addColorStop(1, 'transparent');
         orbCtx.fillStyle = gradV2;
         orbCtx.fillRect(0, 0, w, h);
 
-        // Vortex 3: Luminous Golden Light Swirl
-        const v3x = cx + Math.cos(orbAngle * 0.75 + 2) * (r * 0.3);
-        const v3y = cy + Math.sin(orbAngle * 0.9 + 1.5) * (r * 0.3);
-        const gradV3 = orbCtx.createRadialGradient(v3x, v3y, 1, v3x, v3y, r * 0.5);
-        gradV3.addColorStop(0, 'rgba(254, 240, 138, 0.75)');
-        gradV3.addColorStop(0.5, 'rgba(251, 146, 60, 0.3)');
-        gradV3.addColorStop(1, 'transparent');
-        orbCtx.fillStyle = gradV3;
-        orbCtx.fillRect(0, 0, w, h);
-
-        // 3. Apple Glass Specular Arc Reflection (Curved high-gloss glint on top)
+        // Glass Specular Arc Reflection (Curved high-gloss glint)
         orbCtx.globalCompositeOperation = 'source-over';
         const glintGrad = orbCtx.createLinearGradient(cx - r * 0.5, cy - r * 0.8, cx + r * 0.3, cy);
-        glintGrad.addColorStop(0, 'rgba(255, 255, 255, 0.75)');
+        glintGrad.addColorStop(0, 'rgba(255, 255, 255, 0.82)');
         glintGrad.addColorStop(0.4, 'rgba(255, 255, 255, 0.15)');
         glintGrad.addColorStop(1, 'transparent');
 
         orbCtx.fillStyle = glintGrad;
         orbCtx.beginPath();
-        orbCtx.ellipse(cx, cy - r * 0.35, r * 0.75, r * 0.38, -Math.PI / 12, 0, Math.PI * 2);
+        orbCtx.ellipse(cx, cy - r * 0.35, r * 0.75, r * 0.36, -Math.PI / 12, 0, Math.PI * 2);
         orbCtx.fill();
 
-        // 4. Subtle Inner Caustic Rim Reflection (Fresnel lens effect)
+        // Inner Caustic Rim Reflection
         orbCtx.globalCompositeOperation = 'screen';
-        const rimGrad = orbCtx.createRadialGradient(cx, cy, r * 0.78, cx, cy, r);
+        const rimGrad = orbCtx.createRadialGradient(cx, cy, r * 0.75, cx, cy, r);
         rimGrad.addColorStop(0, 'transparent');
         rimGrad.addColorStop(0.85, 'rgba(255, 255, 255, 0.35)');
         rimGrad.addColorStop(1, 'rgba(255, 255, 255, 0.8)');
@@ -533,14 +614,66 @@
 
         orbCtx.restore();
 
-        // 5. Crisp Micro-Border (Luminous glass edge)
+        // 4. Luminous Glass Rim Stroke
         orbCtx.save();
         orbCtx.beginPath();
         orbCtx.arc(cx, cy, r - 0.5, 0, Math.PI * 2);
-        orbCtx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
-        orbCtx.lineWidth = 1.2;
+        orbCtx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
+        orbCtx.lineWidth = 1.3;
+        orbCtx.shadowColor = '#38bdf8';
+        orbCtx.shadowBlur = 8;
         orbCtx.stroke();
         orbCtx.restore();
+
+        // 5. Draw FRONT HALF of Orbital Ring (z >= 0)
+        orbCtx.save();
+        orbCtx.beginPath();
+        for (let a = 0; a <= Math.PI; a += 0.05) {
+          const pt = getOrbitalPoint(a);
+          if (a === 0) orbCtx.moveTo(pt.x, pt.y);
+          else orbCtx.lineTo(pt.x, pt.y);
+        }
+        const rg = orbCtx.createLinearGradient(cx - rx, cy, cx + rx, cy);
+        rg.addColorStop(0, 'rgba(56, 189, 248, 0.95)');
+        rg.addColorStop(0.5, 'rgba(255, 255, 255, 0.95)');
+        rg.addColorStop(1, 'rgba(244, 63, 94, 0.95)');
+        orbCtx.strokeStyle = rg;
+        orbCtx.lineWidth = 2.4;
+        orbCtx.shadowColor = '#ffffff';
+        orbCtx.shadowBlur = 10;
+        orbCtx.stroke();
+        orbCtx.restore();
+
+        // 6. Draw Satellites IN FRONT of Sphere (z >= 0)
+        [orbAngle, orbAngle + 2.1, orbAngle + 4.2].forEach(ang => {
+          const pt = getOrbitalPoint(ang);
+          if (pt.z >= 0) {
+            orbCtx.save();
+            orbCtx.fillStyle = '#ffffff';
+            orbCtx.shadowColor = '#f43f5e';
+            orbCtx.shadowBlur = 12;
+            orbCtx.beginPath();
+            orbCtx.arc(pt.x, pt.y, 3.2, 0, Math.PI * 2);
+            orbCtx.fill();
+
+            // Diamond star flare on front satellite
+            const s = 4.5;
+            orbCtx.beginPath();
+            orbCtx.moveTo(pt.x, pt.y - s);
+            orbCtx.lineTo(pt.x + s * 0.25, pt.y - s * 0.25);
+            orbCtx.lineTo(pt.x + s, pt.y);
+            orbCtx.lineTo(pt.x + s * 0.25, pt.y + s * 0.25);
+            orbCtx.lineTo(pt.x, pt.y + s);
+            orbCtx.lineTo(pt.x - s * 0.25, pt.y + s * 0.25);
+            orbCtx.lineTo(pt.x - s, pt.y);
+            orbCtx.lineTo(pt.x - s * 0.25, pt.y - s * 0.25);
+            orbCtx.closePath();
+            orbCtx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+            orbCtx.fill();
+
+            orbCtx.restore();
+          }
+        });
 
         requestAnimationFrame(drawMiniOrb);
       }
