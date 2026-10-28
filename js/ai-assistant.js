@@ -669,389 +669,322 @@
     scheduleNextPop(2500);
 
     // ==========================================================================
-    // 4. 3D QUANTUM ORBITAL SATURN LIQUID ORB (Bottom Right Widget)
+    // 4 & 5. PROCEDURAL 3D IRIDESCENT HOLOGRAPHIC BUTTERFLY ENGINE
+    //    Buttercup signature cyber-morpho / glasswing luxury butterfly
     // ==========================================================================
+    function createButterflyParticles(count, cx, cy) {
+      const list = [];
+      for (let i = 0; i < count; i++) {
+        list.push({
+          x: cx + (Math.random() - 0.5) * 320,
+          y: cy + (Math.random() - 0.5) * 320,
+          vx: (Math.random() - 0.5) * 0.55,
+          vy: -0.32 - Math.random() * 0.55,
+          size: 1.5 + Math.random() * 2.8,
+          alpha: 0.25 + Math.random() * 0.75,
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+      return list;
+    }
+
+    function drawButterfly(ctx, w, h, t, particles, isSpeaking, isListening, isThinking, isHovering) {
+      ctx.clearRect(0, 0, w, h);
+      const cx = w / 2;
+      const cy = h / 2;
+      const scale = (w / 560);
+
+      // Smooth hover bobbing and natural banking tilt
+      const bobY = Math.sin(t * 1.6) * (10 * scale);
+      const tilt = Math.sin(t * 0.9) * 0.035;
+      const bodyY = cy + bobY;
+
+      // Dynamic wing flapping perspective speed based on AI state
+      const flapSpeed = isSpeaking ? 4.6 : (isThinking ? 3.8 : (isListening ? 3.2 : (isHovering ? 2.8 : 2.2)));
+      const flapAngle = 0.45 + Math.sin(t * flapSpeed) * 0.42;
+      const wingScaleX = Math.cos(flapAngle);
+
+      ctx.save();
+      ctx.translate(cx, bodyY);
+      ctx.rotate(tilt);
+      ctx.scale(scale, scale);
+
+      // 1. Ambient Cosmic Aura (Dynamic state reflection)
+      const auraRadius = 240;
+      const auraGrad = ctx.createRadialGradient(0, 0, 30, 0, 0, auraRadius);
+      if (isListening) {
+        auraGrad.addColorStop(0, 'rgba(56, 189, 248, 0.48)');
+        auraGrad.addColorStop(0.5, 'rgba(99, 102, 241, 0.24)');
+        auraGrad.addColorStop(1, 'transparent');
+      } else if (isSpeaking) {
+        auraGrad.addColorStop(0, 'rgba(244, 63, 94, 0.44)');
+        auraGrad.addColorStop(0.45, 'rgba(168, 85, 247, 0.28)');
+        auraGrad.addColorStop(1, 'transparent');
+      } else if (isThinking) {
+        auraGrad.addColorStop(0, 'rgba(168, 85, 247, 0.46)');
+        auraGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.25)');
+        auraGrad.addColorStop(1, 'transparent');
+      } else {
+        auraGrad.addColorStop(0, 'rgba(192, 132, 252, 0.38)');
+        auraGrad.addColorStop(0.35, 'rgba(236, 72, 153, 0.24)');
+        auraGrad.addColorStop(0.65, 'rgba(56, 189, 248, 0.14)');
+        auraGrad.addColorStop(1, 'transparent');
+      }
+      ctx.fillStyle = auraGrad;
+      ctx.beginPath();
+      ctx.arc(0, 0, auraRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 2. Floating Diamond Stardust Particles
+      if (particles && particles.length > 0) {
+        particles.forEach(p => {
+          p.y += p.vy;
+          p.x += p.vx;
+          const limit = 240 * scale;
+          if (p.y < cy - limit) p.y = cy + limit * 0.8 + Math.random() * 40;
+          if (p.x < cx - limit) p.x = cx + limit;
+          if (p.x > cx + limit) p.x = cx - limit;
+
+          const alpha = (Math.sin(t * 3 + p.phase) * 0.35 + 0.65) * p.alpha;
+          ctx.save();
+          ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+          ctx.shadowColor = '#e879f9';
+          ctx.shadowBlur = 8;
+          ctx.beginPath();
+          ctx.arc((p.x - cx) / scale, (p.y - bodyY) / scale, p.size, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (p.size > 2.5) {
+            const s = p.size * 2;
+            ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.85})`;
+            ctx.lineWidth = 0.8;
+            ctx.beginPath();
+            ctx.moveTo((p.x - cx) / scale - s, (p.y - bodyY) / scale);
+            ctx.lineTo((p.x - cx) / scale + s, (p.y - bodyY) / scale);
+            ctx.moveTo((p.x - cx) / scale, (p.y - bodyY) / scale - s);
+            ctx.lineTo((p.x - cx) / scale, (p.y - bodyY) / scale + s);
+            ctx.stroke();
+          }
+          ctx.restore();
+        });
+      }
+
+      // 3. Symmetrical 3D Perspective Wings
+      function drawWingSide(side) {
+        ctx.save();
+        ctx.scale(side * wingScaleX, 1);
+
+        // --- HINDWING (Lower Wing) ---
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(8, 20);
+        ctx.bezierCurveTo(40, 60, 110, 150, 140, 130);
+        ctx.bezierCurveTo(165, 110, 155, 60, 130, 25);
+        ctx.bezierCurveTo(115, 5, 60, -5, 10, 5);
+        ctx.closePath();
+
+        const hGrad = ctx.createRadialGradient(50, 60, 10, 80, 80, 140);
+        hGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+        hGrad.addColorStop(0.2, 'rgba(244, 114, 182, 0.88)');
+        hGrad.addColorStop(0.5, 'rgba(168, 85, 247, 0.9)');
+        hGrad.addColorStop(0.8, 'rgba(99, 102, 241, 0.85)');
+        hGrad.addColorStop(1, 'rgba(56, 189, 248, 0.8)');
+
+        ctx.fillStyle = hGrad;
+        ctx.shadowColor = 'rgba(168, 85, 247, 0.55)';
+        ctx.shadowBlur = 16;
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.92)';
+        ctx.lineWidth = 2.2;
+        ctx.stroke();
+
+        // Venation lines on hindwing
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(10, 15);
+        ctx.quadraticCurveTo(60, 60, 140, 130);
+        ctx.moveTo(10, 15);
+        ctx.quadraticCurveTo(80, 50, 130, 25);
+        ctx.moveTo(40, 45);
+        ctx.quadraticCurveTo(90, 85, 120, 125);
+        ctx.stroke();
+
+        // Hindwing eye-spot
+        ctx.beginPath();
+        ctx.arc(105, 85, 9, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = '#38bdf8';
+        ctx.shadowBlur = 12;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(105, 85, 4.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#9333ea';
+        ctx.fill();
+        ctx.restore();
+
+        // --- FOREWING (Upper Wing) ---
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(5, -15);
+        ctx.bezierCurveTo(45, -95, 130, -185, 215, -165);
+        ctx.bezierCurveTo(240, -145, 220, -75, 185, -25);
+        ctx.bezierCurveTo(160, 15, 120, 35, 10, 5);
+        ctx.closePath();
+
+        const fGrad = ctx.createLinearGradient(10, 10, 220, -170);
+        fGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+        fGrad.addColorStop(0.18, 'rgba(244, 114, 182, 0.92)');
+        fGrad.addColorStop(0.42, 'rgba(168, 85, 247, 0.95)');
+        fGrad.addColorStop(0.7, 'rgba(124, 58, 237, 0.92)');
+        fGrad.addColorStop(0.9, 'rgba(56, 189, 248, 0.9)');
+        fGrad.addColorStop(1, 'rgba(255, 255, 255, 0.95)');
+
+        ctx.fillStyle = fGrad;
+        ctx.shadowColor = 'rgba(236, 72, 153, 0.65)';
+        ctx.shadowBlur = 22;
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
+        ctx.lineWidth = 2.6;
+        ctx.stroke();
+
+        // Intricate venation lines on forewing
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
+        ctx.lineWidth = 1.3;
+        ctx.beginPath();
+        ctx.moveTo(8, -10);
+        ctx.quadraticCurveTo(80, -90, 215, -165);
+        ctx.moveTo(8, -10);
+        ctx.quadraticCurveTo(100, -60, 195, -105);
+        ctx.moveTo(8, -10);
+        ctx.quadraticCurveTo(110, -25, 185, -25);
+        ctx.moveTo(8, -10);
+        ctx.quadraticCurveTo(80, 5, 140, 25);
+        ctx.moveTo(60, -60);
+        ctx.quadraticCurveTo(120, -130, 175, -150);
+        ctx.moveTo(90, -45);
+        ctx.quadraticCurveTo(145, -75, 185, -65);
+        ctx.moveTo(50, -20);
+        ctx.quadraticCurveTo(100, -10, 150, 10);
+        ctx.stroke();
+
+        // Wingtip Sparkles
+        [
+          { x: 215, y: -165, r: 4 },
+          { x: 195, y: -105, r: 3 },
+          { x: 185, y: -25, r: 3.5 }
+        ].forEach(sp => {
+          ctx.fillStyle = '#ffffff';
+          ctx.shadowColor = '#38bdf8';
+          ctx.shadowBlur = 12;
+          ctx.beginPath();
+          ctx.arc(sp.x, sp.y, sp.r, 0, Math.PI * 2);
+          ctx.fill();
+
+          const cs = sp.r * 2.2;
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(sp.x - cs, sp.y);
+          ctx.lineTo(sp.x + cs, sp.y);
+          ctx.moveTo(sp.x, sp.y - cs);
+          ctx.lineTo(sp.x, sp.y + cs);
+          ctx.stroke();
+        });
+
+        ctx.restore();
+        ctx.restore();
+      }
+
+      drawWingSide(-1);
+      drawWingSide(1);
+
+      // 4. Central Butterfly Body & Luminous Antennae
+      ctx.save();
+      const bodyGrad = ctx.createLinearGradient(0, -50, 0, 70);
+      bodyGrad.addColorStop(0, '#ffffff');
+      bodyGrad.addColorStop(0.3, '#f472b6');
+      bodyGrad.addColorStop(0.65, '#9333ea');
+      bodyGrad.addColorStop(1, '#3b82f6');
+
+      ctx.fillStyle = bodyGrad;
+      ctx.shadowColor = 'rgba(168, 85, 247, 0.8)';
+      ctx.shadowBlur = 14;
+      ctx.beginPath();
+      ctx.ellipse(0, -10, 7, 24, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.ellipse(0, 32, 5, 28, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(0, -38, 7.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.8;
+      ctx.shadowColor = '#e879f9';
+      ctx.shadowBlur = 10;
+      // Left Antenna
+      ctx.beginPath();
+      ctx.moveTo(-3, -42);
+      ctx.bezierCurveTo(-14, -65, -35, -80, -42, -95);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(-42, -95, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+      // Right Antenna
+      ctx.beginPath();
+      ctx.moveTo(3, -42);
+      ctx.bezierCurveTo(14, -65, 35, -80, 42, -95);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(42, -95, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+
+      ctx.restore();
+      ctx.restore();
+    }
+
+    // Mini Butterfly (Bottom Right Trigger Button)
     const orbCanvas = document.getElementById('orb-canvas');
     if (orbCanvas) {
       const orbCtx = orbCanvas.getContext('2d');
-      let orbAngle = 0;
+      const miniParticles = createButterflyParticles(12, 80, 80);
+      let miniTime = 0;
 
       function drawMiniOrb() {
         if (document.hidden) {
           requestAnimationFrame(drawMiniOrb);
           return;
         }
-        const w = orbCanvas.width;
-        const h = orbCanvas.height;
-        orbCtx.clearRect(0, 0, w, h);
-
-        orbAngle += isHoveringOrb ? 0.038 : 0.022;
-        const cx = w / 2;
-        const cy = h / 2;
-        const r = 46; // Sphere radius
-        const rx = 70; // Orbital ring horizontal radius
-        const ry = 22; // Orbital ring vertical radius
-        const tilt = -Math.PI / 7; // -25 deg tilt
-
-        // Helper for 3D tilted orbital ring coordinates
-        function getOrbitalPoint(ang) {
-          const cosA = Math.cos(ang), sinA = Math.sin(ang);
-          const x0 = cosA * rx;
-          const y0 = sinA * ry;
-          const x = x0 * Math.cos(tilt) - y0 * Math.sin(tilt);
-          const y = x0 * Math.sin(tilt) + y0 * Math.cos(tilt);
-          return { x: cx + x, y: cy + y, z: sinA };
-        }
-
-        // 1. Draw BACK HALF of Orbital Ring (z < 0)
-        orbCtx.save();
-        orbCtx.beginPath();
-        for (let a = Math.PI; a <= Math.PI * 2; a += 0.05) {
-          const pt = getOrbitalPoint(a);
-          if (a === Math.PI) orbCtx.moveTo(pt.x, pt.y);
-          else orbCtx.lineTo(pt.x, pt.y);
-        }
-        orbCtx.strokeStyle = 'rgba(168, 85, 247, 0.45)';
-        orbCtx.lineWidth = 2.2;
-        orbCtx.shadowColor = '#a855f7';
-        orbCtx.shadowBlur = 10;
-        orbCtx.stroke();
-        orbCtx.restore();
-
-        // 2. Draw Satellites BEHIND Sphere (z < 0)
-        [orbAngle, orbAngle + 2.1, orbAngle + 4.2].forEach(ang => {
-          const pt = getOrbitalPoint(ang);
-          if (pt.z < 0) {
-            orbCtx.save();
-            orbCtx.fillStyle = '#ffffff';
-            orbCtx.shadowColor = '#38bdf8';
-            orbCtx.shadowBlur = 8;
-            orbCtx.beginPath();
-            orbCtx.arc(pt.x, pt.y, 2.5, 0, Math.PI * 2);
-            orbCtx.fill();
-            orbCtx.restore();
-          }
-        });
-
-        // 3. Draw MAIN LIQUID SPHERE BODY
-        orbCtx.save();
-        orbCtx.beginPath();
-        orbCtx.arc(cx, cy, r, 0, Math.PI * 2);
-        orbCtx.clip();
-
-        // Base multi-color radiant gradient
-        const lx = cx + Math.cos(orbAngle) * (r * 0.35);
-        const ly = cy + Math.sin(orbAngle * 0.8) * (r * 0.35);
-
-        const baseGrad = orbCtx.createRadialGradient(lx, ly, 3, cx, cy, r);
-        baseGrad.addColorStop(0, '#ffffff');        // Pure white highlight
-        baseGrad.addColorStop(0.18, '#fed7aa');     // Warm solar amber
-        baseGrad.addColorStop(0.38, '#f43f5e');     // Neon rose / magenta
-        baseGrad.addColorStop(0.68, '#8b5cf6');     // Vibrant royal violet
-        baseGrad.addColorStop(0.88, '#06b6d4');     // Electric cyan
-        baseGrad.addColorStop(1.0, '#3b82f6');      // Vivid azure
-
-        orbCtx.fillStyle = baseGrad;
-        orbCtx.fillRect(0, 0, w, h);
-
-        // Swirling fluid light vortices
-        orbCtx.globalCompositeOperation = 'screen';
-
-        // Vortex 1: Electric Cyan
-        const v1x = cx + Math.cos(orbAngle * 1.35) * (r * 0.42);
-        const v1y = cy + Math.sin(orbAngle * 1.1) * (r * 0.42);
-        const gradV1 = orbCtx.createRadialGradient(v1x, v1y, 2, v1x, v1y, r * 0.7);
-        gradV1.addColorStop(0, 'rgba(56, 189, 248, 0.95)');
-        gradV1.addColorStop(0.45, 'rgba(6, 182, 212, 0.5)');
-        gradV1.addColorStop(1, 'transparent');
-        orbCtx.fillStyle = gradV1;
-        orbCtx.fillRect(0, 0, w, h);
-
-        // Vortex 2: Neon Magenta
-        const v2x = cx + Math.sin(-orbAngle * 0.95) * (r * 0.38);
-        const v2y = cy + Math.cos(orbAngle * 1.25) * (r * 0.38);
-        const gradV2 = orbCtx.createRadialGradient(v2x, v2y, 2, v2x, v2y, r * 0.65);
-        gradV2.addColorStop(0, 'rgba(244, 63, 94, 0.9)');
-        gradV2.addColorStop(0.4, 'rgba(236, 72, 153, 0.45)');
-        gradV2.addColorStop(1, 'transparent');
-        orbCtx.fillStyle = gradV2;
-        orbCtx.fillRect(0, 0, w, h);
-
-        // Glass Specular Arc Reflection (Curved high-gloss glint)
-        orbCtx.globalCompositeOperation = 'source-over';
-        const glintGrad = orbCtx.createLinearGradient(cx - r * 0.5, cy - r * 0.8, cx + r * 0.3, cy);
-        glintGrad.addColorStop(0, 'rgba(255, 255, 255, 0.82)');
-        glintGrad.addColorStop(0.4, 'rgba(255, 255, 255, 0.15)');
-        glintGrad.addColorStop(1, 'transparent');
-
-        orbCtx.fillStyle = glintGrad;
-        orbCtx.beginPath();
-        orbCtx.ellipse(cx, cy - r * 0.35, r * 0.75, r * 0.36, -Math.PI / 12, 0, Math.PI * 2);
-        orbCtx.fill();
-
-        // Inner Caustic Rim Reflection
-        orbCtx.globalCompositeOperation = 'screen';
-        const rimGrad = orbCtx.createRadialGradient(cx, cy, r * 0.75, cx, cy, r);
-        rimGrad.addColorStop(0, 'transparent');
-        rimGrad.addColorStop(0.85, 'rgba(255, 255, 255, 0.35)');
-        rimGrad.addColorStop(1, 'rgba(255, 255, 255, 0.8)');
-
-        orbCtx.fillStyle = rimGrad;
-        orbCtx.beginPath();
-        orbCtx.arc(cx, cy, r, 0, Math.PI * 2);
-        orbCtx.fill();
-
-        orbCtx.restore();
-
-        // 4. Luminous Glass Rim Stroke
-        orbCtx.save();
-        orbCtx.beginPath();
-        orbCtx.arc(cx, cy, r - 0.5, 0, Math.PI * 2);
-        orbCtx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
-        orbCtx.lineWidth = 1.3;
-        orbCtx.shadowColor = '#38bdf8';
-        orbCtx.shadowBlur = 8;
-        orbCtx.stroke();
-        orbCtx.restore();
-
-        // 5. Draw FRONT HALF of Orbital Ring (z >= 0)
-        orbCtx.save();
-        orbCtx.beginPath();
-        for (let a = 0; a <= Math.PI; a += 0.05) {
-          const pt = getOrbitalPoint(a);
-          if (a === 0) orbCtx.moveTo(pt.x, pt.y);
-          else orbCtx.lineTo(pt.x, pt.y);
-        }
-        const rg = orbCtx.createLinearGradient(cx - rx, cy, cx + rx, cy);
-        rg.addColorStop(0, 'rgba(56, 189, 248, 0.95)');
-        rg.addColorStop(0.5, 'rgba(255, 255, 255, 0.95)');
-        rg.addColorStop(1, 'rgba(244, 63, 94, 0.95)');
-        orbCtx.strokeStyle = rg;
-        orbCtx.lineWidth = 2.4;
-        orbCtx.shadowColor = '#ffffff';
-        orbCtx.shadowBlur = 10;
-        orbCtx.stroke();
-        orbCtx.restore();
-
-        // 6. Draw Satellites IN FRONT of Sphere (z >= 0)
-        [orbAngle, orbAngle + 2.1, orbAngle + 4.2].forEach(ang => {
-          const pt = getOrbitalPoint(ang);
-          if (pt.z >= 0) {
-            orbCtx.save();
-            orbCtx.fillStyle = '#ffffff';
-            orbCtx.shadowColor = '#f43f5e';
-            orbCtx.shadowBlur = 12;
-            orbCtx.beginPath();
-            orbCtx.arc(pt.x, pt.y, 3.2, 0, Math.PI * 2);
-            orbCtx.fill();
-
-            // Diamond star flare on front satellite
-            const s = 4.5;
-            orbCtx.beginPath();
-            orbCtx.moveTo(pt.x, pt.y - s);
-            orbCtx.lineTo(pt.x + s * 0.25, pt.y - s * 0.25);
-            orbCtx.lineTo(pt.x + s, pt.y);
-            orbCtx.lineTo(pt.x + s * 0.25, pt.y + s * 0.25);
-            orbCtx.lineTo(pt.x, pt.y + s);
-            orbCtx.lineTo(pt.x - s * 0.25, pt.y + s * 0.25);
-            orbCtx.lineTo(pt.x - s, pt.y);
-            orbCtx.lineTo(pt.x - s * 0.25, pt.y - s * 0.25);
-            orbCtx.closePath();
-            orbCtx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-            orbCtx.fill();
-
-            orbCtx.restore();
-          }
-        });
-
+        miniTime += isHoveringOrb ? 0.034 : 0.022;
+        drawButterfly(orbCtx, orbCanvas.width, orbCanvas.height, miniTime, miniParticles, isAiSpeaking, isAiListening, isAiThinking, isHoveringOrb);
         requestAnimationFrame(drawMiniOrb);
       }
 
       requestAnimationFrame(drawMiniOrb);
     }
 
-    // ==========================================================================
-    // 5. GIANT 3D IRIDESCENT FLUID AI ORB (Inside Modal Overlay)
-    // ==========================================================================
+    // Large Holographic Butterfly (Inside Modal Overlay)
     const largeOrbCanvas = document.getElementById('em-ai-large-orb');
     if (largeOrbCanvas) {
       const lctx = largeOrbCanvas.getContext('2d');
-      let largeOrbAngle = 0;
+      const largeParticles = createButterflyParticles(35, 280, 280);
+      let largeTime = 0;
 
       drawLargeOrb = function() {
         if (!isModalOpen || document.hidden) {
           return;
         }
-        const w = largeOrbCanvas.width;
-        const h = largeOrbCanvas.height;
-        lctx.clearRect(0, 0, w, h);
-
-        // Speed up and amplify when AI is speaking, listening, or thinking
-        const speed = isAiSpeaking ? 0.045 : (isAiThinking ? 0.038 : (isAiListening ? 0.035 : 0.016));
-        largeOrbAngle += speed;
-
-        const cx = w / 2;
-        const cy = h / 2;
-        const pulse = isAiSpeaking 
-          ? Math.sin(largeOrbAngle * 4) * 16 
-          : (isAiThinking ? Math.sin(largeOrbAngle * 6) * 12 : Math.sin(largeOrbAngle * 2) * 6);
-        const r = (w * 0.32) + pulse;
-
-        // 1. Ambient Apple Intelligence Cosmic Glow
-        const glowGrad = lctx.createRadialGradient(cx, cy, r * 0.6, cx, cy, r * 1.55);
-        glowGrad.addColorStop(0, 'rgba(168, 85, 247, 0.45)');
-        glowGrad.addColorStop(0.4, 'rgba(236, 72, 153, 0.28)');
-        glowGrad.addColorStop(0.7, 'rgba(56, 189, 248, 0.18)');
-        glowGrad.addColorStop(1, 'transparent');
-        lctx.fillStyle = glowGrad;
-        lctx.beginPath();
-        lctx.arc(cx, cy, r * 1.55, 0, Math.PI * 2);
-        lctx.fill();
-
-        // 3D Orbital Projection Math for Rings & Satellites (tilt 24deg)
-        const tiltAngle = 24 * Math.PI / 180;
-        const cosT = Math.cos(tiltAngle);
-        const sinT = Math.sin(tiltAngle);
-        const rx = r * 1.48;
-        const ry = r * 0.48;
-
-        function getOrbitalPoint(ang) {
-          const ox = Math.cos(ang) * rx;
-          const oz = Math.sin(ang) * rx;
-          const oy = Math.sin(ang) * ry;
-          const rotY = oy * cosT - oz * sinT;
-          const rotZ = oy * sinT + oz * cosT;
-          return { x: cx + ox, y: cy + rotY, z: rotZ };
-        }
-
-        // 2. Draw Back Portion of Quantum Rings (z < 0)
-        lctx.save();
-        lctx.beginPath();
-        for (let a = 0; a <= Math.PI * 2; a += 0.04) {
-          const pt = getOrbitalPoint(a);
-          if (pt.z < 0) {
-            lctx.lineTo(pt.x, pt.y);
-          } else {
-            lctx.moveTo(pt.x, pt.y);
-          }
-        }
-        lctx.strokeStyle = 'rgba(192, 132, 252, 0.45)';
-        lctx.lineWidth = 3.5;
-        lctx.shadowColor = 'rgba(168, 85, 247, 0.6)';
-        lctx.shadowBlur = 14;
-        lctx.stroke();
-        lctx.restore();
-
-        // 3. Draw Back Satellites (z < 0)
-        [largeOrbAngle, largeOrbAngle + 2.1, largeOrbAngle + 4.2].forEach(ang => {
-          const pt = getOrbitalPoint(ang);
-          if (pt.z < 0) {
-            lctx.save();
-            lctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-            lctx.shadowColor = '#a855f7';
-            lctx.shadowBlur = 10;
-            lctx.beginPath();
-            lctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
-            lctx.fill();
-            lctx.restore();
-          }
-        });
-
-        // 4. Draw Core 3D Iridescent Sphere
-        const f1x = cx + Math.cos(largeOrbAngle) * (r * 0.4);
-        const f1y = cy + Math.sin(largeOrbAngle * 0.8) * (r * 0.35);
-
-        const f2x = cx + Math.sin(-largeOrbAngle * 0.7) * (r * 0.35);
-        const f2y = cy + Math.cos(largeOrbAngle * 1.1) * (r * 0.3);
-
-        const baseGrad = lctx.createRadialGradient(f1x, f1y, 10, cx, cy, r);
-        baseGrad.addColorStop(0, '#ffffff');
-        baseGrad.addColorStop(0.18, '#fbcfe8');
-        baseGrad.addColorStop(0.42, '#e879f9');
-        baseGrad.addColorStop(0.68, '#a855f7');
-        baseGrad.addColorStop(0.88, '#6366f1');
-        baseGrad.addColorStop(1, '#3b82f6');
-
-        lctx.fillStyle = baseGrad;
-        lctx.beginPath();
-        lctx.arc(cx, cy, r, 0, Math.PI * 2);
-        lctx.fill();
-
-        lctx.globalCompositeOperation = 'screen';
-        const plasmaGrad = lctx.createRadialGradient(f2x, f2y, 8, cx, cy, r * 0.9);
-        plasmaGrad.addColorStop(0, 'rgba(255, 255, 255, 0.85)');
-        plasmaGrad.addColorStop(0.3, 'rgba(236, 72, 153, 0.6)');
-        plasmaGrad.addColorStop(0.65, 'rgba(168, 85, 247, 0.45)');
-        plasmaGrad.addColorStop(1, 'transparent');
-
-        lctx.fillStyle = plasmaGrad;
-        lctx.beginPath();
-        lctx.arc(cx, cy, r, 0, Math.PI * 2);
-        lctx.fill();
-
-        const specGrad = lctx.createRadialGradient(cx - r * 0.32, cy - r * 0.32, 2, cx, cy, r);
-        specGrad.addColorStop(0, 'rgba(255, 255, 255, 0.92)');
-        specGrad.addColorStop(0.32, 'rgba(255, 255, 255, 0.28)');
-        specGrad.addColorStop(0.68, 'transparent');
-
-        lctx.fillStyle = specGrad;
-        lctx.beginPath();
-        lctx.arc(cx, cy, r, 0, Math.PI * 2);
-        lctx.fill();
-
-        lctx.globalCompositeOperation = 'source-over';
-
-        // 5. Draw Front Portion of Quantum Rings (z >= 0)
-        lctx.save();
-        lctx.beginPath();
-        for (let a = 0; a <= Math.PI * 2; a += 0.04) {
-          const pt = getOrbitalPoint(a);
-          if (pt.z >= 0) {
-            lctx.lineTo(pt.x, pt.y);
-          } else {
-            lctx.moveTo(pt.x, pt.y);
-          }
-        }
-        const rg = lctx.createLinearGradient(cx - rx, cy, cx + rx, cy);
-        rg.addColorStop(0, 'rgba(56, 189, 248, 0.95)');
-        rg.addColorStop(0.5, 'rgba(255, 255, 255, 0.98)');
-        rg.addColorStop(1, 'rgba(244, 63, 94, 0.95)');
-        lctx.strokeStyle = rg;
-        lctx.lineWidth = 4.2;
-        lctx.shadowColor = '#ffffff';
-        lctx.shadowBlur = 18;
-        lctx.stroke();
-        lctx.restore();
-
-        // 6. Draw Front Satellites with Diamond Star Flares (z >= 0)
-        [largeOrbAngle, largeOrbAngle + 2.1, largeOrbAngle + 4.2].forEach(ang => {
-          const pt = getOrbitalPoint(ang);
-          if (pt.z >= 0) {
-            lctx.save();
-            lctx.fillStyle = '#ffffff';
-            lctx.shadowColor = '#f43f5e';
-            lctx.shadowBlur = 18;
-            lctx.beginPath();
-            lctx.arc(pt.x, pt.y, 6.5, 0, Math.PI * 2);
-            lctx.fill();
-
-            const s = 10;
-            lctx.beginPath();
-            lctx.moveTo(pt.x, pt.y - s);
-            lctx.lineTo(pt.x + s * 0.25, pt.y - s * 0.25);
-            lctx.lineTo(pt.x + s, pt.y);
-            lctx.lineTo(pt.x + s * 0.25, pt.y + s * 0.25);
-            lctx.lineTo(pt.x, pt.y + s);
-            lctx.lineTo(pt.x - s * 0.25, pt.y + s * 0.25);
-            lctx.lineTo(pt.x - s, pt.y);
-            lctx.lineTo(pt.x - s * 0.25, pt.y - s * 0.25);
-            lctx.closePath();
-            lctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-            lctx.fill();
-
-            lctx.restore();
-          }
-        });
+        const speed = isAiSpeaking ? 0.038 : (isAiThinking ? 0.032 : (isAiListening ? 0.028 : 0.02));
+        largeTime += speed;
+        drawButterfly(lctx, largeOrbCanvas.width, largeOrbCanvas.height, largeTime, largeParticles, isAiSpeaking, isAiListening, isAiThinking, false);
 
         if (isModalOpen && !document.hidden) {
           requestAnimationFrame(drawLargeOrb);
