@@ -1,0 +1,621 @@
+/* ==========================================================================
+   BUTTERCUP STUDIO - UNIVERSAL 3D IRIDESCENT AI ASSISTANT & PARTICLE SYSTEM
+   ========================================================================== */
+
+/* Outer Widget Wrapper (Anchored bottom-right across the entire website) */
+.btr-ai-orb-widget {
+  position: fixed;
+  bottom: 2rem;
+  right: 2.5rem;
+  width: 66px;
+  height: 66px;
+  z-index: 99998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* Only the inner button and bubble receive clicks */
+  user-select: none;
+}
+
+/* Ambient Spark & Radiant Particle Canvas (Emits sparks floating upward) */
+.btr-ai-sparks-canvas {
+  position: absolute;
+  bottom: -25px;
+  right: -57px;
+  width: 180px;
+  height: 280px;
+  pointer-events: none;
+  z-index: 1;
+  overflow: visible;
+  filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.45));
+}
+
+/* Background Energy Pulse Halo */
+.btr-ai-orb-halo {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.35) 0%, rgba(144, 71, 255, 0.15) 50%, transparent 70%);
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: 2;
+  animation: btr-halo-breathe 3.5s infinite ease-in-out;
+}
+
+@keyframes btr-halo-breathe {
+  0%, 100% {
+    transform: scale(0.92);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.22);
+    opacity: 0.95;
+  }
+}
+
+/* Iridescent 3D Orb Button (Interactive Trigger) */
+.em-orb-toggle,
+.btr-ai-orb-button {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  pointer-events: auto;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+  padding: 0;
+  margin: 0;
+  animation: btr-orb-float 4.2s infinite ease-in-out;
+}
+
+@keyframes btr-orb-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.em-orb-toggle:hover,
+.btr-ai-orb-button:hover {
+  transform: scale(1.15) translateY(-4px);
+}
+
+/* Canvas containing the 3D fluid sphere */
+.em-orb-canvas,
+.btr-ai-orb-canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 24px rgba(144, 71, 255, 0.85)) drop-shadow(0 0 45px rgba(216, 136, 255, 0.5));
+  display: block;
+}
+
+/* Floating Purple Speech Bubble on Hover / Idle */
+.em-ai-bubble,
+.btr-ai-bubble {
+  position: fixed;
+  bottom: 2.2rem;
+  right: 7.2rem;
+  background: linear-gradient(135deg, #9047ff 0%, #b85eff 100%);
+  color: #ffffff;
+  padding: 0.75rem 1.15rem;
+  border-radius: 1rem 1rem 0.25rem 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 30px rgba(144, 71, 255, 0.5), 0 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 99998;
+  pointer-events: auto;
+  cursor: pointer;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(12px) scale(0.96);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.em-ai-bubble::after,
+.btr-ai-bubble::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -6px;
+  transform: translateY(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: #b85eff;
+}
+
+/* Show bubble on hovering the orb button or when hovered directly */
+.btr-ai-orb-widget:hover .btr-ai-bubble,
+.em-orb-toggle:hover ~ .em-ai-bubble,
+.em-ai-bubble:hover,
+.em-ai-bubble.is-active,
+.btr-ai-bubble:hover,
+.btr-ai-bubble.is-active {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+/* Mobile responsive placement */
+@media (max-width: 768px) {
+  .em-ai-bubble,
+  .btr-ai-bubble {
+    display: none !important;
+  }
+  .btr-ai-orb-widget {
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 52px;
+    height: 52px;
+  }
+  .em-orb-toggle,
+  .btr-ai-orb-button {
+    width: 52px;
+    height: 52px;
+  }
+  .btr-ai-sparks-canvas {
+    bottom: -20px;
+    right: -45px;
+    width: 140px;
+    height: 220px;
+  }
+}
+
+/* ==========================================================================
+   FULL-SCREEN AI ASSISTANT MODAL OVERLAY
+   ========================================================================== */
+
+.em-ai-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999999;
+  background: radial-gradient(circle at 75% 50%, #ffffff 0%, #f6efff 55%, #ede2ff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s;
+  overflow: hidden;
+  color: #1e1035;
+}
+
+.em-ai-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* Restore standard cursor inside AI modal for normal comfortable typing */
+.em-ai-overlay,
+.em-ai-overlay * {
+  cursor: auto !important;
+  box-sizing: border-box;
+}
+
+.em-ai-overlay input {
+  cursor: text !important;
+}
+
+.em-ai-overlay button,
+.em-ai-overlay a,
+.em-ai-chip {
+  cursor: pointer !important;
+}
+
+/* Top Right Action Controls */
+.em-ai-top-actions {
+  position: absolute;
+  top: 2rem;
+  right: 2.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  z-index: 20;
+}
+
+.em-ai-btn-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid rgba(144, 71, 255, 0.16);
+  color: #7928ca;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(144, 71, 255, 0.08);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.em-ai-btn-icon:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(144, 71, 255, 0.18);
+  border-color: #9047ff;
+}
+
+.em-ai-btn-icon.is-speaking {
+  border-color: #9047ff;
+  box-shadow: 0 0 0 4px rgba(144, 71, 255, 0.22), 0 6px 20px rgba(144, 71, 255, 0.28);
+  animation: em-voice-pulse 1.3s infinite ease-in-out;
+}
+
+@keyframes em-voice-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.em-ai-btn-close {
+  color: #e63946;
+}
+
+.em-ai-btn-close:hover {
+  background: #fff0f3;
+  border-color: #e63946;
+}
+
+/* Two Column Layout Container */
+.em-ai-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  max-width: 1350px;
+  height: 85vh;
+  gap: 4rem;
+  position: relative;
+}
+
+/* Left Column: Chat Conversation, Suggestion Chips & Input */
+.em-ai-chat-col {
+  flex: 1;
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+/* Messages List */
+.em-ai-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 48vh;
+  overflow-y: auto;
+  padding-right: 0.6rem;
+  scrollbar-width: thin;
+}
+
+.em-ai-messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+.em-ai-messages::-webkit-scrollbar-thumb {
+  background: rgba(144, 71, 255, 0.25);
+  border-radius: 4px;
+}
+
+.em-ai-msg {
+  display: flex;
+  flex-direction: column;
+  animation: em-msg-appear 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes em-msg-appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Assistant Bubble (White Pill Card) */
+.em-ai-msg-assistant .em-ai-bubble-content {
+  background: #ffffff;
+  color: #22123d;
+  padding: 1.15rem 1.5rem;
+  border-radius: 1.25rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.55;
+  box-shadow: 0 6px 24px rgba(100, 50, 180, 0.06);
+  border: 1px solid rgba(144, 71, 255, 0.1);
+  max-width: 92%;
+}
+
+/* Animated Searching Indicator */
+.em-ai-searching-box {
+  background: #ffffff !important;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.95rem 1.4rem !important;
+  border-radius: 1.25rem !important;
+  border: 1px solid rgba(144, 71, 255, 0.18) !important;
+  box-shadow: 0 6px 24px rgba(144, 71, 255, 0.08) !important;
+  width: fit-content;
+}
+
+.em-ai-searching-dots {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.em-ai-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #9047ff 0%, #ec4899 100%);
+  animation: em-dot-pulse 1.2s infinite ease-in-out both;
+}
+
+.em-ai-dot:nth-child(1) { animation-delay: -0.32s; }
+.em-ai-dot:nth-child(2) { animation-delay: -0.16s; }
+.em-ai-dot:nth-child(3) { animation-delay: 0s; }
+
+@keyframes em-dot-pulse {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.35;
+  }
+  40% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.em-ai-searching-label {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #7b5ea7;
+  letter-spacing: 0.01em;
+  animation: em-label-fade 1.5s infinite ease-in-out alternate;
+}
+
+@keyframes em-label-fade {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+/* User Bubble (Purple Pill) */
+.em-ai-msg-user {
+  align-self: flex-end;
+}
+
+.em-ai-msg-user .em-ai-bubble-content {
+  background: linear-gradient(135deg, #9047ff 0%, #a855f7 100%);
+  color: #ffffff;
+  padding: 0.85rem 1.4rem;
+  border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  box-shadow: 0 6px 20px rgba(144, 71, 255, 0.35);
+  max-width: 85%;
+}
+
+/* Suggestion Chips */
+.em-ai-chips-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 1.25rem;
+}
+
+.em-ai-chip {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(144, 71, 255, 0.2);
+  border-radius: 9999px;
+  padding: 0.52rem 1.1rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #40206e;
+  transition: all 0.22s ease;
+  box-shadow: 0 2px 10px rgba(144, 71, 255, 0.05);
+  white-space: nowrap;
+  outline: none;
+}
+
+.em-ai-chip:hover {
+  background: #ffffff;
+  border-color: #9047ff;
+  color: #9047ff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(144, 71, 255, 0.18);
+}
+
+/* Floating Glow Input Bar */
+.em-ai-input-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: #ffffff;
+  border: 1.5px solid rgba(144, 71, 255, 0.22);
+  border-radius: 9999px;
+  padding: 0.55rem 0.65rem 0.55rem 1.25rem;
+  box-shadow: 0 12px 40px rgba(144, 71, 255, 0.2), 0 0 25px rgba(144, 71, 255, 0.12);
+  margin-top: 1.5rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.em-ai-input-bar:focus-within {
+  border-color: #9047ff;
+  box-shadow: 0 15px 45px rgba(144, 71, 255, 0.3), 0 0 35px rgba(144, 71, 255, 0.2);
+}
+
+.em-ai-mic-btn {
+  background: none;
+  border: none;
+  color: #7928ca;
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.em-ai-mic-btn:hover {
+  color: #9047ff;
+  transform: scale(1.1);
+}
+
+.em-ai-mic-btn.is-listening {
+  color: #e63946;
+  animation: em-mic-pulse 1s infinite alternate;
+}
+
+@keyframes em-mic-pulse {
+  0% { transform: scale(1); filter: drop-shadow(0 0 2px #e63946); }
+  100% { transform: scale(1.25); filter: drop-shadow(0 0 12px #e63946); }
+}
+
+.em-ai-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.95rem;
+  color: #1e0d3b;
+}
+
+.em-ai-input::placeholder {
+  color: #a49bb5;
+}
+
+.em-ai-send-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a855f7 0%, #9047ff 100%);
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.22s ease;
+  outline: none;
+}
+
+.em-ai-send-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 15px rgba(144, 71, 255, 0.45);
+}
+
+/* Google Gemini Status & Config Row */
+.em-ai-api-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.9rem;
+  padding: 0 0.5rem;
+}
+
+.em-ai-api-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.68rem;
+  color: #6d5494;
+  letter-spacing: 0.04em;
+}
+
+.em-ai-api-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.em-ai-key-btn {
+  background: none;
+  border: 1px solid rgba(144, 71, 255, 0.2);
+  border-radius: 9999px;
+  padding: 0.2rem 0.65rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.65rem;
+  color: #7928ca;
+  transition: all 0.2s ease;
+}
+
+.em-ai-key-btn:hover {
+  background: rgba(144, 71, 255, 0.1);
+  border-color: #9047ff;
+}
+
+/* Right Column: Giant Pulsating 3D Iridescent Fluid AI Orb */
+.em-ai-orb-col {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.em-ai-large-orb-wrap {
+  position: relative;
+  width: 520px;
+  height: 520px;
+  max-width: 44vw;
+  max-height: 44vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.em-ai-large-canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 60px rgba(180, 90, 255, 0.45)) drop-shadow(0 0 100px rgba(255, 120, 220, 0.35));
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .em-ai-container {
+    flex-direction: column-reverse;
+    justify-content: center;
+    gap: 1.5rem;
+    height: 90vh;
+  }
+  .em-ai-chat-col {
+    max-width: 100%;
+    width: 100%;
+  }
+  .em-ai-large-orb-wrap {
+    width: 220px;
+    height: 220px;
+    max-width: 220px;
+    max-height: 220px;
+  }
+  .em-ai-top-actions {
+    top: 1rem;
+    right: 1.2rem;
+  }
+}

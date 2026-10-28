@@ -1,34 +1,328 @@
-/* =========================================
-   LOADER COMPONENT STYLES
-   ========================================= */
+/* ==========================================================================
+   BUTTERCUP ADVERTISING STUDIO - SIGNATURE PAGE LOADER & TRANSITION SYSTEM
+   Ultra-clean luxury white background with massive kinetic purple typography
+   ========================================================================== */
 
-.loader-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
+#btr-page-loader {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: #ffffff !important;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.09) 0%, rgba(245, 243, 255, 0.5) 40%, #ffffff 75%),
+    linear-gradient(rgba(124, 58, 237, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 58, 237, 0.035) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 48px 48px, 48px 48px !important;
+  background-position: center center, center center, center center !important;
+  z-index: 99999999 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s !important;
+  will-change: transform, opacity !important;
 }
 
-.loader-text {
-    color: #1a1a1a;
-    font-size: clamp(3rem, 6vw, 6rem);
-    font-weight: 800;
-    letter-spacing: -2px;
-    text-transform: lowercase;
-    opacity: 0; /* Starts hidden, fades in */
-    transform: scale(0.95);
+#btr-page-loader.is-active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: all !important;
 }
 
-/* SVG Filter container hidden from view */
-.svg-filters {
-    position: absolute;
-    width: 0;
-    height: 0;
-    pointer-events: none;
+#btr-page-loader.is-instant {
+  transition: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: all !important;
+}
+
+#btr-page-loader.is-exiting {
+  pointer-events: none !important;
+  animation: btrCurtainSlideUp 0.62s cubic-bezier(0.77, 0, 0.175, 1) forwards !important;
+}
+
+@keyframes btrCurtainSlideUp {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0.98;
+  }
+}
+
+/* Central Ambient Glow Behind Text */
+.btr-loader-ambient-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(750px, 92vw);
+  height: min(420px, 60vh);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(147, 51, 234, 0.16) 0%, rgba(124, 58, 237, 0.06) 50%, transparent 75%);
+  filter: blur(55px);
+  pointer-events: none;
+  animation: btrGlowBreathing 4.5s ease-in-out infinite alternate;
+}
+
+@keyframes btrGlowBreathing {
+  0% {
+    transform: translate(-50%, -50%) scale(0.92);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.08);
+    opacity: 1;
+  }
+}
+
+/* Top Studio Pill Badge */
+.btr-loader-badge {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 18px;
+  border-radius: 999px;
+  background: rgba(124, 58, 237, 0.07);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  box-shadow: 0 4px 18px rgba(124, 58, 237, 0.08);
+  margin-bottom: 2.2rem;
+  transform: translateY(-16px);
+  opacity: 0;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease;
+}
+
+#btr-page-loader.is-active .btr-loader-badge,
+#btr-page-loader.is-instant .btr-loader-badge {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.btr-loader-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #7c3aed;
+  box-shadow: 0 0 10px #9333ea, 0 0 20px rgba(147, 51, 234, 0.6);
+  animation: btrDotPulsing 1.4s ease-in-out infinite;
+}
+
+@keyframes btrDotPulsing {
+  0%, 100% {
+    transform: scale(0.9);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 1;
+    box-shadow: 0 0 14px #a855f7, 0 0 26px rgba(168, 85, 247, 0.9);
+  }
+}
+
+.btr-loader-badge-text {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #6d28d9;
+}
+
+/* Centerpiece Massive Animated Purple Text */
+.btr-loader-title-box {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 10px 24px;
+  margin: 0;
+  perspective: 1200px;
+}
+
+.btr-loader-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  margin: 0;
+  padding: 0;
+  font-family: 'TASA Orbiter', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: clamp(4rem, 14vw, 11rem);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  color: #7c3aed;
+}
+
+/* Character Stagger Mask & 3D Emergence */
+.btr-loader-char-box {
+  display: inline-block;
+  overflow: hidden;
+  line-height: 0.95;
+  padding: 0 0.02em;
+  vertical-align: middle;
+}
+
+.btr-loader-char {
+  display: inline-block;
+  color: #7c3aed;
+  background: linear-gradient(135deg, #4c1d95 0%, #6d28d9 22%, #7c3aed 48%, #9333ea 72%, #a855f7 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 15px 35px rgba(124, 58, 237, 0.3));
+  transform: translate3d(0, 115%, 0) rotateX(45deg);
+  opacity: 0;
+  transition: transform 0.54s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.38s ease;
+  will-change: transform, opacity;
+  animation: btrPurpleShimmer 2.6s ease infinite;
+}
+
+.btr-loader-char.is-space {
+  display: inline-block;
+  width: 0.35em;
+}
+
+#btr-page-loader.is-active .btr-loader-char,
+#btr-page-loader.is-instant .btr-loader-char {
+  transform: translate3d(0, 0, 0) rotateX(0deg);
+  opacity: 1;
+}
+
+/* Stagger Delay Rules for up to 14 characters */
+.btr-loader-char:nth-child(1) { transition-delay: 0.03s; }
+.btr-loader-char:nth-child(2) { transition-delay: 0.06s; }
+.btr-loader-char:nth-child(3) { transition-delay: 0.09s; }
+.btr-loader-char:nth-child(4) { transition-delay: 0.12s; }
+.btr-loader-char:nth-child(5) { transition-delay: 0.15s; }
+.btr-loader-char:nth-child(6) { transition-delay: 0.18s; }
+.btr-loader-char:nth-child(7) { transition-delay: 0.21s; }
+.btr-loader-char:nth-child(8) { transition-delay: 0.24s; }
+.btr-loader-char:nth-child(9) { transition-delay: 0.27s; }
+.btr-loader-char:nth-child(10) { transition-delay: 0.30s; }
+.btr-loader-char:nth-child(11) { transition-delay: 0.33s; }
+.btr-loader-char:nth-child(12) { transition-delay: 0.36s; }
+
+/* Bottom Progress Track & Numeric Counter */
+.btr-loader-progress-wrap {
+  position: relative;
+  z-index: 2;
+  margin-top: 2.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.4s ease 0.08s, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.08s;
+}
+
+#btr-page-loader.is-active .btr-loader-progress-wrap,
+#btr-page-loader.is-instant .btr-loader-progress-wrap {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.btr-loader-bar-track {
+  width: min(240px, 68vw);
+  height: 3px;
+  background: rgba(124, 58, 237, 0.12);
+  border-radius: 99px;
+  overflow: hidden;
+  position: relative;
+}
+
+.btr-loader-bar-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #6d28d9 0%, #7c3aed 40%, #a855f7 75%, #c084fc 100%);
+  border-radius: 99px;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.95);
+  transition: width 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: width;
+}
+
+.btr-loader-sub-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #7c3aed;
+}
+
+.btr-loader-counter {
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  color: #4c1d95;
+  display: inline-block;
+  min-width: 2.2ch;
+  text-align: right;
+}
+
+/* Subtle Watermark Branding at the bottom */
+.btr-loader-brand-watermark {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: rgba(124, 58, 237, 0.28);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Mobile Responsive Adjustments */
+@media screen and (max-width: 768px) {
+  .btr-loader-badge {
+    margin-bottom: 1.5rem;
+    padding: 5px 14px;
+  }
+  .btr-loader-badge-text {
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+  }
+  .btr-loader-title {
+    font-size: clamp(2.9rem, 15vw, 4.8rem);
+    letter-spacing: -0.035em;
+  }
+  .btr-loader-progress-wrap {
+    margin-top: 2rem;
+  }
+  .btr-loader-bar-track {
+    width: min(200px, 72vw);
+    height: 3px;
+  }
+  .btr-loader-sub-info {
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+  }
+  .btr-loader-brand-watermark {
+    bottom: 1.2rem;
+    font-size: 0.95rem;
+  }
 }

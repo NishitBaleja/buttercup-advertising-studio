@@ -1307,6 +1307,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, true);
 
     // 5. If user directly visits a /projects/*.html page, inject a top banner and trigger modal
+    const isInsideProjectsFolder = window.location.pathname.includes('/projects/');
     if (isInsideProjectsFolder) {
       const existingBanner = document.querySelector(".project-cs-status-banner");
       if (!existingBanner) {
@@ -1320,14 +1321,23 @@ document.addEventListener("DOMContentLoaded", () => {
           <a href="../pages/case-studies/index.html">← Explore All Work</a>
         `;
         document.body.prepend(banner);
-
-        setTimeout(() => {
-          openModal(pageHeading, pageCat);
-        }, 350);
       }
     }
   }
 
   initCaseStudyComingSoon();
+
+  // =========================================================================
+  // BUTTERCUP PAGE LOADER BOOTSTRAP (Blogs, About Us, Services, Industry)
+  // =========================================================================
+  if (!window.__btrLoaderInitialized) {
+    const scripts = document.querySelectorAll('script[src*="main.js"]');
+    const mainSrc = scripts.length > 0 ? scripts[scripts.length - 1].getAttribute('src') : 'js/main.js';
+    const loaderSrc = mainSrc.replace(/main\.js(\?.*)?$/, 'loader.js');
+    const s = document.createElement('script');
+    s.src = loaderSrc;
+    s.async = false;
+    document.body.appendChild(s);
+  }
 
 });
