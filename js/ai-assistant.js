@@ -168,6 +168,9 @@
   } else {
     initAiSystem();
   }
+  window.addEventListener('load', () => {
+    initFooterBrandAnimation();
+  });
 
   function initFooterBrandAnimation() {
     const brandEls = document.querySelectorAll('.footer-bottom-brand-text');
@@ -178,6 +181,7 @@
       const text = el.textContent.trim();
       if (text.toLowerCase() === 'buttercup') {
         el.innerHTML = '';
+        el.classList.add('has-split');
         text.split('').forEach((char, i) => {
           const span = document.createElement('span');
           span.className = 'btr-footer-char';
