@@ -373,6 +373,10 @@
       }
 
       function animateAura() {
+        if (document.hidden) {
+          requestAnimationFrame(animateAura);
+          return;
+        }
         auraFrame++;
         sctx.clearRect(0, 0, sparksCanvas.width, sparksCanvas.height);
 
@@ -542,6 +546,10 @@
       let orbAngle = 0;
 
       function drawMiniOrb() {
+        if (document.hidden) {
+          requestAnimationFrame(drawMiniOrb);
+          return;
+        }
         const w = orbCanvas.width;
         const h = orbCanvas.height;
         orbCtx.clearRect(0, 0, w, h);
@@ -740,6 +748,9 @@
       let largeOrbAngle = 0;
 
       function drawLargeOrb() {
+        if (!isModalOpen || document.hidden) {
+          return;
+        }
         const w = largeOrbCanvas.width;
         const h = largeOrbCanvas.height;
         lctx.clearRect(0, 0, w, h);
@@ -802,10 +813,16 @@
 
         lctx.globalCompositeOperation = 'source-over';
 
-        requestAnimationFrame(drawLargeOrb);
+        if (isModalOpen && !document.hidden) {
+          requestAnimationFrame(drawLargeOrb);
+        }
       }
 
-      requestAnimationFrame(drawLargeOrb);
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && isModalOpen && largeOrbCanvas) {
+          requestAnimationFrame(drawLargeOrb);
+        }
+      });
     }
 
     // ==========================================================================
@@ -832,6 +849,9 @@
       aiOverlay.setAttribute('aria-hidden', 'false');
       document.documentElement.classList.add('em-modal-open');
       updateModalUrl(true);
+      if (largeOrbCanvas) {
+        requestAnimationFrame(drawLargeOrb);
+      }
       setTimeout(() => {
         if (aiInput) aiInput.focus();
       }, 300);
